@@ -6,3 +6,17 @@ node_modules/
 
 # Assignment brief: not ours to publish
 *.pdf
+
+# Next.js
+/.next/
+/out/
+next-env.d.ts
+*.tsbuildinfo
+
+# Tests and local data
+/coverage
+/test-results/
+/playwright-report/
+/.features-gen/
+/data/
+*.pem

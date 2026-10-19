@@ -2,13 +2,18 @@
 
 ## Code style
 
-To be defined in E1 with the stack.
+- ESLint (`eslint-config-next`) + Prettier. `pnpm check` = format check, lint,
+  typecheck, unit tests; `pnpm test:e2e` = acceptance features.
+- Boundaries between `src/server` and the frontend are enforced by ESLint
+  ([ARCHITECTURE](ARCHITECTURE.md#invariants)).
 
 ## Dependencies
 
 - pnpm only.
 - Always install the latest stable (`pnpm add x@latest`, `shadcn@latest`);
   check the version before installing, never trust a remembered one.
+  Exception: majors the framework pins (TypeScript 5, ESLint 9 for Next 16).
+- Node: the LTS in `.nvmrc` (`nvm use`).
 - UI primitives come from shadcn/ui.
 
 ## Commits

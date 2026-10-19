@@ -12,8 +12,7 @@ Coarse tasks grouped by [epic](ROADMAP.md). Flow and rules: [AGENTS.md](../AGENT
 ## E1 — Stack and architecture
 
 - [x] E1-01 Grill stack and architecture → [ADR-0002..0007](ADL.md), [ARCHITECTURE](ARCHITECTURE.md)
-- [ ] E1-02 Bootstrap: install, lint/format/typecheck, `.env.example`, a smoke
-      feature running green.
+- [x] E1-02 Bootstrap: Next + in-process Hono, shadcn, ESLint/Prettier, Vitest, smoke feature green
 
 ## E2 — Skeleton, DB, auth
 
