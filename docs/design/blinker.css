@@ -1,0 +1,483 @@
+/* Blinker design reference. Shared by styleguide.html and landing.html.
+   Token names follow shadcn/ui so they map 1:1 onto src/app/globals.css. */
+
+/* ---------- Tokens ---------- */
+:root,
+.light {
+  --background: #ffffff;
+  --foreground: #000000;
+  --muted: #f5f6f8;
+  --muted-foreground: #5c5f66;
+  --border: #e3e4e8;
+  --primary: #d6006f; /* the cursor; the only colour */
+  --primary-foreground: #ffffff;
+  --ring: var(--primary);
+  --destructive: #c4281c;
+  --warning: #9a6700;
+  --success: #1a7f37;
+  --radius: 0.5rem;
+  --font-sans: "Hanken Grotesk", system-ui, sans-serif;
+  --gutter: clamp(16px, 4vw, 48px);
+  --blink: 1.06s;
+  color-scheme: light;
+}
+.dark {
+  --background: #000000;
+  --foreground: #ffffff;
+  --muted: #111215;
+  --muted-foreground: #a2a5ad;
+  --border: #26282d;
+  --primary: #ff4fa3;
+  --primary-foreground: #000000;
+  --destructive: #ff6b5e;
+  --warning: #d29922;
+  --success: #3fb950;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not(.light) {
+    --background: #000000;
+    --foreground: #ffffff;
+    --muted: #111215;
+    --muted-foreground: #a2a5ad;
+    --border: #26282d;
+    --primary: #ff4fa3;
+    --primary-foreground: #000000;
+    --destructive: #ff6b5e;
+    --warning: #d29922;
+    --success: #3fb950;
+    color-scheme: dark;
+  }
+}
+
+/* ---------- Base ---------- */
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  font-size: 1.125rem;
+  line-height: 1.55;
+}
+a {
+  color: inherit;
+}
+:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 3px;
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+.wrap {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding-inline: var(--gutter);
+}
+.muted {
+  color: var(--muted-foreground);
+}
+
+/* ---------- Type ---------- */
+.display,
+.h1,
+.h2 {
+  font-weight: 800;
+  letter-spacing: -0.04em;
+}
+.display {
+  font-size: clamp(3.4rem, 12vw, 9.5rem);
+  line-height: 0.95;
+}
+.h1 {
+  font-size: clamp(3rem, 9vw, 7rem);
+  line-height: 0.95;
+}
+.h2 {
+  font-size: clamp(2rem, 4.2vw, 3.2rem);
+  line-height: 1.04;
+  max-width: 18ch;
+}
+.h3 {
+  font-size: 1.25rem;
+  line-height: 1.25;
+  font-weight: 600;
+}
+.lead {
+  font-size: clamp(1.15rem, 1.6vw, 1.3rem);
+  color: var(--muted-foreground);
+  max-width: 44ch;
+}
+.small {
+  font-size: 0.9rem;
+  color: var(--muted-foreground);
+}
+kbd {
+  font-family: inherit;
+  font-size: 0.85em;
+  font-weight: 600;
+  padding: 0.1em 0.45em;
+  border: 1px solid var(--border);
+  border-bottom-width: 2px;
+  border-radius: 6px;
+  background: var(--muted);
+}
+
+/* ---------- Cursor: the one coloured, moving thing ---------- */
+.bar {
+  display: inline-block;
+  width: 0.1em;
+  min-width: 3px;
+  height: 0.85em;
+  background: var(--primary);
+  vertical-align: -0.08em;
+  margin-left: 0.05em;
+  animation: blink var(--blink) steps(1) infinite;
+}
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: inline-block;
+  white-space: nowrap;
+  background: var(--primary);
+  color: var(--primary-foreground);
+  font: inherit;
+  font-weight: 600;
+  font-size: 1rem;
+  padding: 0.7em 1.15em;
+  border-radius: var(--radius);
+  border: 0;
+  text-decoration: none;
+  cursor: pointer;
+}
+.btn:hover {
+  filter: brightness(1.1);
+}
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  filter: none;
+}
+.btn.big {
+  font-size: 1.15rem;
+  padding: 0.8em 1.4em;
+}
+.btn.quiet {
+  background: transparent;
+  color: var(--foreground);
+  box-shadow: inset 0 0 0 1.5px var(--border);
+}
+.btn.quiet:hover {
+  box-shadow: inset 0 0 0 1.5px var(--foreground);
+  filter: none;
+}
+
+/* ---------- Fields ---------- */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-width: 360px;
+}
+.field label {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+.field input {
+  font: inherit;
+  font-size: 1rem;
+  color: var(--foreground);
+  background: var(--background);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.65em 0.8em;
+}
+.field input:focus {
+  outline: none;
+  border-color: var(--ring);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ring) 25%, transparent);
+}
+.field[data-invalid] input {
+  border-color: var(--destructive);
+}
+.field .hint {
+  font-size: 0.9rem;
+  color: var(--muted-foreground);
+}
+.field[data-invalid] .hint {
+  color: var(--destructive);
+}
+
+/* ---------- Switch ---------- */
+.switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.95rem;
+  color: var(--muted-foreground);
+  cursor: pointer;
+  user-select: none;
+}
+.switch input {
+  appearance: none;
+  width: 36px;
+  height: 20px;
+  border-radius: 999px;
+  background: var(--border);
+  position: relative;
+  margin: 0;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.switch input::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--background);
+  transition: transform 0.15s;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+}
+.switch input:checked {
+  background: var(--primary);
+}
+.switch input:checked::after {
+  transform: translateX(16px);
+}
+.switch input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ---------- Save status ---------- */
+.save {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  color: var(--muted-foreground);
+}
+.save::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.6;
+}
+.save[data-state="saving"]::before {
+  animation: blink var(--blink) steps(1) infinite;
+}
+.save[data-state="saved"]::before {
+  background: var(--success);
+  opacity: 1;
+}
+.save[data-state="retrying"] {
+  color: var(--warning);
+}
+.save[data-state="error"] {
+  color: var(--destructive);
+}
+.save:is([data-state="retrying"], [data-state="error"])::before {
+  opacity: 1;
+}
+
+/* ---------- Notice (toasts, banners): status colour on the edge only ---------- */
+.notice {
+  display: flex;
+  gap: 12px;
+  align-items: baseline;
+  max-width: 420px;
+  padding: 12px 16px;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--muted-foreground);
+  border-radius: var(--radius);
+  font-size: 0.95rem;
+}
+.notice strong {
+  font-weight: 600;
+}
+.notice[data-tone="success"] {
+  border-left-color: var(--success);
+}
+.notice[data-tone="warning"] {
+  border-left-color: var(--warning);
+}
+.notice[data-tone="destructive"] {
+  border-left-color: var(--destructive);
+}
+
+/* ---------- Counter + optional pop ---------- */
+.meter {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  flex-wrap: wrap;
+}
+.stat {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  color: var(--muted-foreground);
+  font-size: 0.95rem;
+}
+.num {
+  position: relative;
+  display: inline-block;
+  color: var(--foreground);
+  font-weight: 800;
+  font-size: 1.5rem;
+  font-variant-numeric: tabular-nums;
+}
+.spark {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  margin: -3px;
+  border-radius: 50%;
+  background: var(--primary);
+  pointer-events: none;
+}
+
+/* ---------- Typing area (hero, and the editor's blank page) ---------- */
+.try {
+  position: relative;
+}
+.try textarea,
+.try .ghost {
+  font-family: var(--font-sans);
+  margin: 0;
+  padding: 0;
+}
+.try textarea {
+  display: block;
+  width: 100%;
+  min-height: 1.1em;
+  background: transparent;
+  color: var(--foreground);
+  border: 0;
+  resize: none;
+  overflow: hidden;
+  caret-color: var(--primary);
+}
+.try textarea:focus {
+  outline: none;
+}
+.try.empty textarea {
+  caret-color: transparent;
+}
+.try .ghost {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.try:not(.empty) .ghost {
+  display: none;
+}
+.try:focus-within .ghost {
+  color: var(--muted-foreground);
+  opacity: 0.5;
+}
+
+/* ---------- Surfaces ---------- */
+.panel {
+  border: 1px solid var(--border);
+  border-radius: calc(var(--radius) * 1.8);
+  padding: clamp(24px, 4vw, 36px);
+  background: var(--background);
+}
+.panel.strong {
+  border: 2px solid var(--foreground);
+}
+.rule {
+  border: 0;
+  border-top: 1px solid var(--border);
+  margin: 0;
+}
+
+/* ---------- Motion ---------- */
+/* Reduced motion wins everywhere: no blinking, no pop (blinker.js also disables the toggle). */
+@media (prefers-reduced-motion: reduce) {
+  .bar,
+  .save[data-state="saving"]::before {
+    animation: none;
+  }
+  .spark {
+    display: none;
+  }
+}
+
+/* ---------- Doc-only controls (theme) ---------- */
+.doc-ctl {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 10;
+  font-size: 0.85rem;
+}
+.doc-ctl summary {
+  list-style: none;
+  cursor: pointer;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--muted);
+  border: 1px solid var(--border);
+  color: var(--muted-foreground);
+  margin-left: auto;
+}
+.doc-ctl summary::-webkit-details-marker {
+  display: none;
+}
+.doc-ctl .menu {
+  display: none;
+  flex-direction: column;
+  gap: 8px;
+  position: absolute;
+  right: 0;
+  bottom: 36px;
+  background: var(--background);
+  border: 1px solid var(--border);
+  padding: 12px 14px;
+  border-radius: 10px;
+  white-space: nowrap;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+.doc-ctl[open] .menu {
+  display: flex;
+}
+.doc-ctl label {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  cursor: pointer;
+}
+.doc-ctl button {
+  font: inherit;
+  background: var(--muted);
+  color: var(--foreground);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 4px 8px;
+  cursor: pointer;
+}

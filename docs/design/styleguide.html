@@ -1,0 +1,561 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Blinker style guide</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="blinker.css" />
+    <style>
+      /* Page layout only; components and tokens live in blinker.css */
+      header.wrap {
+        padding-block: clamp(40px, 8vh, 96px) 32px;
+      }
+      header .h1 {
+        margin: 0 0 16px;
+      }
+      header p {
+        margin: 0 0 8px;
+      }
+      section.s {
+        padding-block: 56px;
+        border-top: 1px solid var(--border);
+      }
+      section.s > .h2 {
+        margin: 0 0 12px;
+      }
+      section.s > p.lead {
+        margin: 0 0 32px;
+      }
+      .row {
+        display: flex;
+        gap: 16px;
+        align-items: center;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+      }
+      .grid2 {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 32px;
+      }
+
+      .tokens {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.95rem;
+      }
+      .tokens th,
+      .tokens td {
+        text-align: left;
+        padding: 10px 12px 10px 0;
+        border-bottom: 1px solid var(--border);
+        vertical-align: middle;
+      }
+      .tokens th {
+        font-weight: 600;
+        color: var(--muted-foreground);
+        font-size: 0.85rem;
+      }
+      .tokens code {
+        font-size: 0.9rem;
+      }
+      .sw {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 6px 10px 6px 6px;
+        border-radius: var(--radius);
+        background: var(--background);
+        color: var(--foreground);
+        border: 1px solid var(--border);
+        font-variant-numeric: tabular-nums;
+        font-size: 0.85rem;
+      }
+      .sw i {
+        width: 28px;
+        height: 28px;
+        border-radius: 6px;
+        border: 1px solid var(--border);
+      }
+      @media (max-width: 640px) {
+        .tokens .role {
+          display: none;
+        }
+      }
+
+      .type > div {
+        padding: 16px 0;
+        border-bottom: 1px solid var(--border);
+      }
+      .type .meta {
+        font-size: 0.85rem;
+        color: var(--muted-foreground);
+        margin-bottom: 6px;
+      }
+      .type .display,
+      .type .h1 {
+        margin: 0;
+      }
+      .type .h2 {
+        margin: 0;
+        max-width: none;
+      }
+
+      .rules {
+        margin: 0;
+        padding-left: 1.2em;
+        max-width: 70ch;
+      }
+      .rules li {
+        margin: 0 0 8px;
+      }
+      .voice {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0 32px;
+        max-width: 900px;
+      }
+      .voice h3 {
+        margin: 0 0 8px;
+      }
+      .voice p {
+        margin: 0;
+        padding: 12px 0;
+        border-top: 1px solid var(--border);
+      }
+      @media (max-width: 640px) {
+        .voice {
+          grid-template-columns: 1fr;
+        }
+      }
+      .demo-box {
+        border: 1px solid var(--border);
+        border-radius: calc(var(--radius) * 1.8);
+        padding: 28px;
+      }
+      .demo-box textarea {
+        font-size: 1.6rem;
+        font-weight: 600;
+        line-height: 1.3;
+      }
+      .demo-box .ghost {
+        font-size: 1.6rem;
+        font-weight: 600;
+        line-height: 1.3;
+      }
+      .demo-box .meter {
+        margin-top: 20px;
+        padding-top: 14px;
+        border-top: 1px solid var(--border);
+      }
+      .demo-box .switch {
+        margin-left: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="wrap">
+      <h1 class="h1">Blinker<span class="bar" aria-hidden="true"></span></h1>
+      <p class="lead">
+        Style guide. Neutral, focused, keyboard first. The cheek lives in the
+        copy; the only colour is the cursor.
+      </p>
+      <p class="small">
+        Decisions and rationale: <a href="../DESIGN.md">DESIGN.md</a>. Applied:
+        <a href="landing.html">landing.html</a>. Theme: the dot, bottom right.
+      </p>
+    </header>
+
+    <main>
+      <section class="s wrap" aria-labelledby="c">
+        <h2 class="h2" id="c">Colour</h2>
+        <p class="lead">
+          Black and white plus one accent. Status colours mark state, never
+          decorate. Names match shadcn/ui tokens.
+        </p>
+        <table class="tokens">
+          <thead>
+            <tr>
+              <th>Token</th>
+              <th>Light</th>
+              <th>Dark</th>
+              <th class="role">Use</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>--background</code></td>
+              <td>
+                <span class="sw light"
+                  ><i style="background: var(--background)"></i>#FFFFFF</span
+                >
+              </td>
+              <td>
+                <span class="sw dark"
+                  ><i style="background: var(--background)"></i>#000000</span
+                >
+              </td>
+              <td class="role">Page</td>
+            </tr>
+            <tr>
+              <td><code>--foreground</code></td>
+              <td>
+                <span class="sw light"
+                  ><i style="background: var(--foreground)"></i>#000000</span
+                >
+              </td>
+              <td>
+                <span class="sw dark"
+                  ><i style="background: var(--foreground)"></i>#FFFFFF</span
+                >
+              </td>
+              <td class="role">Text, strong borders</td>
+            </tr>
+            <tr>
+              <td><code>--muted</code></td>
+              <td>
+                <span class="sw light"
+                  ><i style="background: var(--muted)"></i>#F5F6F8</span
+                >
+              </td>
+              <td>
+                <span class="sw dark"
+                  ><i style="background: var(--muted)"></i>#111215</span
+                >
+              </td>
+              <td class="role">Quiet surfaces, kbd</td>
+            </tr>
+            <tr>
+              <td><code>--muted-foreground</code></td>
+              <td>
+                <span class="sw light"
+                  ><i style="background: var(--muted-foreground)"></i
+                  >#5C5F66</span
+                >
+              </td>
+              <td>
+                <span class="sw dark"
+                  ><i style="background: var(--muted-foreground)"></i
+                  >#A2A5AD</span
+                >
+              </td>
+              <td class="role">Secondary text, stats labels</td>
+            </tr>
+            <tr>
+              <td><code>--border</code></td>
+              <td>
+                <span class="sw light"
+                  ><i style="background: var(--border)"></i>#E3E4E8</span
+                >
+              </td>
+              <td>
+                <span class="sw dark"
+                  ><i style="background: var(--border)"></i>#26282D</span
+                >
+              </td>
+              <td class="role">Hairlines, inputs</td>
+            </tr>
+            <tr>
+              <td><code>--primary</code></td>
+              <td>
+                <span class="sw light"
+                  ><i style="background: var(--primary)"></i>#D6006F</span
+                >
+              </td>
+              <td>
+                <span class="sw dark"
+                  ><i style="background: var(--primary)"></i>#FF4FA3</span
+                >
+              </td>
+              <td class="role">
+                Cursor, primary CTA, focus ring, counter pop. Nothing else.
+              </td>
+            </tr>
+            <tr>
+              <td><code>--primary-foreground</code></td>
+              <td>
+                <span class="sw light"
+                  ><i style="background: var(--primary-foreground)"></i
+                  >#FFFFFF</span
+                >
+              </td>
+              <td>
+                <span class="sw dark"
+                  ><i style="background: var(--primary-foreground)"></i
+                  >#000000</span
+                >
+              </td>
+              <td class="role">Text on primary</td>
+            </tr>
+            <tr>
+              <td><code>--destructive</code></td>
+              <td>
+                <span class="sw light"
+                  ><i style="background: var(--destructive)"></i>#C4281C</span
+                >
+              </td>
+              <td>
+                <span class="sw dark"
+                  ><i style="background: var(--destructive)"></i>#FF6B5E</span
+                >
+              </td>
+              <td class="role">Data at risk, invalid field, delete</td>
+            </tr>
+            <tr>
+              <td><code>--warning</code></td>
+              <td>
+                <span class="sw light"
+                  ><i style="background: var(--warning)"></i>#9A6700</span
+                >
+              </td>
+              <td>
+                <span class="sw dark"
+                  ><i style="background: var(--warning)"></i>#D29922</span
+                >
+              </td>
+              <td class="role">
+                Something failed, nothing lost yet: autosave retrying
+              </td>
+            </tr>
+            <tr>
+              <td><code>--success</code></td>
+              <td>
+                <span class="sw light"
+                  ><i style="background: var(--success)"></i>#1A7F37</span
+                >
+              </td>
+              <td>
+                <span class="sw dark"
+                  ><i style="background: var(--success)"></i>#3FB950</span
+                >
+              </td>
+              <td class="role">
+                Confirmations: the Saved dot, success notices
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="s wrap" aria-labelledby="t">
+        <h2 class="h2" id="t">Type</h2>
+        <p class="lead">Hanken Grotesk, one family.</p>
+        <div class="type">
+          <div>
+            <p class="meta">
+              <code>.display</code> 800, tracking −0.04em. Hero and blank page
+              only.
+            </p>
+            <p class="display">Start typing</p>
+          </div>
+          <div>
+            <p class="meta"><code>.h1</code> 800. Closing statements.</p>
+            <p class="h1">Still reading?</p>
+          </div>
+          <div>
+            <p class="meta"><code>.h2</code> 800. Section titles, max 18ch.</p>
+            <p class="h2">Three reasons. Then back to work.</p>
+          </div>
+          <div>
+            <p class="meta"><code>.h3</code> 600.</p>
+            <p class="h3" style="margin: 0">It saves. You don't have to.</p>
+          </div>
+          <div>
+            <p class="meta"><code>.lead</code> muted, max 44ch.</p>
+            <p class="lead" style="margin: 0">
+              A blank page, no toolbar, autosave, and a cursor that won't stop
+              staring at you.
+            </p>
+          </div>
+          <div>
+            <p class="meta">Body 18px / 1.55.</p>
+            <p style="margin: 0; max-width: 65ch">
+              Every change goes to our servers while you write. If a save fails,
+              you'll know before you lose a word.
+            </p>
+          </div>
+          <div>
+            <p class="meta"><code>.small</code> muted.</p>
+            <p class="small" style="margin: 0">
+              7 days free, card required. Cancel whenever.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="s wrap" aria-labelledby="cu">
+        <h2 class="h2" id="cu">The cursor</h2>
+        <p class="lead">
+          The brand mark. A primary-coloured bar after the wordmark and on any
+          blank page. It blinks at 1.06s, hard steps, and stops under reduced
+          motion.
+        </p>
+        <div class="row">
+          <span class="h2" style="max-width: none"
+            >Blinker<span class="bar"></span
+          ></span>
+        </div>
+      </section>
+
+      <section class="s wrap" aria-labelledby="co">
+        <h2 class="h2" id="co">Components</h2>
+        <p class="lead">
+          Few, flat, one radius family. Primary is for the one action that
+          matters on screen.
+        </p>
+        <div class="grid2">
+          <div>
+            <h3 class="h3">Buttons</h3>
+            <div class="row">
+              <button class="btn big">Start typing</button
+              ><button class="btn">Start typing</button>
+            </div>
+            <div class="row">
+              <button class="btn quiet">Buy lifetime</button
+              ><button class="btn" disabled>Start typing</button>
+            </div>
+          </div>
+          <div>
+            <h3 class="h3">Fields</h3>
+            <div class="field" style="margin-bottom: 16px">
+              <label for="e">Email</label
+              ><input id="e" type="email" placeholder="you@work.com" />
+            </div>
+            <div class="field" data-invalid>
+              <label for="p">Password</label
+              ><input id="p" type="password" value="1234" /><span class="hint"
+                >Use at least 8 characters.</span
+              >
+            </div>
+          </div>
+          <div>
+            <h3 class="h3">Save status</h3>
+            <div class="row">
+              <span class="save" data-state="saved">Saved</span>
+            </div>
+            <div class="row">
+              <span class="save" data-state="saving">Saving</span>
+            </div>
+            <div class="row">
+              <span class="save" data-state="retrying"
+                >Not saved yet. Retrying in 5s.</span
+              >
+            </div>
+            <div class="row">
+              <span class="save" data-state="error"
+                >Offline. Don't close this tab.</span
+              >
+            </div>
+          </div>
+          <div>
+            <h3 class="h3">Notices</h3>
+            <div class="notice" data-tone="success" style="margin-bottom: 12px">
+              <strong>Subscribed.</strong
+              ><span class="muted">No more excuses.</span>
+            </div>
+            <div class="notice" data-tone="warning" style="margin-bottom: 12px">
+              <strong>Payment failed.</strong
+              ><span class="muted">Update your card within 7 days.</span>
+            </div>
+            <div class="notice" data-tone="destructive">
+              <strong>Document deleted.</strong
+              ><span class="muted">It's gone. Like your motivation.</span>
+            </div>
+          </div>
+          <div>
+            <h3 class="h3">Shortcuts</h3>
+            <div class="row">
+              <kbd>⌘B</kbd><kbd>⌘I</kbd><kbd>⌘K</kbd><kbd>#</kbd><kbd>-</kbd
+              ><kbd>&gt;</kbd>
+            </div>
+            <h3 class="h3">Switch</h3>
+            <div class="row">
+              <label class="switch"><input type="checkbox" checked /> On</label
+              ><label class="switch"><input type="checkbox" /> Off</label>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="s wrap" aria-labelledby="st" data-demo>
+        <h2 class="h2" id="st">Stats and fireworks</h2>
+        <p class="lead">
+          Live word count and words per minute. The optional pop bursts primary
+          dots each time a number changes.
+        </p>
+        <div class="demo-box">
+          <div class="try empty" data-try>
+            <label for="demoBox" class="sr-only">Type to see the counter</label>
+            <textarea id="demoBox" rows="1" spellcheck="false"></textarea>
+            <div class="ghost" aria-hidden="true">
+              Start typing<span class="bar"></span>
+            </div>
+          </div>
+          <div class="meter">
+            <span class="stat"
+              ><span class="num" data-words>0</span> words</span
+            >
+            <span class="stat"
+              ><span class="num" data-wpm>0</span> per minute</span
+            >
+            <label class="switch"
+              ><input type="checkbox" data-fx checked />
+              <span data-fx-text>Fireworks</span></label
+            >
+          </div>
+        </div>
+      </section>
+
+      <section class="s wrap" aria-labelledby="m">
+        <h2 class="h2" id="m">Motion</h2>
+        <ul class="rules">
+          <li>
+            Only two things move on their own: the cursor blink and the counter
+            pop.
+          </li>
+          <li>
+            Counter pop: on in the landing, off by default in the editor, user
+            toggle.
+          </li>
+          <li>
+            <strong>Reduced motion always wins:</strong> no blink, no pop, and
+            the toggle is disabled with the reason shown. Never overridable.
+          </li>
+          <li>
+            Everything else moves only in answer to the user: open, close,
+            confirm.
+          </li>
+        </ul>
+      </section>
+
+      <section class="s wrap" aria-labelledby="v">
+        <h2 class="h2" id="v">Voice</h2>
+        <p class="lead">
+          Cheeky in marketing and in mouse moments; silent while you type.
+        </p>
+        <div class="voice">
+          <div>
+            <h3 class="h3">Write</h3>
+            <p>Still reading? That's not writing.</p>
+            <p>Not saved yet. Retrying in 5s.</p>
+            <p>No documents yet. The cursor is waiting.</p>
+          </div>
+          <div>
+            <h3 class="h3">Not</h3>
+            <p>Unlock your productivity potential today!</p>
+            <p>Oops! Something went wrong 😢</p>
+            <p>Pop-up jokes while the user is typing.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script src="blinker.js"></script>
+  </body>
+</html>

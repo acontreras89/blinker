@@ -22,18 +22,20 @@ Coarse tasks grouped by [epic](ROADMAP.md). Flow and rules: [AGENTS.md](../AGENT
 
 ## E3 — Product and brand concept
 
-- [ ] E3-01 Grill name, positioning, tone and visual direction → DESIGN (light).
-      Note: the user wants a cheeky, transgressive landing.
+- [x] E3-01 Brand and product concept: Blinker → [DESIGN](DESIGN.md), [styleguide](design/styleguide.html)
 
 ## E4 — Minimal landing
 
-- [ ] E4-01 Value proposition, CTA, pricing, trust elements; responsive.
+- [ ] E4-01 Value proposition, CTA, pricing, trust elements; responsive. Port
+      `docs/design/landing.html` and its tokens to the app.
 
 ## E5 — Documents and editor
 
 - [ ] E5-01 Document list (title, last updated), create with default title,
       rename, delete with confirmation, empty states.
 - [ ] E5-02 Rich text editing and save to backend, failed-save handling.
+- [ ] E5-03 Chromeless editor: shortcuts + Markdown input rules, toolbar on request
+      (Simple Editor's toolbar hidden by default); live words + WPM.
 
 ## E6 — Stripe and gating
 
@@ -52,6 +54,10 @@ Coarse tasks grouped by [epic](ROADMAP.md). Flow and rules: [AGENTS.md](../AGENT
 
 - [ ] E8-01 Deepen DESIGN and polish the landing.
 - [ ] E8-02 Polish the editor UX.
+- [ ] E8-03 Editor settings: counter pop toggle (off by default, locked off under
+      reduced motion), font choice.
+- [ ] E8-04 Cheeky copy in mouse-driven moments: empty states, save feedback, sidebar,
+      trial-limit upgrade prompt.
 
 ## E9 — Demo and submission
 

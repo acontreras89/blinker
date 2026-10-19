@@ -1,4 +1,51 @@
 # Design
 
-Product and brand concept: positioning, tone of voice, visual line. Light
-version in E3, deepened in E8.
+Product and brand concept. Tokens and components: [design/styleguide.html](design/styleguide.html)
+(source: [design/blinker.css](design/blinker.css)); applied: [design/landing.html](design/landing.html).
+Open them through any static server (`npx serve docs`).
+
+## Product
+
+**Blinker**: a focused rich text editor for professionals who should be writing
+and procrastinate instead. Power-user minded: opinionated, few features, done well.
+
+- Chromeless by default: a blank page and a cursor. Keyboard shortcuts (⌘B/I/K)
+  and Markdown input rules (`#`, `-`, `>`); toolbar only on request. On touch
+  devices (no shortcuts) a compact toolbar shows above the keyboard.
+- Autosave with a quiet status: Saved, Saving, or a warning while it retries;
+  destructive only when work is at risk.
+- Live stats: words in the document, and words per minute over the words
+  actually written (deleting never lowers your speed).
+- Not included, on purpose: AI, collaboration, export.
+- Pricing: Monthly $8 with a 7-day card-required trial capped at 3 documents;
+  Lifetime $9,600 once (100 years of Monthly). Billing model: [ADR-0006](adr/0006-own-billing-entitlements.md).
+
+## Voice
+
+Cheeky, impatient, a bit insolent: the cursor is judging you. Primary CTA is
+always **Start typing**.
+
+- Jokes live in marketing and mouse-driven moments: empty states, save feedback,
+  sidebar. **Never while typing**: then only the counter speaks.
+- Errors say what happened and what's next, in the product's voice; no apologies,
+  no emoji.
+- Placeholder social proof must read as obviously fake.
+
+## Visual line
+
+Neutral and quiet, so the page is the only thing that matters.
+
+- Black and white, light and dark from day one. One accent, magenta, reserved for
+  the cursor, the primary CTA, focus and the counter pop. Status colours
+  (success, warning, destructive) mark state only.
+- The brand mark is the blinking cursor after the wordmark.
+- Type: Hanken Grotesk, one family. Document body face: decide in E5.
+- Tokens use shadcn/ui names so they map 1:1 onto `src/app/globals.css`.
+
+## Motion
+
+- Only the cursor blink and the counter pop move on their own; anything else
+  answers a user action.
+- Counter pop: on in the landing; off by default in the editor, with a toggle.
+- **`prefers-reduced-motion` always wins**: no blink, no pop, toggle disabled with
+  the reason shown. Not overridable.
