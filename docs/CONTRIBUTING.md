@@ -4,6 +4,13 @@
 
 To be defined in E1 with the stack.
 
+## Dependencies
+
+- pnpm only.
+- Always install the latest stable (`pnpm add x@latest`, `shadcn@latest`);
+  check the version before installing, never trust a remembered one.
+- UI primitives come from shadcn/ui.
+
 ## Commits
 
 - [Conventional Commits](https://www.conventionalcommits.org), one-line subject, straight to `main`.

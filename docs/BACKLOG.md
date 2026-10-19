@@ -11,8 +11,7 @@ Coarse tasks grouped by [epic](ROADMAP.md). Flow and rules: [AGENTS.md](../AGENT
 
 ## E1 — Stack and architecture
 
-- [ ] E1-01 Grill stack and architecture: framework, DB/ORM, auth, editor library,
-      BDD tooling (Playwright + Gherkin), test layout. Output: ADRs + ARCHITECTURE.
+- [x] E1-01 Grill stack and architecture → [ADR-0002..0007](ADL.md), [ARCHITECTURE](ARCHITECTURE.md)
 - [ ] E1-02 Bootstrap: install, lint/format/typecheck, `.env.example`, a smoke
       feature running green.
 
@@ -39,7 +38,8 @@ Coarse tasks grouped by [epic](ROADMAP.md). Flow and rules: [AGENTS.md](../AGENT
 
 ## E6 — Stripe and gating
 
-- [ ] E6-01 Checkout + verified webhook → subscription state on the user.
+- [ ] E6-01 Checkout + verified webhook → entitlements ([ADR-0006](adr/0006-own-billing-entitlements.md)).
+      Subscription + one of trial/lifetime; the other goes to EX-05.
 - [ ] E6-02 Server-side gating, non-subscriber/subscriber UI states, upgrade
       path, visible subscription status.
 
@@ -66,3 +66,6 @@ Coarse tasks grouped by [epic](ROADMAP.md). Flow and rules: [AGENTS.md](../AGENT
 - [ ] EX-01 Stripe Customer Portal ("Manage billing").
 - [ ] EX-02 Deploy to GCP (see [ADR-0001](adr/0001-local-only-deployment.md)).
 - [ ] EX-03 OAuth login.
+- [ ] EX-04 Version history: manual "save version" vs autosave checkpoints,
+      history panel with preview and restore. E5 ships the minimal save only.
+- [ ] EX-05 Whichever of trial (7 days, card, 3 docs) / lifetime E6 skipped.
