@@ -1,3 +1,5 @@
 date,block,start,end,epic,task,claude_session,note
 2026-10-19,B1,10:30,11:35,E0,E0-01,98aae101-acea-4688-955c-d3c52fba5791,Process grilling
 2026-10-19,B1,11:35,11:37,E0,E0-02,98aae101-acea-4688-955c-d3c52fba5791,Docs scaffold and usage script
+2026-10-19,B2,11:44,13:15,E1,E1-01,7047ed28-d18a-4cf4-a2d1-00f1a5a7f3a6,Stack and architecture grilling
+2026-10-19,B2,13:15,13:19,E1,E1-02,7047ed28-d18a-4cf4-a2d1-00f1a5a7f3a6,Bootstrap scaffold

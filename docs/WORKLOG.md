@@ -7,13 +7,14 @@
 
 | Scope | Time | Claude sessions | Messages | Input | Output | Cache write | Cache read | Est. cost |
 | ----- | ---: | --------------: | -------: | ----: | -----: | ----------: | ---------: | --------: |
-| All   | 1h07 |               1 |       15 |    30 |  27.6k |      109.1k |      1.26M |     $1.68 |
+| All   | 2h42 |               2 |       56 |   112 |  69.9k |      200.8k |      5.34M |     $4.07 |
 
 ## By epic
 
 | Epic | Time | Claude sessions | Messages | Input | Output | Cache write | Cache read | Est. cost |
 | ---- | ---: | --------------: | -------: | ----: | -----: | ----------: | ---------: | --------: |
 | E0   | 1h07 |               1 |       15 |    30 |  27.6k |      109.1k |      1.26M |     $1.68 |
+| E1   | 1h35 |               1 |       41 |    82 |  42.3k |       91.7k |      4.08M |     $2.40 |
 
 ## By task
 
@@ -21,15 +22,26 @@
 | ----- | ---: | --------------: | -------: | ----: | -----: | ----------: | ---------: | --------: |
 | E0-01 | 1h05 |               1 |        9 |    18 |  14.2k |       51.8k |     577.8k |     $0.81 |
 | E0-02 | 0h02 |               1 |        6 |    12 |  13.4k |       57.3k |     680.6k |     $0.86 |
+| E1-01 | 1h31 |               1 |       17 |    34 |  27.5k |       63.3k |      1.26M |     $1.31 |
+| E1-02 | 0h04 |               1 |       24 |    48 |  14.8k |       28.5k |      2.82M |     $1.09 |
 
 ## By work block
 
 | Block           | Time | Claude sessions | Messages | Input | Output | Cache write | Cache read | Est. cost |
 | --------------- | ---: | --------------: | -------: | ----: | -----: | ----------: | ---------: | --------: |
 | B1 (2026-10-19) | 1h07 |               1 |       15 |    30 |  27.6k |      109.1k |      1.26M |     $1.68 |
+| B2 (2026-10-19) | 1h35 |               1 |       41 |    82 |  42.3k |       91.7k |      4.08M |     $2.40 |
 
 ## By Claude session
 
 | Session  | Time | Claude sessions | Messages | Input | Output | Cache write | Cache read | Est. cost |
 | -------- | ---: | --------------: | -------: | ----: | -----: | ----------: | ---------: | --------: |
 | 98aae101 | 1h07 |               1 |       15 |    30 |  27.6k |      109.1k |      1.26M |     $1.68 |
+| 7047ed28 | 1h35 |               1 |       41 |    82 |  42.3k |       91.7k |      4.08M |     $2.40 |
+
+## Unattributed
+
+Messages outside every row window (widen the row or add one):
+
+- `98aae101`: 2 messages, $0.15
+- `7047ed28`: 5 messages, $0.21
