@@ -24,13 +24,13 @@ Feature: Landing
   Scenario: The draft and stats survive a reload
     When they type "come back later"
     And they reload the page
-    Then the hero contains "come back later"
+    Then the editor contains "come back later"
     And the word count is 3
     And the words per minute are above 0
 
   Scenario: Resetting the stats keeps the draft
     When they type "fresh start please"
     And they reset the stats
-    Then the hero contains "fresh start please"
+    Then the editor contains "fresh start please"
     And the word count is 3
     And the words per minute are 0

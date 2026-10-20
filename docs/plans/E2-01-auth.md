@@ -37,8 +37,11 @@ Register, log in, log out with server-validated sessions. Behaviour:
        boot. Rules in `src/server/auth/rules.ts` (shared with forms), enforced by a
        Better Auth `before` hook; `safeNext` in `src/lib/safe-next.ts`. Statuses:
        invalid 400, duplicate email 422, bad credentials 401.
-3. [ ] Step definitions, confirm red (separate agent). Fresh SQLite per run → unique emails per
-       scenario; second device = `browser.newContext()`; rejected session =
-       replay the old cookie against the backend.
+3. [ ] **Next.** Step definitions, confirm red (separate agent). Vocabulary
+       phrases go in `e2e/steps/common.steps.ts`, the rest in `auth.steps.ts`.
+       Fresh SQLite per run → unique emails per scenario; second device =
+       `browser.newContext()`; rejected session = replay the old cookie against
+       `/api/auth/get-session`. Playwright reuses any server on :3100: kill stale
+       ones after a rebuild.
 4. [ ] UI until green (separate agent, `.feature` untouched).
 5. [ ] `pnpm check` + e2e green, ARCHITECTURE/CONTEXT touched up, plan deleted.

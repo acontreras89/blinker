@@ -1,18 +1,18 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useId, useRef } from "react";
 
 type StatProps = {
   value: number;
   label: string;
   /** Counter pop on every change. Callers turn it off under reduced motion. */
   pop?: boolean;
-  testId?: string;
 };
 
-export function Stat({ value, label, pop = false, testId }: StatProps) {
+export function Stat({ value, label, pop = false }: StatProps) {
+  const id = useId();
   const box = useRef<HTMLSpanElement>(null);
-  const num = useRef<HTMLSpanElement>(null);
+  const num = useRef<HTMLOutputElement>(null);
   const previous = useRef(value);
 
   useEffect(() => {
@@ -24,15 +24,17 @@ export function Stat({ value, label, pop = false, testId }: StatProps) {
   return (
     <span className="flex items-baseline gap-2 text-[0.95rem] text-muted-foreground">
       <span ref={box} className="relative inline-block">
-        <span
+        {/* Labelled output, not live: announcing every keystroke is noise. */}
+        <output
           ref={num}
-          data-testid={testId}
+          id={id}
+          aria-live="off"
           className="inline-block text-2xl font-extrabold text-foreground tabular-nums"
         >
           {value}
-        </span>
+        </output>
       </span>
-      {label}
+      <label htmlFor={id}>{label}</label>
     </span>
   );
 }

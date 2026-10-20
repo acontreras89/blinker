@@ -104,8 +104,8 @@ export function Hero({ finePrint }: { finePrint: string }) {
         className="min-h-[1lh] shrink"
       />
       <div className="mt-[clamp(20px,4vh,36px)] flex shrink-0 flex-wrap items-center gap-x-7 gap-y-3 border-t pt-4">
-        <Stat value={stats.words} label="words" pop={pop} testId="words" />
-        <Stat value={wpm} label="per minute" pop={pop} testId="wpm" />
+        <Stat value={stats.words} label="words" pop={pop} />
+        <Stat value={wpm} label="per minute" pop={pop} />
         <button
           type="button"
           onClick={reset}

@@ -1,6 +1,7 @@
 # Step vocabulary
 
-Shared Gherkin phrases, reusable in any feature. Load this instead of reading
+Shared Gherkin phrases, reusable in any feature; their steps live in
+[common.steps.ts](steps/common.steps.ts) once implemented. Load this instead of reading
 every feature. Phrases specific to one feature stay in that feature and are not
 listed here. `{…}` = parameter; actors and nouns from [CONTEXT](../docs/CONTEXT.md).
 
@@ -21,8 +22,10 @@ listed here. `{…}` = parameter; actors and nouns from [CONTEXT](../docs/CONTEX
 
 ## Editing
 
-- `they type {string}`
-- `the editor contains {string}`
+- `they type {string}` · `they delete everything they typed`
+- `the editor contains {string}` — the editor on screen, hero or app
+- `the word count is {int}` · `the words per minute are above 0` ·
+  `the words per minute are 0`
 
 ## Feedback
 

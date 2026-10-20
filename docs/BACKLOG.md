@@ -18,7 +18,8 @@ Coarse tasks grouped by [epic](ROADMAP.md). Flow and rules: [AGENTS.md](../AGENT
 
 - [~] E2-01 Auth → [plan](plans/E2-01-auth.md)
 - [~] E2-02 Extract the BDD flow into a skill + subagents. Done: `bdd-feature`
-  (step 1); left: steps/red and UI/green subagents.
+  (step 1) + [vocabulary](../e2e/VOCABULARY.md); left: steps/red and UI/green
+  subagents; landing stats steps use test ids → accessible queries.
 
 ## E3 — Product and brand concept
 

@@ -9,7 +9,7 @@ Feature: Accounts
       Given a visitor opens the landing
       When they start typing from the landing
       And they register with valid details
-      Then they are in a blank editor
+      Then they are on a blank editor
       And they are logged in
 
     Scenario: What a visitor typed on the landing carries over to the editor
@@ -99,7 +99,7 @@ Feature: Accounts
       When they open the landing
       Then the landing offers to open the app instead of logging in
       When they start typing from the landing
-      Then they are in a blank editor
+      Then they are on a blank editor
 
   Rule: Logging out ends only the current session, on the server
 
