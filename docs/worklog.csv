@@ -13,3 +13,4 @@ date,block,start,end,epic,task,claude_session,note
 2026-10-20,B7,12:43,12:52,E2,E2-02,e4bb536d-4e0d-44dc-a1ea-fb02cbc297f6,Landing stats steps by label instead of test ids; e2e never reuses a server
 2026-10-20,B7,12:52,13:36,E2,E2-01,e4bb536d-4e0d-44dc-a1ea-fb02cbc297f6,Auth step definitions (API setup; UI outcomes by role/name); red on missing UI
 2026-10-20,B7,13:36,13:47,E2,E2-02,e4bb536d-4e0d-44dc-a1ea-fb02cbc297f6,bdd-steps subagent; AGENTS.md points to it
+2026-10-20,B8,12:57,14:00,E5,E5-01,393707e5-8a97-4b47-98fa-c54aa02df29c,"Grill and plan documents + editor (E5-01..03); ADR-0008; brief as local Markdown"
