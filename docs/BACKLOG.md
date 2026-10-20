@@ -16,8 +16,7 @@ Coarse tasks grouped by [epic](ROADMAP.md). Flow and rules: [AGENTS.md](../AGENT
 
 ## E2 — Skeleton, DB, auth
 
-- [ ] E2-01 Register, log in, log out with server-validated sessions; logged-out
-      vs logged-in UI states. First real run of the BDD flow.
+- [~] E2-01 Auth → [plan](plans/E2-01-auth.md)
 - [ ] E2-02 Extract the BDD flow into a skill + subagents.
 
 ## E3 — Product and brand concept
@@ -50,7 +49,8 @@ Coarse tasks grouped by [epic](ROADMAP.md). Flow and rules: [AGENTS.md](../AGENT
 
 - [ ] E7-01 README: setup (<15 min), architecture, tradeoffs, Stripe test flow,
       known limitations, how AI was used.
-- [ ] E7-02 Write-up: active subscriber rule, delayed webhook, one security decision.
+- [ ] E7-02 Write-up: active subscriber rule, delayed webhook, one security decision
+      ([notes](security-notes.md)).
 
 ## E8 — Polish
 

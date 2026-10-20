@@ -64,9 +64,14 @@ Small tasks skip the plan and keep their state in the backlog entry.
 
 UI behaviour is specified before it is built, with Playwright + Gherkin:
 
-1. Grilling on the behaviour → a `.feature` file.
+1. Grilling on the behaviour → a `.feature` file. Features are declarative:
+   behaviour in domain language, no routes, controls, layout or copy.
 2. An agent writes the step definitions and confirms the scenario is **red**.
-3. A separate agent builds the UI until it is **green**, without editing the `.feature`.
+   Steps locate by accessible role and name only and prescribe as little UI as
+   possible.
+3. A separate agent builds the UI until it is **green**, without editing the
+   `.feature`. UI decisions are made here: prototype freely, any UI that passes
+   is valid.
 
 To be refined on its first real use (E2), likely into a project skill plus two
 subagents (steps / implement) so red and green run in separate contexts.
