@@ -12,3 +12,5 @@ Running cheat sheet for the E7-02 write-up. One line per decision, link the code
 - **Server-side sessions.** httpOnly cookie checked against the DB on every
   request ([ADR-0003](adr/0003-better-auth.md)); logout revokes only the current
   session, other devices stay logged in.
+- **Default auth rate limit.** Better Auth's built-in limiter is on in
+  production; only e2e turns it off (`AUTH_RATE_LIMIT=off`).

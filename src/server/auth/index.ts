@@ -11,6 +11,11 @@ const rules = { "/sign-up/email": signUpInput, "/sign-in/email": signInInput };
 export const auth = betterAuth({
   database: drizzleAdapter(db, { provider: "sqlite", usePlural: true }),
   emailAndPassword: { enabled: true, autoSignIn: true, minPasswordLength: 8 },
+  // Built-in limiter, on in production. E2E turns it off: every scenario signs
+  // up and logs in from the same address.
+  rateLimit: {
+    enabled: process.env.AUTH_RATE_LIMIT === "off" ? false : undefined,
+  },
   hooks: {
     before: createAuthMiddleware(async (ctx) => {
       const schema = rules[ctx.path as keyof typeof rules];

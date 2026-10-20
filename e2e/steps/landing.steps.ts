@@ -1,7 +1,5 @@
 import { expect } from "@playwright/test";
-import { createBdd } from "playwright-bdd";
-
-const { When, Then } = createBdd();
+import { Then, When } from "./fixtures";
 
 Then("they see the product name", async ({ page }) => {
   await expect(page.getByRole("heading", { level: 1 })).toContainText(

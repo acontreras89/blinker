@@ -24,6 +24,7 @@ export default defineConfig({
       DATABASE_URL: `data/e2e-${Date.now()}.db`,
       BETTER_AUTH_SECRET: "e2e-secret-at-least-32-characters-long",
       BETTER_AUTH_URL: `http://localhost:${PORT}`,
+      AUTH_RATE_LIMIT: "off",
     },
   },
 });
