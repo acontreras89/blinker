@@ -10,3 +10,6 @@ date,block,start,end,epic,task,claude_session,note
 2026-10-20,B5,12:06,12:22,E2,E2-01,186395a0-f34f-453a-ad2d-17350d71c894,Better Auth + Drizzle/SQLite; shared Zod rules; safeNext; backend tests
 2026-10-20,B5,12:22,12:44,E2,E2-02,186395a0-f34f-453a-ad2d-17350d71c894,Align landing and auth features on shared vocabulary steps
 2026-10-20,B6,12:35,13:00,E4,E4-02,83118c95-fc7d-4026-bbf9-42e277871cbe,Favicon (B + cursor); OG image with tagline; 404/500; Terms/Privacy stubs
+2026-10-20,B7,12:43,12:52,E2,E2-02,e4bb536d-4e0d-44dc-a1ea-fb02cbc297f6,Landing stats steps by label instead of test ids; e2e never reuses a server
+2026-10-20,B7,12:52,13:36,E2,E2-01,e4bb536d-4e0d-44dc-a1ea-fb02cbc297f6,Auth step definitions (API setup; UI outcomes by role/name); red on missing UI
+2026-10-20,B7,13:36,13:47,E2,E2-02,e4bb536d-4e0d-44dc-a1ea-fb02cbc297f6,bdd-steps subagent; AGENTS.md points to it
