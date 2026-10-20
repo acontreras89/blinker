@@ -82,7 +82,10 @@ ours → `fixup` + rebase onto it, not a new unrelated commit. No push until E9.
 
 ## Worklog
 
-At the end of each work block (ask the user the real end time):
+At the end of each work block (ask the user the real end time). The worklog is
+the last thing touched: close everything first (task/plan state, backlog,
+docs, commits), skipping pending validations if needed. If something can't be
+closed, ask before logging; never log with work pending.
 
 1. Close/add rows in [docs/worklog.csv](docs/worklog.csv): one row per epic/task
    touched, with the Claude session id (`date,block,start,end,epic,task,claude_session,note`).

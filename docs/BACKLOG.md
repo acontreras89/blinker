@@ -26,7 +26,7 @@ Coarse tasks grouped by [epic](ROADMAP.md). Flow and rules: [AGENTS.md](../AGENT
 
 ## E4 — Minimal landing
 
-- [~] E4-01 Landing → [plan](plans/E4-01-landing.md)
+- [x] E4-01 Landing: live hero editor (shared Tiptap component), plan-driven pricing
 - [ ] E4-02 Meta/OG/favicon, 404/500 pages, Terms/Privacy stubs in the footer.
 
 ## E5 — Documents and editor
