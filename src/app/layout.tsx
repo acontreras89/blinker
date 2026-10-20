@@ -1,20 +1,27 @@
 import type { Metadata } from "next";
-import { Hanken_Grotesk } from "next/font/google";
+import { brand } from "@/lib/brand";
+import { fontClass } from "./fonts";
 import "./globals.css";
 
-const hanken = Hanken_Grotesk({
-  variable: "--font-hanken",
-  subsets: ["latin"],
-});
+const title = `${brand.name}. ${brand.tagline}`;
 
 export const metadata: Metadata = {
-  title: "Blinker",
-  description: "A rich text editor for people who should be writing right now.",
+  // The public app URL; Better Auth needs the same one.
+  metadataBase: new URL(process.env.BETTER_AUTH_URL ?? "http://localhost:3000"),
+  title: { default: title, template: `%s · ${brand.name}` },
+  description: brand.description,
+  openGraph: {
+    siteName: brand.name,
+    title,
+    description: brand.description,
+    type: "website",
+  },
+  twitter: { card: "summary_large_image" },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${hanken.variable} h-full antialiased`}>
+    <html lang="en" className={fontClass}>
       <body className="flex min-h-full flex-col text-lg leading-[1.55]">
         {children}
       </body>

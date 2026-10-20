@@ -22,8 +22,9 @@ and procrastinate instead. Power-user minded: opinionated, few features, done we
 
 ## Voice
 
-Cheeky, impatient, a bit insolent: the cursor is judging you. Primary CTA is
-always **Start typing**.
+Cheeky, impatient, a bit insolent: the cursor is judging you. Tagline: **The
+cursor is waiting.** (runners-up: _Stop reading. Start typing._, _Start
+typing._). Primary CTA is always **Start typing**.
 
 - Jokes live in marketing and mouse-driven moments: empty states, save feedback,
   sidebar. **Never while typing**: then only the counter speaks.

@@ -19,15 +19,15 @@ export default function MarketingLayout({ children }: LayoutProps<"/">) {
           aria-label="Main"
           className="ml-auto flex items-center gap-6 text-base font-medium whitespace-nowrap"
         >
-          <a className={`${navLink} max-md:hidden`} href="#editor">
+          <Link className={`${navLink} max-md:hidden`} href="/#editor">
             What it does
-          </a>
-          <a className={`${navLink} max-md:hidden`} href="#pricing">
+          </Link>
+          <Link className={`${navLink} max-md:hidden`} href="/#pricing">
             Pricing
-          </a>
-          <a className={`${navLink} max-md:hidden`} href="#faq">
+          </Link>
+          <Link className={`${navLink} max-md:hidden`} href="/#faq">
             FAQ
-          </a>
+          </Link>
           <Link className={navLink} href="/login">
             Log in
           </Link>
@@ -40,7 +40,15 @@ export default function MarketingLayout({ children }: LayoutProps<"/">) {
       <footer className="border-t">
         <div className="wrap flex flex-wrap justify-between gap-4 pt-6 pb-24 text-[0.9rem] text-muted-foreground">
           <span>Blinker. Made by people who should also be writing.</span>
-          <span>© 2026</span>
+          <span className="flex gap-6">
+            <Link className={navLink} href="/terms">
+              Terms
+            </Link>
+            <Link className={navLink} href="/privacy">
+              Privacy
+            </Link>
+            <span>© 2026</span>
+          </span>
         </div>
       </footer>
     </>
