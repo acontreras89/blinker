@@ -15,7 +15,9 @@ export default defineConfig({
   webServer: {
     command: `pnpm build && pnpm start --port ${PORT}`,
     url: `http://localhost:${PORT}`,
-    reuseExistingServer: !process.env.CI,
+    // Never reuse: a stale server from another agent fails fast instead of
+    // silently testing old code.
+    reuseExistingServer: false,
     timeout: 180_000,
     // Fresh database per run; unique emails keep scenarios independent.
     env: {
