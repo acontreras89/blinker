@@ -14,3 +14,6 @@ Running cheat sheet for the E7-02 write-up. One line per decision, link the code
   session, other devices stay logged in.
 - **Default auth rate limit.** Better Auth's built-in limiter is on in
   production; only e2e turns it off (`AUTH_RATE_LIMIT=off`).
+- **Foreign documents are 404, not 403.** Ownership is checked on every
+  document request; another user's id answers like a missing one, so ids can't
+  be probed. Short ids are not secrets ([ADR-0008](adr/0008-document-persistence.md)).

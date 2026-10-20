@@ -32,13 +32,9 @@ Coarse tasks grouped by [epic](ROADMAP.md). Flow and rules: [AGENTS.md](../AGENT
 
 ## E5 — Documents and editor
 
-- [ ] E5-01 Document list (title, last updated), create with default title,
-      rename, delete with confirmation, empty states. The landing hero draft
-      (`localStorage`) becomes the first document after signup.
-- [ ] E5-02 Rich text editing and save to backend, failed-save handling. Same
-      document in two tabs: last write wins, but warn.
-- [ ] E5-03 Chromeless editor: shortcuts + Markdown input rules, toolbar on request
-      (Simple Editor's toolbar hidden by default); live words + WPM.
+- [~] E5-01 Document list, create, rename, delete, hero draft → planned 2026-10-20, [plan](plans/E5-documents.md)
+- [~] E5-02 Save to backend, failed-save handling, two-tab warning → [plan](plans/E5-documents.md)
+- [~] E5-03 Chromeless editor, toolbar on request, live stats → [plan](plans/E5-documents.md)
 
 ## E6 — Stripe and gating
 
@@ -69,6 +65,9 @@ Coarse tasks grouped by [epic](ROADMAP.md). Flow and rules: [AGENTS.md](../AGENT
       script; record one video of the whole flow.
 - [ ] E9-02 Fresh-machine check, push to GitHub, submission reply (repo, time,
       sprint questions).
+- [ ] E9-03 Check every landing claim holds: autosave ("It saves", "Saved,
+      Saving, or exactly what went wrong"), ⌘B/I/K + Markdown, toolbar on
+      request, live words + WPM.
 
 ## EX — Extras (by priority)
 
@@ -82,3 +81,9 @@ Coarse tasks grouped by [epic](ROADMAP.md). Flow and rules: [AGENTS.md](../AGENT
 - [ ] EX-07 Account deletion and data export (GDPR).
 - [ ] EX-08 Rate limiting on auth.
 - [ ] EX-09 Observability: structured logs, error tracking.
+- [ ] EX-10 Document sidebar: the list on the left edge, revealed by the mouse,
+      pinnable.
+- [ ] EX-11 Autosave hardening: retry with backoff, local backup of unsaved
+      changes (restore on reload, cleared on logout).
+- [ ] EX-12 List sorting (name / last updated, user's choice) and folders.
+- [ ] EX-13 Diff saves (ProseMirror steps) instead of the whole JSON ([ADR-0008](adr/0008-document-persistence.md)).

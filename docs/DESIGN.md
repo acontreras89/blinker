@@ -12,8 +12,9 @@ and procrastinate instead. Power-user minded: opinionated, few features, done we
 - Chromeless by default: a blank page and a cursor. Keyboard shortcuts (⌘B/I/K)
   and Markdown input rules (`#`, `-`, `>`); toolbar only on request. On touch
   devices (no shortcuts) a compact toolbar shows above the keyboard.
-- Autosave with a quiet status: Saved, Saving, or a warning while it retries;
-  destructive only when work is at risk.
+- Autosave plus manual save (⌘S, button), with a quiet status: Unsaved, Saving,
+  Saved; a warning while autosave retries, an error when a manual save fails.
+  Never hidden when work is at risk.
 - Live stats: words in the document, and words per minute over the words
   actually written (deleting never lowers your speed).
 - Not included, on purpose: AI, collaboration, export.
