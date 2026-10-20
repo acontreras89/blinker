@@ -6,6 +6,7 @@ node_modules/
 
 # Assignment brief: not ours to publish
 *.pdf
+/take-home-assignment-*.md
 
 # Next.js
 /.next/

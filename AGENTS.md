@@ -1,8 +1,9 @@
 # AGENTS.md
 
 Take-home assignment for LeadTech: a web rich text editor with a marketing site,
-email/password auth and Stripe (test mode) subscriptions. The brief is the local,
-uncommitted `take-home-assignment-web-deployed-rich-text-editor.pdf`.
+email/password auth and Stripe (test mode) subscriptions. The brief is local and
+uncommitted: `take-home-assignment-web-deployed-rich-text-editor.md` (text
+transcript of the `.pdf`; read the `.md`).
 
 ## Rule #1: be terse
 
