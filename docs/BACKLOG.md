@@ -26,14 +26,16 @@ Coarse tasks grouped by [epic](ROADMAP.md). Flow and rules: [AGENTS.md](../AGENT
 
 ## E4 — Minimal landing
 
-- [ ] E4-01 Value proposition, CTA, pricing, trust elements; responsive. Port
-      `docs/design/landing.html` and its tokens to the app.
+- [~] E4-01 Landing → [plan](plans/E4-01-landing.md)
+- [ ] E4-02 Meta/OG/favicon, 404/500 pages, Terms/Privacy stubs in the footer.
 
 ## E5 — Documents and editor
 
 - [ ] E5-01 Document list (title, last updated), create with default title,
-      rename, delete with confirmation, empty states.
-- [ ] E5-02 Rich text editing and save to backend, failed-save handling.
+      rename, delete with confirmation, empty states. The landing hero draft
+      (`localStorage`) becomes the first document after signup.
+- [ ] E5-02 Rich text editing and save to backend, failed-save handling. Same
+      document in two tabs: last write wins, but warn.
 - [ ] E5-03 Chromeless editor: shortcuts + Markdown input rules, toolbar on request
       (Simple Editor's toolbar hidden by default); live words + WPM.
 
@@ -42,7 +44,7 @@ Coarse tasks grouped by [epic](ROADMAP.md). Flow and rules: [AGENTS.md](../AGENT
 - [ ] E6-01 Checkout + verified webhook → entitlements ([ADR-0006](adr/0006-own-billing-entitlements.md)).
       Subscription + one of trial/lifetime; the other goes to EX-05.
 - [ ] E6-02 Server-side gating, non-subscriber/subscriber UI states, upgrade
-      path, visible subscription status.
+      path, visible subscription status (incl. `past_due` / failed payment).
 
 ## E7 — Written deliverables
 
@@ -74,3 +76,7 @@ Coarse tasks grouped by [epic](ROADMAP.md). Flow and rules: [AGENTS.md](../AGENT
 - [ ] EX-04 Version history: manual "save version" vs autosave checkpoints,
       history panel with preview and restore. E5 ships the minimal save only.
 - [ ] EX-05 Whichever of trial (7 days, card, 3 docs) / lifetime E6 skipped.
+- [ ] EX-06 Password reset and email verification.
+- [ ] EX-07 Account deletion and data export (GDPR).
+- [ ] EX-08 Rate limiting on auth.
+- [ ] EX-09 Observability: structured logs, error tracking.
