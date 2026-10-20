@@ -1,0 +1,48 @@
+import Link from "next/link";
+import { Cursor } from "@/components/cursor";
+import { buttonVariants } from "@/components/ui/button";
+
+const navLink = "text-muted-foreground no-underline hover:text-foreground";
+
+export default function MarketingLayout({ children }: LayoutProps<"/">) {
+  return (
+    <>
+      <header className="wrap flex h-20 shrink-0 items-center gap-6">
+        <Link
+          href="/"
+          className="text-[1.35rem] font-extrabold tracking-[-0.02em]"
+        >
+          Blinker
+          <Cursor />
+        </Link>
+        <nav
+          aria-label="Main"
+          className="ml-auto flex items-center gap-6 text-base font-medium whitespace-nowrap"
+        >
+          <a className={`${navLink} max-md:hidden`} href="#editor">
+            What it does
+          </a>
+          <a className={`${navLink} max-md:hidden`} href="#pricing">
+            Pricing
+          </a>
+          <a className={`${navLink} max-md:hidden`} href="#faq">
+            FAQ
+          </a>
+          <Link className={navLink} href="/login">
+            Log in
+          </Link>
+          <Link href="/signup" className={buttonVariants({ size: "xl" })}>
+            Start typing
+          </Link>
+        </nav>
+      </header>
+      <main className="flex-1">{children}</main>
+      <footer className="border-t">
+        <div className="wrap flex flex-wrap justify-between gap-4 pt-6 pb-24 text-[0.9rem] text-muted-foreground">
+          <span>Blinker. Made by people who should also be writing.</span>
+          <span>© 2026</span>
+        </div>
+      </footer>
+    </>
+  );
+}

@@ -34,8 +34,9 @@ throwaway reference: behaviour below wins over it.
 
 ## Steps
 
-1. [ ] `e2e/features/landing.feature` + steps, red. Replaces the smoke feature.
-2. [ ] Tokens, font, route group, static sections.
-3. [ ] Pricing component + presets + dev preview.
-4. [ ] Editor component + stats + persistence; hero sizing.
-5. [ ] Green, `pnpm check`, visual pass light/dark/mobile.
+1. [x] `e2e/features/landing.feature` + steps, red. Replaces the smoke feature.
+2. [x] Tokens, font, route group, static sections.
+3. [x] Pricing component + presets + dev preview.
+4. [x] Editor component + stats + persistence; hero sizing.
+5. [x] Green, `pnpm check`, visual pass light/dark/mobile.
+6. [ ] User review; then close (delete plan, collapse task).
