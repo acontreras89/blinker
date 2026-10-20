@@ -32,9 +32,11 @@ Register, log in, log out with server-validated sessions. Behaviour:
 
 ## Steps
 
-1. [x] Grilling → `auth.feature` (pending user review).
-2. [ ] Better Auth + Drizzle (not installed yet) schema/migrations; Vitest for backend validation
-       (invalid email, short password, empty name → 400) and `safeNext`.
+1. [x] Grilling → `auth.feature`.
+2. [x] Better Auth + Drizzle (`better-sqlite3`), migrations in `drizzle/` run on
+       boot. Rules in `src/server/auth/rules.ts` (shared with forms), enforced by a
+       Better Auth `before` hook; `safeNext` in `src/lib/safe-next.ts`. Statuses:
+       invalid 400, duplicate email 422, bad credentials 401.
 3. [ ] Step definitions, confirm red (separate agent). Fresh SQLite per run → unique emails per
        scenario; second device = `browser.newContext()`; rejected session =
        replay the old cookie against the backend.

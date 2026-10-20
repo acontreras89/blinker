@@ -17,5 +17,11 @@ export default defineConfig({
     url: `http://localhost:${PORT}`,
     reuseExistingServer: !process.env.CI,
     timeout: 180_000,
+    // Fresh database per run; unique emails keep scenarios independent.
+    env: {
+      DATABASE_URL: `data/e2e-${Date.now()}.db`,
+      BETTER_AUTH_SECRET: "e2e-secret-at-least-32-characters-long",
+      BETTER_AUTH_URL: `http://localhost:${PORT}`,
+    },
   },
 });
