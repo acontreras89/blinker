@@ -36,3 +36,7 @@ Running cheat sheet for the E7-02 write-up. One line per decision, link the code
   deleting your own documents still work.
 - **The fake billing gateway is test-only.** It is enabled by an e2e env var,
   and the server refuses to boot with it under `NODE_ENV=production`.
+- **One trial per user.** Checkout offers the trial only to users who never
+  had a subscription.
+- **Test keys enforced in code.** The server refuses to boot unless
+  `STRIPE_SECRET_KEY` starts with `sk_test_`.

@@ -23,7 +23,13 @@ path, visible status. Base: [ADR-0006](../adr/0006-own-billing-entitlements.md),
 - **Upgrade path.** Non-subscriber: fixed "Subscribe to start writing" banner
   in `/app`; "New document" opens Checkout; read-only editor shows the same CTA.
   Trial at the limit: creating a 2nd document shows "Your trial includes 1
-  document" (backend 403 anyway). Copy polish → E8-04.
+  document" (backend 403 anyway) with "Start paying now" (ends the trial,
+  `trial_end: "now"`). Copy polish → E8-04.
+- **One trial per user.** Offered only if the user never had a subscription.
+- **Customer.** Created in Stripe on the first Checkout, `customer_id` stored
+  on the user and reused. Abandoning Checkout leaves a registered
+  non-subscriber; that is the normal entry to the upgrade path.
+- **Keys.** The server refuses to boot unless `STRIPE_SECRET_KEY` is `sk_test_`.
 - **Status.** `/account/billing`: plan and state (trial ends / renews /
   past due / access until).
 - **E2E.** A `BillingGateway` port: Stripe in dev/prod, a fake in e2e (local
@@ -35,9 +41,7 @@ path, visible status. Base: [ADR-0006](../adr/0006-own-billing-entitlements.md),
 ## Open
 
 - Customer Portal (EX-01) for cancel / card / invoices vs own buttons.
-- "Start paying now" (end trial early) in E6 or extra.
-- One trial per user; test-key guard; events list; when the Customer is
-  created.
+- Double Checkout (two tabs, two subscriptions); events list.
 
 ## Steps
 
