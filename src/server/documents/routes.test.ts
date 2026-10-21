@@ -1,6 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import { app } from "../app";
+import { fakeBilling } from "../billing/fake";
 import { CONTENT_MAX_BYTES } from "./rules";
 
 const doc = (text: string) => ({
@@ -26,6 +27,25 @@ async function signUp() {
   );
   return res.headers.get("set-cookie")!.split(";")[0];
 }
+
+const billing = (cookie: string, path: string, body?: unknown) =>
+  app.request(`/billing${path}`, {
+    method: "POST",
+    headers: { cookie, "content-type": "application/json" },
+    body: body === undefined ? undefined : JSON.stringify(body),
+  });
+
+/** Pays Checkout on the fake and comes back: on the trial, or paying. */
+async function subscribe(cookie: string, trial = false) {
+  const { url } = await (await billing(cookie, "/checkout")).json();
+  const sessionId = url.split("/").at(-1);
+  fakeBilling.complete(sessionId);
+  await billing(cookie, "/return", { sessionId });
+  if (!trial) await billing(cookie, "/trial/end");
+  return cookie;
+}
+
+const subscriber = async () => subscribe(await signUp());
 
 // A tiny client bound to one user's cookie.
 function as(cookie: string) {
@@ -55,8 +75,8 @@ function as(cookie: string) {
 let ada: ReturnType<typeof as>;
 let eve: ReturnType<typeof as>;
 beforeAll(async () => {
-  ada = as(await signUp());
-  eve = as(await signUp());
+  ada = as(await subscriber());
+  eve = as(await subscriber());
 });
 afterEach(() => vi.unstubAllEnvs());
 
@@ -66,7 +86,7 @@ describe("documents", () => {
   });
 
   it("are numbered among the user's own titles", async () => {
-    const user = as(await signUp());
+    const user = as(await subscriber());
     await user.create();
     const second = await user.create();
     await eve.create();
@@ -97,7 +117,7 @@ describe("documents", () => {
   });
 
   it("list the most recently updated first", async () => {
-    const user = as(await signUp());
+    const user = as(await subscriber());
     const old = await user.create();
     await user.create();
     await user.save(old.id, "touched", old.revision);
@@ -184,7 +204,7 @@ describe("renaming", () => {
 
   // Duplicates are allowed on purpose: identity is the id (ADR-0008).
   it("allows duplicate titles", async () => {
-    const user = as(await signUp());
+    const user = as(await subscriber());
     const a = await user.create();
     const b = await user.create();
     await user.rename(a.id, "Draft");
@@ -199,6 +219,40 @@ describe("deleting", () => {
     expect((await ada.remove(id)).status).toBe(204);
     expect((await ada.get(id)).status).toBe(404);
     expect((await ada.remove(id)).status).toBe(404);
+  });
+});
+
+describe("without access", () => {
+  it("refuses writing but lets them read and delete", async () => {
+    vi.stubEnv("E2E_SEED", "on");
+    const cookie = await signUp();
+    const user = as(cookie);
+    const seeded = await app.request("/api/e2e/documents", {
+      method: "POST",
+      headers: { cookie, "content-type": "application/json" },
+      body: JSON.stringify({ title: "Old notes" }),
+    });
+    const { id } = await seeded.json();
+    const refused = { error: "no_access" };
+    const create = await user.call("POST", "", { content: doc("new") });
+    expect([create.status, await create.json()]).toEqual([403, refused]);
+    expect((await user.save(id, "edited", 1)).status).toBe(403);
+    expect((await user.rename(id, "Renamed")).status).toBe(403);
+    expect((await user.get(id)).status).toBe(200);
+    expect((await user.remove(id)).status).toBe(204);
+  });
+
+  it("on a trial, caps how many documents exist at once", async () => {
+    const user = as(await subscribe(await signUp(), true));
+    const { id } = await user.create("first");
+    const second = await user.call("POST", "", { content: doc("second") });
+    expect(second.status).toBe(403);
+    expect(await second.json()).toEqual({ error: "trial_limit" });
+    expect((await user.save(id, "edited", 1)).status).toBe(200);
+    await user.remove(id);
+    expect(
+      (await user.call("POST", "", { content: doc("again") })).status,
+    ).toBe(201);
   });
 });
 

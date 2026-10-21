@@ -1,13 +1,16 @@
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { bodyLimit } from "hono/body-limit";
+import { createMiddleware } from "hono/factory";
 import { z } from "zod";
 import { requireUser, type User } from "../auth/middleware";
+import { getAccess } from "../billing/access";
 import { CONTENT_MAX_BYTES, content, title, type Content } from "./rules";
 import {
   createDocument,
   deleteDocument,
   getDocument,
+  countDocuments,
   listDocuments,
   renameDocument,
   saveContent,
@@ -26,7 +29,24 @@ const dates = (d: { createdAt: Date; updatedAt: Date }) => ({
   updatedAt: d.updatedAt.toISOString(),
 });
 
-// A logged-in user's own documents; E6 adds access checks to the writes.
+// Writing needs access (docs/plans/E6-billing.md); reading and deleting don't.
+// A trial also caps how many documents exist at once. Everything after this
+// runs synchronously on SQLite, so the count can't race the insert.
+const noAccess = { error: "no_access" } as const;
+const trialLimit = { error: "trial_limit" } as const;
+const canWrite = (creating: boolean) =>
+  createMiddleware<{ Variables: { user: User } }>(async (c, next) => {
+    const userId = c.var.user.id;
+    const access = getAccess(userId);
+    if (!access) return c.json(noAccess, 403);
+    const { documentLimit } = access;
+    if (creating && documentLimit !== null)
+      if (countDocuments(userId) >= documentLimit)
+        return c.json(trialLimit, 403);
+    await next();
+  });
+
+// A logged-in user's own documents.
 export const documentRoutes = new Hono<{ Variables: { user: User } }>()
   .use(requireUser)
   .get("/", (c) => {
@@ -36,11 +56,17 @@ export const documentRoutes = new Hono<{ Variables: { user: User } }>()
     }));
     return c.json({ documents });
   })
-  .post("/", limit, zValidator("json", z.object({ content })), (c) => {
-    const d = createDocument(c.var.user.id, c.req.valid("json").content);
-    const { id, title, revision } = d;
-    return c.json({ document: { id, title, revision, ...dates(d) } }, 201);
-  })
+  .post(
+    "/",
+    canWrite(true),
+    limit,
+    zValidator("json", z.object({ content })),
+    (c) => {
+      const d = createDocument(c.var.user.id, c.req.valid("json").content);
+      const { id, title, revision } = d;
+      return c.json({ document: { id, title, revision, ...dates(d) } }, 201);
+    },
+  )
   .get("/:id", (c) => {
     const d = getDocument(c.var.user.id, c.req.param("id"));
     if (!d) return c.json(missing, 404);
@@ -56,6 +82,7 @@ export const documentRoutes = new Hono<{ Variables: { user: User } }>()
   })
   .put(
     "/:id/content",
+    canWrite(false),
     limit,
     zValidator(
       "json",
@@ -87,15 +114,20 @@ export const documentRoutes = new Hono<{ Variables: { user: User } }>()
       });
     },
   )
-  .patch("/:id", zValidator("json", z.object({ title })), (c) => {
-    const d = renameDocument(
-      c.var.user.id,
-      c.req.param("id"),
-      c.req.valid("json").title,
-    );
-    if (!d) return c.json(missing, 404);
-    return c.json({ title: d.title, updatedAt: d.updatedAt.toISOString() });
-  })
+  .patch(
+    "/:id",
+    canWrite(false),
+    zValidator("json", z.object({ title })),
+    (c) => {
+      const d = renameDocument(
+        c.var.user.id,
+        c.req.param("id"),
+        c.req.valid("json").title,
+      );
+      if (!d) return c.json(missing, 404);
+      return c.json({ title: d.title, updatedAt: d.updatedAt.toISOString() });
+    },
+  )
   .delete("/:id", (c) => {
     if (!deleteDocument(c.var.user.id, c.req.param("id")))
       return c.json(missing, 404);

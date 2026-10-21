@@ -1,4 +1,4 @@
-import { and, desc, eq, sql } from "drizzle-orm";
+import { and, count, desc, eq, sql } from "drizzle-orm";
 import { customAlphabet } from "nanoid";
 import { db } from "../db";
 import { documents } from "../db/schema";
@@ -29,6 +29,14 @@ export function listDocuments(userId: string) {
     .where(eq(documents.userId, userId))
     .orderBy(desc(documents.updatedAt), desc(sql`rowid`))
     .all();
+}
+
+export function countDocuments(userId: string) {
+  return db
+    .select({ n: count() })
+    .from(documents)
+    .where(eq(documents.userId, userId))
+    .get()!.n;
 }
 
 export function getDocument(userId: string, id: string) {
