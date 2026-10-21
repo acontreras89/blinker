@@ -70,6 +70,9 @@ async function openDocument(
   }
   await page.clock.install();
   await page.goto(documentPath(doc.id));
+  // Ready once the editor is there: a key pressed before the page is
+  // interactive would go nowhere.
+  await expect(editor(page)).toBeVisible();
 }
 
 const editing = (seed: { title?: string; text?: string }, touch = false) =>
@@ -406,8 +409,11 @@ Then(
     const role = (r: "strong" | "emphasis" | "code" | "blockquote") =>
       expect(box.getByRole(r).filter({ hasText: exact })).toBeVisible();
     const list = async (marker: RegExp) => {
-      const item = box.getByRole("listitem").filter({ hasText: exact });
-      await expect(item).toBeVisible();
+      const item = page.getByRole("listitem").filter({ hasText: exact });
+      await expect(
+        box.getByRole("listitem").filter({ hasText: exact }),
+      ).toBeVisible();
+      // `has` is relative to the list: the item locator must not start at the box.
       await expect(box.getByRole("list").filter({ has: item })).toHaveCSS(
         "list-style-type",
         marker,

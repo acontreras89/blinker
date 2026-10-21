@@ -2,33 +2,50 @@
 
 import {
   EditorContent,
+  Extension,
+  textblockTypeInputRule,
   useEditor,
   type Editor as TiptapEditor,
+  type JSONContent,
 } from "@tiptap/react";
+import { AllSelection, Selection } from "@tiptap/pm/state";
 import StarterKit from "@tiptap/starter-kit";
 import { useEffect, useRef } from "react";
 
 export type TiptapProps = {
   label: string;
   autofocus: boolean;
+  content?: JSONContent;
   onCreate: (editor: TiptapEditor) => void;
   onUpdate: (editor: TiptapEditor) => void;
+  /** ⌘K: the caller opens its link field. Unset, the shortcut does nothing. */
+  onLinkShortcut?: (editor: TiptapEditor) => void;
 };
 
 /** Client-only (Tiptap reads randomness while rendering); see editor.tsx. */
 export default function Tiptap({
   label,
   autofocus,
+  content,
   onCreate,
   onUpdate,
+  onLinkShortcut,
 }: TiptapProps) {
-  const callbacks = useRef({ onCreate, onUpdate });
+  const callbacks = useRef({ onCreate, onUpdate, onLinkShortcut });
   useEffect(() => {
-    callbacks.current = { onCreate, onUpdate };
+    callbacks.current = { onCreate, onUpdate, onLinkShortcut };
   });
 
   const editor = useEditor({
-    extensions: [StarterKit],
+    extensions: [
+      StarterKit.configure({
+        heading: { levels: [1, 2, 3] },
+        underline: false,
+        link: { openOnClick: false, defaultProtocol: "https" },
+      }),
+      Shortcuts,
+    ],
+    content,
     autofocus: autofocus && "end",
     editorProps: {
       attributes: {
@@ -42,5 +59,55 @@ export default function Tiptap({
     onUpdate: ({ editor }) => callbacks.current.onUpdate(editor),
   });
 
+  useEffect(() => {
+    const dom = editor?.view.dom;
+    if (!dom) return;
+    const claim = (event: Event) => {
+      const open = callbacks.current.onLinkShortcut;
+      if (!open) return;
+      event.preventDefault();
+      open(editor);
+    };
+    dom.addEventListener(LINK_EVENT, claim);
+    return () => dom.removeEventListener(LINK_EVENT, claim);
+  }, [editor]);
+
   return <EditorContent editor={editor} />;
 }
+
+// What StarterKit leaves out or gets wrong for Blinker:
+// - "```" opens a code block at once. The default rule waits for a space and
+//   takes the word before it as the language, so "```let x" lost the "let".
+// - An arrow key after ⌘A collapses the selection. ProseMirror leaves that to
+//   the browser, which changes nothing in an empty document: the "all"
+//   selection stayed and the next format applied to nothing.
+// - ⌘K asks the page for a link: handled only if a listener claims the event.
+const LINK_EVENT = "blinker:link";
+const Shortcuts = Extension.create({
+  name: "blinkerShortcuts",
+  addInputRules() {
+    const type = this.editor.schema.nodes.codeBlock;
+    return [textblockTypeInputRule({ find: /^(```|~~~)$/, type })];
+  },
+  addKeyboardShortcuts() {
+    const collapse = (toEnd: boolean) => () => {
+      const { state, view } = this.editor;
+      if (!(state.selection instanceof AllSelection)) return false;
+      const to = toEnd
+        ? Selection.atEnd(state.doc)
+        : Selection.atStart(state.doc);
+      view.dispatch(state.tr.setSelection(to).scrollIntoView());
+      return true;
+    };
+    return {
+      ArrowRight: collapse(true),
+      ArrowDown: collapse(true),
+      ArrowLeft: collapse(false),
+      ArrowUp: collapse(false),
+      "Mod-k": () =>
+        !this.editor.view.dom.dispatchEvent(
+          new Event(LINK_EVENT, { cancelable: true }),
+        ),
+    };
+  },
+});

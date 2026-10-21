@@ -1,6 +1,6 @@
 "use client";
 
-import type { Editor as TiptapEditor } from "@tiptap/react";
+import type { JSONContent, Editor as TiptapEditor } from "@tiptap/react";
 import { cn } from "cn";
 import dynamic from "next/dynamic";
 import { useState } from "react";
@@ -21,8 +21,12 @@ type EditorProps = {
   size?: "display" | "page";
   /** Focus on load, cursor at the end: the page is ready to type. */
   autofocus?: boolean;
+  /** Initial content; later changes go through the editor's commands. */
+  content?: JSONContent;
   onCreate?: (editor: TiptapEditor) => void;
   onUpdate?: (editor: TiptapEditor) => void;
+  /** ⌘K: open a link field. Unset, the shortcut does nothing. */
+  onLinkShortcut?: (editor: TiptapEditor) => void;
   /** The scroll box: give it a max height and the content scrolls inside. */
   className?: string;
 };
@@ -38,8 +42,10 @@ export function Editor({
   placeholder = "Start typing",
   size = "page",
   autofocus = false,
+  content,
   onCreate,
   onUpdate,
+  onLinkShortcut,
   className,
 }: EditorProps) {
   const [empty, setEmpty] = useState(true);
@@ -67,6 +73,8 @@ export function Editor({
       <Tiptap
         label={label}
         autofocus={autofocus}
+        content={content}
+        onLinkShortcut={onLinkShortcut}
         onCreate={(editor) => {
           onCreate?.(editor);
           sync(editor);

@@ -125,13 +125,38 @@ request`, `Until typing`, `Always`. Toolbar: role `toolbar` named
    - **Time.** Editor `Given`s install Playwright's clock (time flows);
      idle minutes are `clock.fastForward`. `they pause` waits 1.5 s.
      Returning to a tab = `bringToFront` + a window `focus` event.
-4. [ ] UI until green: list, empty state, `/write` create + manual save
+4. [x] UI until green: list, empty state, `/write` create + manual save
        (button, ⌘S), states, rename, delete, hero draft.
-5. [ ] Chromeless editor (E5-03): header modes and reveal, toolbar
+5. [x] Chromeless editor (E5-03): header modes and reveal, toolbar
        with shortcut tooltips, counters pin, touch.
-6. [ ] **Cuttable if the block runs long:** autosave (idle debounce
-       `AUTOSAVE_IDLE_MS = 1000`, flush on `visibilitychange` and navigation,
-       Warning on failure); "changed elsewhere, reload?" on tab focus. If cut,
-       the landing's autosave claims must be fixed ([E9-03](../BACKLOG.md#e9--demo-and-submission)).
+6. [x] Autosave (idle debounce `AUTOSAVE_IDLE_MS = 1000`, flush on
+       `visibilitychange`/`pagehide` and the back link, Warning on failure);
+       "changed elsewhere, reload?" on tab focus. Kept, not cut. UI
+       decisions, for step 7 to move:
+   - Save logic in `use-saver.ts`: one save at a time, the next queued
+     (manual wins). Autosave skips while "changed elsewhere" is up; ⌘S
+     overwrites. Focus/visible → `revisionOf` server action; newer → alert
+     with Reload. Hero draft loads as Unsaved, no autosave until a change.
+   - Chrome: fixed top stack (header, then toolbar), hidden with the
+     `hidden` attribute. Pointer reveal at ≤ 12 px from the top, hides again 80 px below
+     unless focus/menu inside. Unpinned toolbar and counters follow the
+     header. Save problems sit above the counters, always visible. Content
+     top padding fits header + toolbar, so revealing covers no text.
+   - Prefs in `localStorage` (`blinker:header|toolbar|counters`).
+   - Shortcut hints: `⌘⇧⌥` on Apple, `Ctrl+Shift+Alt` elsewhere; tooltip is
+     visual only, the hint is each button's `aria-describedby`.
+   - Shared editor fixes (hero too): ` ``` ` opens a code block at once (no
+     language); an arrow after ⌘A collapses the "all" selection (formats
+     applied to nothing in an empty doc, typing replaced the text); ⌘K
+     dispatches an event the page claims; StarterKit underline off, links
+     don't open on click; list markers and code/pre/hr/link styles.
+   - Style guide gaps filled: code in the system monospace stack; document
+     body 1.65 line height, h1 2.2em / h2 1.55em / h3 1.2em.
+   - Contract changes (steps, locate/wait only): list format check located
+     the item from the editor inside the list (`has` is relative), so it
+     never matched; editor `Given`s wait for the editor before acting (an
+     immediate Escape landed before hydration).
+   - Follow-ups: counter pop toggle in the editor (DESIGN says off with a
+     toggle; not built); the toolbar has no overflow hint on phones.
 7. [ ] `pnpm check` + e2e green, ARCHITECTURE/CONTEXT/DESIGN touched up, plan
        deleted.

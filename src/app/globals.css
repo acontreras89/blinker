@@ -122,7 +122,8 @@
   padding-inline: clamp(16px, 4vw, 48px);
 }
 
-/* Editor content (Tiptap). Headings keep the editor's size until E5 styles the page. */
+/* Editor content (Tiptap). The hero keeps one size for every block; `.doc`
+   (a document) gives blocks their own size and rhythm. */
 .tiptap {
   outline: none;
   overflow-wrap: anywhere;
@@ -135,9 +136,88 @@
   & :is(ul, ol) {
     padding-left: 1.2em;
   }
+  & ul {
+    list-style: disc;
+  }
+  & ul ul {
+    list-style: circle;
+  }
+  & ol {
+    list-style: decimal;
+  }
+  & li::marker {
+    color: var(--muted-foreground);
+  }
   & blockquote {
     padding-left: 0.6em;
     border-left: 3px solid var(--border);
     color: var(--muted-foreground);
+  }
+  & :is(code, pre) {
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.88em;
+  }
+  & :not(pre) > code {
+    padding: 0.1em 0.3em;
+    border-radius: var(--radius-sm);
+    background: var(--muted);
+  }
+  & pre {
+    padding: 0.85em 1em;
+    border-radius: var(--radius);
+    background: var(--muted);
+    overflow-x: auto;
+    white-space: pre;
+    & code {
+      font-size: inherit;
+    }
+  }
+  & a {
+    text-decoration: underline;
+    text-decoration-color: var(--muted-foreground);
+    text-underline-offset: 0.18em;
+  }
+  & hr {
+    margin-block: 1em;
+    border: 0;
+    border-top: 1px solid var(--border);
+    &.ProseMirror-selectednode {
+      border-top-color: var(--ring);
+    }
+  }
+}
+
+.doc .tiptap {
+  line-height: 1.65;
+  & > * + * {
+    margin-top: 0.85em;
+  }
+  & :is(h1, h2, h3) {
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+  }
+  & > :is(h1, h2, h3):not(:first-child) {
+    margin-top: 1.4em;
+  }
+  & h1 {
+    font-size: 2.2em;
+    font-weight: 800;
+    letter-spacing: -0.035em;
+    line-height: 1.08;
+  }
+  & h2 {
+    font-size: 1.55em;
+    font-weight: 800;
+  }
+  & h3 {
+    font-size: 1.2em;
+    font-weight: 700;
+  }
+  & li + li,
+  & li > * + * {
+    margin-top: 0.3em;
+  }
+  & hr {
+    margin-block: 1.8em;
   }
 }

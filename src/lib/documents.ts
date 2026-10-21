@@ -23,8 +23,11 @@ export async function getDocument(id: string) {
   return (await res.json()).document;
 }
 
+/** Null when the content is over the size limit. */
 export async function createDocument(content: Content) {
   const res = await api.documents.$post({ json: { content } }, await auth());
+  // The body limit answers before the route, so the typed client misses it.
+  if ((res.status as number) === 413) return null;
   if (res.status !== 201) throw new Error(`Create failed: ${res.status}`);
   return (await res.json()).document;
 }
