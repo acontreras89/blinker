@@ -92,6 +92,10 @@ closed, ask before logging; never log with work pending.
 
 1. Close/add rows in [docs/worklog.csv](docs/worklog.csv): one row per epic/task
    touched, with the Claude session id (`date,block,start,end,epic,task,claude_session,note`).
+   Ask about pauses: each is a row with task `BREAK` and empty epic/session;
+   the script subtracts it from every time. Time away is a break even if agents
+   keep working; agents working while the user does other project work (setup,
+   another session) count as work (note it in the row).
 2. Run `node scripts/usage.mjs` to regenerate `docs/WORKLOG.md`.
 3. Commit both.
 
