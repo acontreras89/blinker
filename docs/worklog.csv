@@ -20,3 +20,4 @@ date,block,start,end,epic,task,claude_session,note
 2026-10-21,B11,08:59,10:35,E6,E6-01,a5d2a00f-ae90-434e-9bb7-c8e3be479a18,"Grill and plan billing (E6-01..02); ADR-0009 sync from Stripe; Stripe setup in README; Stripe notes; Portal moved into E6"
 2026-10-21,B12,10:32,10:53,E5,E5-02,cc99844e-e3c8-45c1-a66b-2388eba22db7,"Documents backend (plan step 2): schema, use cases, Hono routes, Vitest, e2e seeding route"
 2026-10-21,B13,10:38,11:20,E6,E6-01,f4b06806-961f-4a63-a0c6-d6d45964d8f2,"Billing backend (plan steps 1-2): schema, getAccess, BillingGateway Stripe + fake, sync, webhook, routes, stripe:setup, test-key guard; user on Stripe setup from 10:47"
+2026-10-21,B14,10:36,11:46,E6,E6-02,6d54c93a-6442-4e18-bee5-f1eb2a5f845f,"Grill billing.feature (plan step 3): return page, gating, trial, states, billing page; journey moved to auth.feature; parked in e2e/pending until E5 UI is done; user away ~30 min"
