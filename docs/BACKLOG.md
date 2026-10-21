@@ -30,9 +30,9 @@ Coarse tasks grouped by [epic](ROADMAP.md). Flow and rules: [AGENTS.md](../AGENT
 
 ## E5 — Documents and editor
 
-- [~] E5-01 Document list, create, rename, delete, hero draft → planned 2026-10-20, [plan](plans/E5-documents.md)
-- [~] E5-02 Save to backend, failed-save handling, two-tab warning → [plan](plans/E5-documents.md)
-- [~] E5-03 Chromeless editor, toolbar on request, live stats → [plan](plans/E5-documents.md)
+- [x] E5-01 Document list, create, rename, delete, hero draft → [documents.feature](../e2e/features/documents.feature)
+- [x] E5-02 Save, autosave, failed-save handling, two tabs → [editor.feature](../e2e/features/editor.feature), [ADR-0008](adr/0008-document-persistence.md)
+- [x] E5-03 Chromeless editor, toolbar on request, live stats → [editor.feature](../e2e/features/editor.feature)
 
 ## E6 — Stripe and gating
 
@@ -49,7 +49,8 @@ Coarse tasks grouped by [epic](ROADMAP.md). Flow and rules: [AGENTS.md](../AGENT
 ## E8 — Polish
 
 - [ ] E8-01 Deepen DESIGN and polish the landing.
-- [ ] E8-02 Polish the editor UX.
+- [ ] E8-02 Polish the editor UX: toolbar docked to the keyboard on touch,
+      overflow hint when the toolbar scrolls on phones.
 - [ ] E8-03 Editor settings: counter pop toggle (off by default, locked off under
       reduced motion), font choice.
 - [ ] E8-04 Cheeky copy in mouse-driven moments: empty states, save feedback, sidebar,

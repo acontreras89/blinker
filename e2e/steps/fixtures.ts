@@ -135,7 +135,7 @@ export async function focusEditorEnd(page: Page) {
 // Save state, in the product's voice (docs/DESIGN.md#voice). Unsaved and
 // Saved are polite statuses: announced, not necessarily on screen while the
 // header is hidden. Everything else is an alert that must be visible
-// (docs/plans/E5-documents.md, "Save states" and "Two tabs").
+// (docs/CONTEXT.md, "Save state"; ADR-0008 for two tabs).
 export const saveCopy = {
   unsaved: "Unsaved changes",
   saved: "Saved",

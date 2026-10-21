@@ -31,7 +31,10 @@ Stripe ─────────┘ /api/webhooks/stripe     (also public: /ap
   the webhook is late, the return page runs the same sync from the Stripe API
   ([ADR-0009](adr/0009-sync-entitlements-from-stripe.md)); the redirect alone
   never grants access.
-- **Edit**: editor → Server Action → backend checks access → document JSON saved.
+- **Edit**: `/write` (new, created on first save, URL replaced) or
+  `/write/[id]` (server-rendered) → `use-saver.ts` (⌘S/button, 1 s idle
+  autosave, flush on hide) → Server Actions in `app/(app)/actions.ts` →
+  backend checks access → document JSON saved, stale autosaves refused.
 
 ## Code map
 
@@ -40,6 +43,7 @@ src/
   app/            Next routes: (marketing), (auth), (app); route-only
                   components live next to their route in `_components/`
   components/     shared UI: shadcn/ui primitives, editor (Tiptap Simple Editor)
+  hooks/          per-device prefs (`use-stored`), touch detection
   proxy.ts        optimistic redirect to log in (cookie presence only)
   lib/api.ts      in-process backend client, server-only
   lib/session.ts  current user for Server Components; auth-client.ts for forms

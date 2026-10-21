@@ -12,6 +12,9 @@ and procrastinate instead. Power-user minded: opinionated, few features, done we
 - Chromeless by default: a blank page and a cursor. Keyboard shortcuts (⌘B/I/K)
   and Markdown input rules (`#`, `-`, `>`); toolbar only on request. On touch
   devices (no shortcuts) a compact toolbar shows above the keyboard.
+- Editor header mode, per device: `On request` (default), `Until typing`,
+  `Always`; revealed by the top edge, Esc or focus. Toolbar and counters are
+  pinnable per device.
 - Autosave plus manual save (⌘S, button), with a quiet status: Unsaved, Saving,
   Saved; a warning while autosave retries, an error when a manual save fails.
   Never hidden when work is at risk.
@@ -41,7 +44,8 @@ Neutral and quiet, so the page is the only thing that matters.
   the cursor, the primary CTA, focus and the counter pop. Status colours
   (success, warning, destructive) mark state only.
 - The brand mark is the blinking cursor after the wordmark.
-- Type: Hanken Grotesk, one family. Document body face: decide in E5.
+- Type: Hanken Grotesk, one family, document body included (1.65 line height;
+  h1 2.2em, h2 1.55em, h3 1.2em). Code: the system monospace stack.
 - Tokens use shadcn/ui names so they map 1:1 onto `src/app/globals.css`.
 
 ## Motion

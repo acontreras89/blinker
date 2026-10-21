@@ -11,3 +11,6 @@ Provisional; sharpen as epics define each term.
   (`past_due` keeps it while Stripe retries; canceled keeps it until period end).
   Only subscribers create, edit or rename; any user reads and deletes their own.
 - **Document**: a titled rich text document owned by one subscriber.
+- **Save state**: Unsaved · Saving · Saved · Warning (autosave failed or the
+  document changed elsewhere; retried on the next change or ⌘S) · Error (a
+  manual save failed). Conflicts: [ADR-0008](adr/0008-document-persistence.md).
