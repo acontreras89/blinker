@@ -25,6 +25,7 @@ export default defineConfig({
       BETTER_AUTH_SECRET: "e2e-secret-at-least-32-characters-long",
       BETTER_AUTH_URL: `http://localhost:${PORT}`,
       AUTH_RATE_LIMIT: "off",
+      E2E_SEED: "on",
     },
   },
 });

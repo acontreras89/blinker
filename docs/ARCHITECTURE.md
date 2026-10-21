@@ -43,10 +43,12 @@ src/
   proxy.ts        optimistic redirect to log in (cookie presence only)
   lib/api.ts      in-process backend client, server-only
   lib/session.ts  current user for Server Components; auth-client.ts for forms
+  lib/documents.ts the user's documents, for Server Components/Actions
   server/         Hono app; never imports next/*
     auth/         Better Auth config + session middleware
     db/           Drizzle schema (plural tables) and migrations
-    documents/    routes + use cases
+    documents/    routes, use cases, rules shared with the UI
+    e2e.ts        test-only seeding, off unless E2E_SEED=on
     billing/      checkout, webhook, getAccess
 e2e/
   features/       Gherkin, written before the UI

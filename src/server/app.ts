@@ -1,5 +1,7 @@
 import { Hono } from "hono";
 import { auth } from "./auth";
+import { documentRoutes } from "./documents/routes";
+import { e2eRoutes } from "./e2e";
 
 // The backend: framework-agnostic, never imports next/* (ADR-0005).
 export const app = new Hono()
@@ -11,6 +13,8 @@ export const app = new Hono()
     const user = session && { id: session.user.id, name: session.user.name };
     return c.json({ user });
   })
-  .on(["GET", "POST"], "/api/auth/*", (c) => auth.handler(c.req.raw));
+  .route("/documents", documentRoutes)
+  .on(["GET", "POST"], "/api/auth/*", (c) => auth.handler(c.req.raw))
+  .route("/api/e2e", e2eRoutes);
 
 export type AppType = typeof app;

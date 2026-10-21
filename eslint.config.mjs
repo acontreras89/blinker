@@ -33,8 +33,8 @@ export default defineConfig([
         {
           patterns: [
             {
-              // Input rules are zod only, shared with the forms on purpose.
-              regex: "^@/server/(?!auth/rules$)",
+              // Input rules are zod only, shared with the UI on purpose.
+              regex: "^@/server/(?!(auth|documents)/rules$)",
               message: "Use @/lib/api instead.",
             },
           ],

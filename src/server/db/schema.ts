@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { index, integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
 // Better Auth core tables (ADR-0003), plural names.
 const timestamps = {
@@ -62,3 +62,28 @@ export const verifications = sqliteTable("verifications", {
   expiresAt: integer("expires_at", { mode: "timestamp_ms" }).notNull(),
   ...timestamps,
 });
+
+// Documents (ADR-0008). Timestamps are set in code, to the millisecond: the
+// list is ordered by `updatedAt` and saves land well within a second.
+const now = () => new Date();
+
+export const documents = sqliteTable(
+  "documents",
+  {
+    id: text("id").primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    title: text("title").notNull(),
+    // ProseMirror JSON, validated on the way in (ADR-0007).
+    content: text("content", { mode: "json" }).notNull(),
+    revision: integer("revision").notNull().default(1),
+    createdAt: integer("created_at", { mode: "timestamp_ms" })
+      .notNull()
+      .$defaultFn(now),
+    updatedAt: integer("updated_at", { mode: "timestamp_ms" })
+      .notNull()
+      .$defaultFn(now),
+  },
+  (t) => [index("documents_user_updated_idx").on(t.userId, t.updatedAt)],
+);

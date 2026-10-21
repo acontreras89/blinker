@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@base-ui/react": "^1.9.0",
+    "@hono/zod-validator": "^0.9.1",
     "@tiptap/pm": "^3.32.0",
     "@tiptap/react": "^3.32.0",
     "@tiptap/starter-kit": "^3.32.0",
@@ -27,6 +28,7 @@
     "drizzle-orm": "^0.45.4",
     "hono": "^4.13.13",
     "lucide-react": "^1.59.0",
+    "nanoid": "^6.0.2",
     "next": "16.4.2",
     "react": "19.3.0",
     "react-dom": "19.3.0",

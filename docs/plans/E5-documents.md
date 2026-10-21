@@ -71,9 +71,18 @@ diff saves, "changed elsewhere" on focus if cut: all in the backlog (EX).
 
 1. [x] Grilling → `documents.feature`, `editor.feature`. `@negotiable` rules =
        step 6, deleted if cut.
-2. [ ] **Next** (fresh session). Schema + migration (`documents`), use cases and Hono routes, Vitest for
-       numbering, ownership 404, size limit, `overwrote`.
-3. [ ] Steps, red (bdd-steps subagent, fresh session). `they reset the stats`
+2. [x] Backend: `documents` table, `src/server/documents/` (use cases,
+       routes, Vitest), `src/lib/documents.ts` for Server Components/Actions.
+       Contract for the next steps:
+   - Seeding: `POST /api/e2e/documents` with the context's `request`
+     (cookie) `{ title?, text?, createdAt?, updatedAt? }` → `{ id, title }`.
+     Test-only, on via `E2E_SEED=on` in `playwright.config.ts`.
+   - "Saving fails" has no backend switch: fail the Server Action POST in the
+     page (`page.route`, requests with a `next-action` header).
+   - Save outcomes (`saveContent`): `saved` (+ `overwrote`), `conflict`
+     (autosave only), `missing`, `too_large`, `failed`. Title rules:
+     `TITLE_MAX` and `title` in `@/server/documents/rules`.
+3. [ ] **Next.** Steps, red (bdd-steps subagent, fresh session). `they reset the stats`
        moves from `landing.steps.ts` to common (now used by two features).
 4. [ ] UI until green: list, empty state, `/write` create + manual save
        (button, ⌘S), states, rename, delete, hero draft.

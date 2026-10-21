@@ -25,6 +25,13 @@ Running cheat sheet for the E7-02 write-up. One line per decision, link the code
 - **Foreign documents are 404, not 403.** Ownership is checked on every
   document request; another user's id answers like a missing one, so ids can't
   be probed. Short ids are not secrets ([ADR-0008](adr/0008-document-persistence.md)).
+- **Document content is bounded and shaped.** Whole-document saves are capped
+  at 1 MB (413) and parsed as ProseMirror JSON with unknown keys stripped
+  ([rules](../src/server/documents/rules.ts)); never stored as HTML.
+- **Autosave never overwrites.** A background save from a stale revision is
+  refused (409); only an explicit save wins ([ADR-0008](adr/0008-document-persistence.md)).
+- **E2E seeding is off by default.** `/api/e2e/*` answers 404 unless
+  `E2E_SEED=on` (set only by the e2e server) and acts as the cookie's user only.
 - **Webhooks are verified.** Stripe's signature is checked on the raw body
   before anything is read; processed `event.id`s are stored, so replays are
   no-ops.
