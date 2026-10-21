@@ -80,7 +80,8 @@ Coarse tasks grouped by [epic](ROADMAP.md). Flow and rules: [AGENTS.md](../AGENT
 - [ ] EX-08 Rate limiting on auth.
 - [ ] EX-09 Observability: structured logs, error tracking.
 - [ ] EX-10 Document sidebar: the list on the left edge, revealed by the mouse,
-      pinnable.
+      pinnable. Its empty-state Start typing then closes it and focuses the
+      editor (changes `documents.feature`).
 - [ ] EX-11 Autosave hardening: retry with backoff, local backup of unsaved
       changes (restore on reload, cleared on logout).
 - [ ] EX-12 List sorting (name / last updated, user's choice) and folders.

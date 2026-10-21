@@ -13,12 +13,14 @@ want readable URLs, a cheap save path and a warning when two tabs fight.
   on every request. Primary key collision → retry.
 - Every save sends the whole ProseMirror JSON (≤ 1 MB, roughly 100k+ words).
 - Each document has an integer `revision`. A save carries the revision it was
-  based on; the server always writes (last write wins) and answers
-  `overwrote: true` when that base was stale, so the client can warn.
+  based on. An explicit save always writes (last write wins) and answers
+  `overwrote: true` when that base was stale, so the client can warn. An
+  autosave from a stale base is refused (409): background saves from two tabs
+  or devices must never overwrite each other unasked.
 - Titles are labels, not identity: duplicates are allowed. Blob storage, if
   ever used, would key by id and apply the title only on download.
 
 ## Consequences
 
-- No merge logic; a stale tab silently wins, only with a warning.
+- No merge logic; a stale tab wins only on an explicit save, with a warning.
 - Saves grow with the document; diffs (ProseMirror steps) are a later option.
