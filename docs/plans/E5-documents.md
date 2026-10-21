@@ -71,7 +71,7 @@ diff saves, "changed elsewhere" on focus if cut: all in the backlog (EX).
 
 1. [x] Grilling → `documents.feature`, `editor.feature`. `@negotiable` rules =
        step 6, deleted if cut.
-2. [ ] Schema + migration (`documents`), use cases and Hono routes, Vitest for
+2. [ ] **Next** (fresh session). Schema + migration (`documents`), use cases and Hono routes, Vitest for
        numbering, ownership 404, size limit, `overwrote`.
 3. [ ] Steps, red (bdd-steps subagent, fresh session). `they reset the stats`
        moves from `landing.steps.ts` to common (now used by two features).
