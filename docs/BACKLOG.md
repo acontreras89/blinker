@@ -71,7 +71,7 @@ Coarse tasks grouped by [epic](ROADMAP.md). Flow and rules: [AGENTS.md](../AGENT
 - [ ] EX-03 OAuth login.
 - [ ] EX-04 Version history: manual "save version" vs autosave checkpoints,
       history panel with preview and restore. E5 ships the minimal save only.
-- [ ] EX-05 Whichever of trial (7 days, card, 3 docs) / lifetime E6 skipped.
+- [ ] EX-05 Lifetime one-time purchase (an entitlement row with no subscription).
 - [ ] EX-06 Password reset and email verification.
 - [ ] EX-07 Account deletion and data export (GDPR).
 - [ ] EX-08 Rate limiting on auth.

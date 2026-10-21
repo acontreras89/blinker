@@ -4,7 +4,8 @@ Covers E6-01..02: Checkout, verified webhook, entitlements, gating, upgrade
 path, visible status. Base: [ADR-0006](../adr/0006-own-billing-entitlements.md),
 [ADR-0009](../adr/0009-sync-entitlements-from-stripe.md). Setup for humans:
 [README](../../README.md#stripe-setup). Notes for the write-up:
-[Stripe notes](../stripe-notes.md). Grilling in progress.
+[Stripe notes](../stripe-notes.md). Grilled 2026-10-21; next: step 3 can
+start in parallel with 1–2.
 
 ## Decisions
 
@@ -26,6 +27,16 @@ path, visible status. Base: [ADR-0006](../adr/0006-own-billing-entitlements.md),
   Trial at the limit: creating a 2nd document shows "Your trial includes 1
   document" (backend 403 anyway) with "Start paying now" (ends the trial,
   `trial_end: "now"`). Copy polish → E8-04.
+- **Entitlements.** One row per Stripe subscription (renewals update it,
+  resubscribing adds a row); one-time purchases would add their own rows.
+  `getAccess` looks for any row granting access now.
+- **Checkout.** Card only (`payment_method_types: ["card"]`).
+- **Return page.** `success_url` → `/billing/return?session_id=…`: DB first,
+  else sync from the API, then redirect to `/write`. With card only, Checkout
+  redirects after the payment is settled (`paid`, or `no_payment_required` on
+  trial), so waiting means Stripe is unreachable: the page itself shows
+  "Confirming payment…", retries ~10 s, then says writing unlocks as soon as
+  Stripe confirms, linking to `/app`. No write-without-save mode.
 - **One trial per user.** Offered only if the user never had a subscription.
 - **Customer.** Created in Stripe on the first Checkout, `customer_id` stored
   on the user and reused.
@@ -43,10 +54,6 @@ path, visible status. Base: [ADR-0006](../adr/0006-own-billing-entitlements.md),
   checks run for real. Real Stripe only for manual checks and the demo video.
 - **Features.** `billing.feature` for now; fold its scenarios into the
   journey/auth features once E2 is done.
-
-## Open
-
-- Entitlement model: one row per subscription (history) vs one per user.
 
 ## Steps
 

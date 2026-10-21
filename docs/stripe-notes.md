@@ -23,6 +23,8 @@ in [ADR-0006](adr/0006-own-billing-entitlements.md) and
   them), `charge.refunded` / `charge.dispute.*` (refunds and disputes are out
   of scope: a limitation), `customer.subscription.trial_will_end` (no emails),
   `paused` / `resumed` (pausing not enabled), `product.*` / `price.*` (static).
+- **Card only in Checkout.** Async methods (SEPA, bank debits) confirm days
+  later and add pending states; left out, a limitation.
 - **Stripe has its own "Entitlements" API** (Features). We don't use it; our
   entitlements are our table.
 - **Period end is on the subscription item** in current API versions, not on
