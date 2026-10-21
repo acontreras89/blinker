@@ -41,8 +41,9 @@ Running cheat sheet for the E7-02 write-up. One line per decision, link the code
 - **Gating is server-side, and lapsing never holds data hostage.** Without an
   active or trialing subscription, create/edit/rename answer 403; reading and
   deleting your own documents still work.
-- **The fake billing gateway is test-only.** It is enabled by an e2e env var,
-  and the server refuses to boot with it under `NODE_ENV=production`.
+- **The fake billing gateway is test-only.** Opt-in by `BILLING_GATEWAY=fake`,
+  set only by the Playwright config. No `NODE_ENV` guard: e2e runs the
+  production build, and the app is local-only (ADR-0001).
 - **One trial per user.** Checkout offers the trial only to users who never
   had a subscription.
 - **Test keys enforced in code.** The server refuses to boot unless

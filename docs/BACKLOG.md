@@ -83,3 +83,5 @@ Coarse tasks grouped by [epic](ROADMAP.md). Flow and rules: [AGENTS.md](../AGENT
       changes (restore on reload, cleared on logout).
 - [ ] EX-12 List sorting (name / last updated, user's choice) and folders.
 - [ ] EX-13 Diff saves (ProseMirror steps) instead of the whole JSON ([ADR-0008](adr/0008-document-persistence.md)).
+- [ ] EX-14 Keep unsaved text across resubscribing: a lapsed user's unsaved
+      edits survive Checkout and are saved once access returns.

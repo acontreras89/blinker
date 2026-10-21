@@ -1,0 +1,31 @@
+diff --git i/e2e/features/auth.feature w/e2e/features/auth.feature
+index ac63969..751f679 100644
+--- i/e2e/features/auth.feature
++++ w/e2e/features/auth.feature
+@@ -1,14 +1,15 @@
+ Feature: Accounts
+ 
+-  Visitors register with a name, an email and a password and start writing
+-  right away. Each device keeps its own session; logging out ends only that one.
++  Visitors register with a name, an email and a password, subscribe and start
++  writing. Each device keeps its own session; logging out ends only that one.
+ 
+-  Rule: Registering takes a visitor straight to the editor
++  Rule: Registering and subscribing takes a visitor to the editor
+ 
+     Scenario: A visitor who typed nothing lands on a blank editor
+       Given a visitor opens the landing
+       When they start typing from the landing
+       And they register with valid details
++      And they subscribe
+       Then they are on a blank editor
+       And they are logged in
+ 
+@@ -17,6 +18,7 @@ Feature: Accounts
+       When they type "first words before signing up"
+       And they start typing from the landing
+       And they register with valid details
++      And they subscribe
+       Then the editor contains "first words before signing up"
+ 
+     Scenario Outline: Registration rejects invalid details

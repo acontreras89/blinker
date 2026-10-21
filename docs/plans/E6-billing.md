@@ -52,8 +52,21 @@ path, visible status. Base: [ADR-0006](../adr/0006-own-billing-entitlements.md),
 - **E2E.** A `BillingGateway` port: Stripe in dev/prod, a fake in e2e (local
   "checkout" page). Tests post webhooks signed with a test secret, so signature
   checks run for real. Real Stripe only for manual checks and the demo video.
-- **Features.** `billing.feature` for now; fold its scenarios into the
-  journey/auth features once E2 is done.
+- **Features.** The signup journey (landing → register → Checkout → editor)
+  lives in `auth.feature`; everything else billing in `billing.feature`.
+  `a logged-in user` is an active subscriber (see e2e vocabulary).
+- **Invalid return** (another user's or unknown `session_id`): dashboard with a
+  joke, "Trying to impersonate someone else, huh? Stop messing around and
+  subscribe to start typing!". Own unpaid session = `pending`, not invalid.
+- **Lapse mid-session.** No push: the next save (manual or autosave) gets 403;
+  the editor says so, keeps the text on screen and invites to subscribe.
+- **CTA copy** (E8-04 polishes): "Subscribe to start writing" for never-paid,
+  "Resubscribe to keep writing" for lapsed.
+- **Trial limit.** "Start paying now" ends the trial and lands on a blank
+  editor; the refused document is not created by itself.
+- **Fake gateway guard.** No `NODE_ENV` check: e2e runs `next start`
+  (production). Opt-in only via `BILLING_GATEWAY=fake`, set by the Playwright
+  config; the app is local-only (ADR-0001).
 
 ## Steps
 
@@ -73,9 +86,16 @@ path, visible status. Base: [ADR-0006](../adr/0006-own-billing-entitlements.md),
      the `success_url`; `fakeBilling.update(subId, …)` changes state before a
      signed webhook. The browser reaches them only through an e2e route
      (`e2e.ts`). E2E webhook secret: `whsec_e2e_secret`.
-3. [ ] `/bdd-feature` → `billing.feature`; steps red (`bdd-steps`); UI green
-       (`bdd-ui`): Checkout after signup, return page, upgrade path, trial
-       limit + "Start paying now", `/account/billing`, Portal button.
+3. [~] Feature agreed, parked in `e2e/pending/` (undefined steps break
+   `bddgen` for agents running e2e). Next: steps, red (separate agent),
+   once E5's UI agent is done: move `billing.feature` into
+   `e2e/features/`, apply `auth.feature.patch`, add `And they subscribe`
+   after registering in `editor.feature` ("A visitor's draft becomes their
+   first document"), make `a logged-in user` subscribe in
+   `common.steps.ts`, delete `e2e/pending/`. Then UI green (`bdd-ui`):
+   Checkout after signup, fake Checkout/Portal pages, return page, upgrade
+   path, trial limit + "Start paying now", `/account/billing`, Portal
+   button.
 4. [ ] Plug `getAccess` into E5's document middleware (likely done by then):
        403 on create/edit/rename without access; read and delete stay open.
 5. [ ] Manual run against real Stripe test mode (Chrome + `stripe listen`):

@@ -14,6 +14,15 @@ listed here. `{…}` = parameter; actors and nouns from [CONTEXT](../docs/CONTEX
 - `they are logged in` · `they are asked to log in`
 - `a logged-in user with the documents {string}` — comma-separated titles,
   created in that order
+- A `logged-in user` is an active subscriber unless the phrase says otherwise:
+  `a logged-in user without a subscription` · `a logged-in user on a trial` ·
+  `a logged-in user whose subscription is {state}` — states as in
+  [billing.feature](features/billing.feature)
+
+## Billing
+
+- `they subscribe` — pays in Checkout and comes back
+- `they are in Checkout` · `they are invited to subscribe`
 
 ## Navigation
 
