@@ -4,8 +4,8 @@ Covers E6-01..02: Checkout, verified webhook, entitlements, gating, upgrade
 path, visible status. Base: [ADR-0006](../adr/0006-own-billing-entitlements.md),
 [ADR-0009](../adr/0009-sync-entitlements-from-stripe.md). Setup for humans:
 [README](../../README.md#stripe-setup). Notes for the write-up:
-[Stripe notes](../stripe-notes.md). Grilled 2026-10-21; steps 1–2 done, next:
-3 and 4.
+[Stripe notes](../stripe-notes.md). Grilled 2026-10-21; steps 1–2 done, 3 red, next:
+3 green and 4.
 
 ## Decisions
 
@@ -86,16 +86,38 @@ path, visible status. Base: [ADR-0006](../adr/0006-own-billing-entitlements.md),
      the `success_url`; `fakeBilling.update(subId, …)` changes state before a
      signed webhook. The browser reaches them only through an e2e route
      (`e2e.ts`). E2E webhook secret: `whsec_e2e_secret`.
-3. [~] Feature agreed, parked in `e2e/pending/` (undefined steps break
-   `bddgen` for agents running e2e). Next: steps, red (separate agent),
-   once E5's UI agent is done: move `billing.feature` into
-   `e2e/features/`, apply `auth.feature.patch`, add `And they subscribe`
-   after registering in `editor.feature` ("A visitor's draft becomes their
-   first document"), make `a logged-in user` subscribe in
-   `common.steps.ts`, delete `e2e/pending/`. Then UI green (`bdd-ui`):
-   Checkout after signup, fake Checkout/Portal pages, return page, upgrade
-   path, trial limit + "Start paying now", `/account/billing`, Portal
-   button.
+3. [~] Feature agreed; steps red (`billing.steps.ts`, billing Givens in
+   `common.steps.ts`, helpers in `fixtures.ts`). Next: UI green (`bdd-ui`).
+   Contract (steps are the source of truth; copy in their `copy` objects,
+   `saveCopy`, `ctaCopy`, `checkoutCopy`):
+   - **Signup** goes to Checkout. **Fake Checkout** `/billing/fake-checkout/:id`:
+     button `Subscribe` pays (`fakeBilling.complete`) and goes to the
+     `success_url`; link `Back` → `cancel_url`; text `3 days free` only when
+     the Checkout has a trial. **Fake Portal**: path `/billing/fake-portal`.
+   - **Return page** `/billing/return?session_id=…`: ready → `/write`;
+     invalid → `/app` with an `alert` holding the impersonation copy;
+     pending → text `Confirming payment…`, retries every ≤ 2 s on page time
+     (timers/`Date`, faked by the steps) for ~10 s, then the unlocks-later
+     copy and a link `Your documents`.
+   - **Upgrade path.** Never paid: a visible link/button
+     `Subscribe to start writing`; had a subscription:
+     `Resubscribe to keep writing` (dashboard, read-only editor, `/write`,
+     and after a refused save, visible even with the header hidden). The
+     dashboard's `Start typing` opens Checkout for a non-subscriber; `/write`
+     itself shows a non-editable editor plus the CTA (no redirect).
+     Read-only = the editor's `contenteditable="false"`.
+   - **Refused saves** are `alert`s: `saveCopy.lapsed` (text kept on
+     screen), `saveCopy.trialLimit` (on `Start typing` or on save; then a
+     link/button `Start paying now` → blank `/write`).
+   - **Past due**: the past-due copy on the dashboard and the billing page.
+   - **`/account/billing`**: link/button `Manage billing` (→ Portal); trial
+     end / renewal / access-until as `en-US` medium days (`Oct 24, 2026`)
+     in the copy; no-subscription copy.
+   - **Gate** (step 4): backend `/documents` writes answer **403** without
+     access; e2e checks it through `/api/e2e/backend`.
+   - Test-only routes added to `src/server/e2e.ts`: `/billing/checkout`,
+     `/billing/checkout/:id/complete`, `/billing/subscription`, `/backend`.
+     Webhooks are posted signed with `whsec_e2e_secret`.
 4. [ ] Plug `getAccess` into E5's document middleware (likely done by then):
        403 on create/edit/rename without access; read and delete stay open.
 5. [ ] Manual run against real Stripe test mode (Chrome + `stripe listen`):

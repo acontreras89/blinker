@@ -27,13 +27,16 @@ listed here. `{…}` = parameter; actors and nouns from [CONTEXT](../docs/CONTEX
 ## Navigation
 
 - `they open {place}` · `they are on {place}` — places: `the landing`,
-  `the dashboard`, `a blank editor`
+  `the dashboard`, `a blank editor`, `their billing page`
+- `they open {string}` — a seeded document, by title
 - `they reload the page`
 - `they are told the page does not exist`
 - `they start typing from {place}` — its **Start typing** link
 
 ## Editing
 
+- `they create a document` — from the dashboard's **Start typing**; types
+  and saves when an editor opens
 - `they type {string}` · `they delete everything they typed`
 - `the editor contains {string}` · `the editor does not contain {string}` — the
   editor on screen, hero or app

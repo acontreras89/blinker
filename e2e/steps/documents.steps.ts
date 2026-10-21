@@ -10,6 +10,7 @@ import {
   expectFieldError,
   focusEditorEnd,
   register,
+  registerSubscriber,
   save,
   seedDocument,
   type Seeded,
@@ -61,23 +62,17 @@ async function startDeleting(page: Page, title: string) {
   await act(page, entry(page, title), "Delete");
 }
 
-// Creating
-
-// "Untitled, Untitled (2)" → "Untitled (1)" PROVES THE LOWEST FREE NUMBER IS
-// REUSED, NOT MAX + 1.
-When("they create a document", async ({ page }) => {
-  await page.goto("/write");
-  await focusEditorEnd(page);
-  await page.keyboard.type("A new document");
-  await save(page);
-});
-
 // Dates
 
 Given(
   "a logged-in user with a document {string} created {int} days ago and last updated {int} hours ago",
-  async ({ page, user, docs }, title: string, days: number, hours: number) => {
-    await register(page.request, user);
+  async (
+    { page, user, docs, billing },
+    title: string,
+    days: number,
+    hours: number,
+  ) => {
+    await registerSubscriber(page.request, user, billing);
     docs.byTitle[title] = await seedDocument(page.request, {
       title,
       createdAt: new Date(Date.now() - days * 24 * 3_600_000),
@@ -206,6 +201,7 @@ When("they cancel", async ({ page }) => {
 When(
   "they delete {string} from the dashboard",
   async ({ page }, title: string) => {
+    if (new URL(page.url()).pathname !== "/app") await page.goto("/app");
     await startDeleting(page, title);
     await confirmation(page)
       .getByRole("button", { name: "Delete", exact: true })

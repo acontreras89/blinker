@@ -9,10 +9,12 @@ import {
   expectAlert,
   expectSaveStatus,
   focusEditorEnd,
-  register,
+  registerSubscriber,
   save,
   saveCopy,
   seedDocument,
+  type Billing,
+  type Credentials,
   type Seeded,
 } from "./fixtures";
 
@@ -80,12 +82,14 @@ const editing = (seed: { title?: string; text?: string }, touch = false) =>
     page,
     user,
     docs,
+    billing,
   }: {
     page: Page;
-    user: Parameters<typeof register>[1];
+    user: Credentials;
     docs: { current?: Seeded };
+    billing: Billing;
   }) {
-    await register(page.request, user);
+    await registerSubscriber(page.request, user, billing);
     docs.current = await seedDocument(page.request, seed);
     await openDocument(page, docs.current, { touch });
   };
@@ -100,13 +104,13 @@ Given(
 );
 Given(
   "a logged-in user editing a document containing {string}",
-  async ({ page, user, docs }, text: string) =>
-    editing({ text })({ page, user, docs }),
+  async ({ page, user, docs, billing }, text: string) =>
+    editing({ text })({ page, user, docs, billing }),
 );
 Given(
   "a logged-in user editing a document titled {string}",
-  async ({ page, user, docs }, title: string) =>
-    editing({ title })({ page, user, docs }),
+  async ({ page, user, docs, billing }, title: string) =>
+    editing({ title })({ page, user, docs, billing }),
 );
 
 // Saving
@@ -175,8 +179,8 @@ When("they pause", async ({ page }) => {
 
 Given(
   "a logged-in user with a document open in two tabs",
-  async ({ page, secondTab, user, docs }) => {
-    await register(page.request, user);
+  async ({ page, secondTab, user, docs, billing }) => {
+    await registerSubscriber(page.request, user, billing);
     docs.current = await seedDocument(page.request);
     for (const tab of [page, secondTab]) {
       await tab.goto(documentPath(docs.current.id));

@@ -6,13 +6,22 @@ import {
   When,
   editor,
   expectAskedToLogIn,
+  expectInvitedToSubscribe,
   expectLoggedIn,
   fillLogIn,
   focusEditorEnd,
   logIn,
   register,
+  registerSubscriber,
+  checkoutCopy,
+  documentPath,
   save,
+  saveCopy,
   seedDocument,
+  stripePaths,
+  subscribe,
+  subscriptionStates,
+  type SubscriptionState,
 } from "./fixtures";
 
 // Steps for the shared phrases in e2e/VOCABULARY.md. Feature-only phrases live
@@ -28,6 +37,7 @@ const places = {
   "the landing": "/",
   "the dashboard": "/app",
   "a blank editor": "/write",
+  "their billing page": "/account/billing",
 } as const;
 type Place = keyof typeof places;
 
@@ -35,6 +45,17 @@ defineParameterType({
   name: "place",
   regexp: new RegExp(Object.keys(places).join("|")),
   transformer: (place: string) => place as Place,
+});
+
+defineParameterType({
+  name: "state",
+  // Longest first, so "canceled at period end, …" never stops at "canceled".
+  regexp: new RegExp(
+    Object.keys(subscriptionStates)
+      .sort((a, b) => b.length - a.length)
+      .join("|"),
+  ),
+  transformer: (state: string) => state as SubscriptionState,
 });
 
 const wpm = (page: Page) => page.getByLabel("per minute", { exact: true });
@@ -75,16 +96,36 @@ Given(
   },
 );
 
-Given("a logged-in user", async ({ page, user, session }) => {
-  await register(page.request, user);
+Given("a logged-in user", async ({ page, user, session, billing }) => {
+  await registerSubscriber(page.request, user, billing);
   session.cookies = await page.context().cookies();
   await page.goto(places["the dashboard"]);
 });
 
+Given("a logged-in user without a subscription", async ({ page, user }) => {
+  await register(page.request, user);
+  await page.goto(places["the dashboard"]);
+});
+
+Given("a logged-in user on a trial", async ({ page, user, billing }) => {
+  await register(page.request, user);
+  await subscribe(page.request, billing, "trialing");
+  await page.goto(places["the dashboard"]);
+});
+
+Given(
+  "a logged-in user whose subscription is {state}",
+  async ({ page, user, billing }, state: SubscriptionState) => {
+    await register(page.request, user);
+    await subscribe(page.request, billing, state);
+    await page.goto(places["the dashboard"]);
+  },
+);
+
 Given(
   "a logged-in user with the documents {string}",
-  async ({ page, user, docs }, list: string) => {
-    await register(page.request, user);
+  async ({ page, user, docs, billing }, list: string) => {
+    await registerSubscriber(page.request, user, billing);
     // Created in that order, a minute apart, so "newest" is unambiguous.
     const start = Date.now() - 60 * 60_000;
     for (const [i, title] of titles(list).entries()) {
@@ -129,15 +170,51 @@ Then("they are asked to log in", async ({ page }) => {
   await expectAskedToLogIn(page);
 });
 
+// Billing
+
+// Pays in the fake Checkout they are on and comes back through the return page.
+When("they subscribe", async ({ page, billing }) => {
+  await expect(page).toHaveURL((url) =>
+    url.pathname.startsWith(stripePaths.checkout),
+  );
+  await page
+    .getByRole("button", { name: checkoutCopy.pay, exact: true })
+    .click();
+  billing.had = true;
+});
+
+Then("they are in Checkout", async ({ page }) => {
+  await expect(page).toHaveURL((url) =>
+    url.pathname.startsWith(stripePaths.checkout),
+  );
+});
+
+// Lapsed users are invited back, the others to start.
+Then("they are invited to subscribe", async ({ page, billing }) => {
+  await expectInvitedToSubscribe(page, billing);
+});
+
 // Navigation
 
 When("they open {place}", async ({ page }, place: Place) => {
   await page.goto(places[place]);
 });
 
+When("they open {string}", async ({ page, docs }, title: string) => {
+  await page.goto(documentPath(docs.byTitle[title].id));
+});
+
 Then("they are on {place}", async ({ page }, place: Place) => {
   await expect(page).toHaveURL((url) => url.pathname === places[place]);
   if (place === "a blank editor") await expect(editor(page)).toHaveText("");
+  // The billing page is where they manage billing.
+  if (place === "their billing page")
+    await expect(
+      page
+        .getByRole("link", { name: "Manage billing", exact: true })
+        .or(page.getByRole("button", { name: "Manage billing", exact: true }))
+        .first(),
+    ).toBeVisible();
 });
 
 When("they reload the page", async ({ page }) => {
@@ -178,6 +255,40 @@ Then("the editor contains {string}", async ({ page }, text: string) => {
 Then("the editor does not contain {string}", async ({ page }, text: string) => {
   await expect(editor(page)).toBeVisible();
   await expect(editor(page)).not.toContainText(text);
+});
+
+// From the dashboard's Start typing. A subscriber gets a blank editor, types
+// and saves; without a subscription it opens Checkout, and a trial at its
+// limit says so (before the editor or on saving it: the UI's choice).
+// "Untitled, Untitled (2)" → "Untitled (1)" PROVES THE LOWEST FREE NUMBER IS
+// REUSED, NOT MAX + 1 (documents.feature).
+When("they create a document", async ({ page }) => {
+  if (new URL(page.url()).pathname !== places["the dashboard"])
+    await page.goto(places["the dashboard"]);
+  await page
+    .getByRole("link", { name: "Start typing", exact: true })
+    .or(page.getByRole("button", { name: "Start typing", exact: true }))
+    .first()
+    .click();
+  const writable = editor(page)
+    .and(page.locator('[contenteditable="true"]'))
+    .first();
+  const trialLimit = page
+    .getByRole("alert")
+    .filter({ hasText: saveCopy.trialLimit })
+    .first();
+  await expect
+    .poll(
+      async () =>
+        new URL(page.url()).pathname.startsWith(stripePaths.checkout) ||
+        (await writable.isVisible()) ||
+        (await trialLimit.isVisible()),
+    )
+    .toBe(true);
+  if (!(await writable.isVisible())) return;
+  await focusEditorEnd(page);
+  await page.keyboard.type("A new document");
+  await save(page);
 });
 
 When("they save the document", async ({ page }) => {

@@ -31,7 +31,10 @@ Running cheat sheet for the E7-02 write-up. One line per decision, link the code
 - **Autosave never overwrites.** A background save from a stale revision is
   refused (409); only an explicit save wins ([ADR-0008](adr/0008-document-persistence.md)).
 - **E2E seeding is off by default.** `/api/e2e/*` answers 404 unless
-  `E2E_SEED=on` (set only by the e2e server) and acts as the cookie's user only.
+  `E2E_SEED=on` (set only by the e2e server) and acts as the cookie's user only. It
+  also drives the fake Stripe (own Checkouts and subscriptions only) and
+  forwards calls to `/documents…` with the caller's cookie, so e2e can prove
+  the backend gate; nothing else is reachable through it.
 - **Webhooks are verified.** Stripe's signature is checked on the raw body
   before anything is read; processed `event.id`s are stored, so replays are
   no-ops.

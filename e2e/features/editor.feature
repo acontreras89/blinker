@@ -90,6 +90,7 @@ Feature: Editor
       When they type "typed before signing up"
       And they start typing from the landing
       And they register with valid details
+      And they subscribe
       And they save the document
       Then the dashboard lists "Untitled"
       When they open the landing
