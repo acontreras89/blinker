@@ -19,6 +19,8 @@ type EditorProps = {
    * lines (back up when emptied). `page` is the document size.
    */
   size?: "display" | "page";
+  /** Focus on load, cursor at the end: the page is ready to type. */
+  autofocus?: boolean;
   onCreate?: (editor: TiptapEditor) => void;
   onUpdate?: (editor: TiptapEditor) => void;
   /** The scroll box: give it a max height and the content scrolls inside. */
@@ -35,6 +37,7 @@ export function Editor({
   label,
   placeholder = "Start typing",
   size = "page",
+  autofocus = false,
   onCreate,
   onUpdate,
   className,
@@ -63,6 +66,7 @@ export function Editor({
     >
       <Tiptap
         label={label}
+        autofocus={autofocus}
         onCreate={(editor) => {
           onCreate?.(editor);
           sync(editor);

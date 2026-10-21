@@ -20,8 +20,12 @@ Stripe ─────────┘ /api/webhooks/stripe     (also public: /ap
 
 ## Flows
 
-- **Auth**: forms → Better Auth at `/api/auth/*` → session row + httpOnly cookie.
-  Every backend call re-reads the session from the DB.
+- **Auth**: forms (browser) → Better Auth at `/api/auth/*` → session row +
+  httpOnly cookie. Every backend call re-reads the session from the DB; Next
+  pages read it through `lib/session.ts` (backend `/session`). Private routes
+  (`/app`, `/write`): `proxy.ts` bounces cookieless requests to
+  `/login?next=…`, the page's `requireUser` does the real check. Logged in, `/login` → `/app`
+  and `/signup` → `/write` ("Start typing" always ends in an editor).
 - **Pay**: Server Action → backend creates a Checkout Session → Stripe → webhook
   (signature verified, idempotent) → entitlement row. The success redirect only
   shows state; it never grants access.
@@ -34,7 +38,9 @@ src/
   app/            Next routes: (marketing), (auth), (app); route-only
                   components live next to their route in `_components/`
   components/     shared UI: shadcn/ui primitives, editor (Tiptap Simple Editor)
+  proxy.ts        optimistic redirect to log in (cookie presence only)
   lib/api.ts      in-process backend client, server-only
+  lib/session.ts  current user for Server Components; auth-client.ts for forms
   server/         Hono app; never imports next/*
     auth/         Better Auth config + session middleware
     db/           Drizzle schema (plural tables) and migrations

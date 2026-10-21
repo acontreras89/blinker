@@ -1,6 +1,8 @@
 import Link from "next/link";
-import { Cursor } from "@/components/cursor";
+import { Suspense } from "react";
+import { Wordmark } from "@/components/wordmark";
 import { buttonVariants } from "@/components/ui/button";
+import { getUser } from "@/lib/session";
 
 const navLink = "text-muted-foreground no-underline hover:text-foreground";
 
@@ -8,13 +10,7 @@ export default function MarketingLayout({ children }: LayoutProps<"/">) {
   return (
     <>
       <header className="wrap flex h-20 shrink-0 items-center gap-6">
-        <Link
-          href="/"
-          className="text-[1.35rem] font-extrabold tracking-[-0.02em]"
-        >
-          Blinker
-          <Cursor />
-        </Link>
+        <Wordmark />
         <nav
           aria-label="Main"
           className="ml-auto flex items-center gap-6 text-base font-medium whitespace-nowrap"
@@ -28,9 +24,16 @@ export default function MarketingLayout({ children }: LayoutProps<"/">) {
           <Link className={`${navLink} max-md:hidden`} href="/#faq">
             FAQ
           </Link>
-          <Link className={navLink} href="/login">
-            Log in
-          </Link>
+          {/* Same width while the session is read, so nothing jumps. */}
+          <Suspense
+            fallback={
+              <span aria-hidden="true" className="invisible">
+                Log in
+              </span>
+            }
+          >
+            <AccountLink />
+          </Suspense>
           <Link href="/signup" className={buttonVariants({ size: "xl" })}>
             Start typing
           </Link>
@@ -52,5 +55,20 @@ export default function MarketingLayout({ children }: LayoutProps<"/">) {
         </div>
       </footer>
     </>
+  );
+}
+
+// Logged in, "Log in" becomes "Open app". "Start typing" needs no switch:
+// signup sends a logged-in user straight to a blank editor.
+async function AccountLink() {
+  const user = await getUser();
+  return user ? (
+    <Link className={navLink} href="/app">
+      Open app
+    </Link>
+  ) : (
+    <Link className={navLink} href="/login">
+      Log in
+    </Link>
   );
 }

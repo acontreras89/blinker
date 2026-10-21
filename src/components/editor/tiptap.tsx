@@ -10,12 +10,18 @@ import { useEffect, useRef } from "react";
 
 export type TiptapProps = {
   label: string;
+  autofocus: boolean;
   onCreate: (editor: TiptapEditor) => void;
   onUpdate: (editor: TiptapEditor) => void;
 };
 
 /** Client-only (Tiptap reads randomness while rendering); see editor.tsx. */
-export default function Tiptap({ label, onCreate, onUpdate }: TiptapProps) {
+export default function Tiptap({
+  label,
+  autofocus,
+  onCreate,
+  onUpdate,
+}: TiptapProps) {
   const callbacks = useRef({ onCreate, onUpdate });
   useEffect(() => {
     callbacks.current = { onCreate, onUpdate };
@@ -23,6 +29,7 @@ export default function Tiptap({ label, onCreate, onUpdate }: TiptapProps) {
 
   const editor = useEditor({
     extensions: [StarterKit],
+    autofocus: autofocus && "end",
     editorProps: {
       attributes: {
         role: "textbox",

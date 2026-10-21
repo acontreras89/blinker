@@ -55,3 +55,23 @@ describe("sign-in validation", () => {
     ).toBe(401);
   });
 });
+
+describe("session", () => {
+  const session = (cookie = "") =>
+    app.request("/session", { headers: { cookie } });
+
+  it("is empty without a cookie", async () => {
+    expect(await (await session()).json()).toEqual({ user: null });
+  });
+
+  it("returns only the user's id and name", async () => {
+    const res = await post("/sign-up/email", {
+      ...valid,
+      email: "linus@example.com",
+    });
+    const cookie = res.headers.get("set-cookie")!.split(";")[0];
+    const { user } = await (await session(cookie)).json();
+    expect(Object.keys(user).sort()).toEqual(["id", "name"]);
+    expect(user.name).toBe("Ada");
+  });
+});

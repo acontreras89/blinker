@@ -1,34 +1,16 @@
 "use client";
 
-import type { Editor as TiptapEditor, JSONContent } from "@tiptap/react";
+import type { Editor as TiptapEditor } from "@tiptap/react";
 import Link from "next/link";
 import { useEffect, useEffectEvent, useRef, useState } from "react";
+import { loadDraft, saveDraft } from "@/components/editor/draft";
 import { Editor } from "@/components/editor/editor";
 import { Stat } from "@/components/editor/stat";
-import { storeStats, type StoredStats } from "@/components/editor/stats";
+import { storeStats } from "@/components/editor/stats";
 import { useWritingStats } from "@/components/editor/use-writing-stats";
 import { buttonVariants } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
-
-// The visitor's draft and stats stay in this browser; E5-01 turns the draft
-// into their first document after signup.
-const STORAGE_KEY = "blinker:hero";
-type Draft = { content: JSONContent; stats: StoredStats };
-
-function load(): Draft | null {
-  try {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY) ?? "null");
-  } catch {
-    return null;
-  }
-}
-
-function save(draft: Draft) {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(draft));
-  } catch {}
-}
 
 const minutes = (ms: number) => {
   const s = Math.max(0, Math.floor(ms / 1000));
@@ -45,7 +27,7 @@ export function Hero({ finePrint }: { finePrint: string }) {
 
   const persist = useEffectEvent(() => {
     if (editor.current)
-      save({
+      saveDraft({
         content: editor.current.getJSON(),
         stats: storeStats(stats, Date.now()),
       });
@@ -57,7 +39,7 @@ export function Hero({ finePrint }: { finePrint: string }) {
   }, []);
 
   const onCreate = (e: TiptapEditor) => {
-    const draft = load();
+    const draft = loadDraft();
     if (draft) {
       e.commands.setContent(draft.content, { emitUpdate: false });
       restore(draft.stats, e.getText());

@@ -1,5 +1,5 @@
-import Link from "next/link";
 import { Cursor } from "@/components/cursor";
+import { Wordmark } from "@/components/wordmark";
 
 /** Full-page 404/500: what happened, then what's next. */
 export function StatusPage({
@@ -16,13 +16,7 @@ export function StatusPage({
   return (
     <>
       <header className="wrap flex h-20 shrink-0 items-center">
-        <Link
-          href="/"
-          className="text-[1.35rem] font-extrabold tracking-[-0.02em]"
-        >
-          Blinker
-          <Cursor />
-        </Link>
+        <Wordmark />
       </header>
       <main className="wrap flex flex-1 flex-col justify-center pb-[clamp(64px,14vh,160px)]">
         <p className="mb-3 font-semibold text-muted-foreground tabular-nums">

@@ -32,7 +32,11 @@ export default defineConfig([
         "error",
         {
           patterns: [
-            { group: ["@/server/*"], message: "Use @/lib/api instead." },
+            {
+              // Input rules are zod only, shared with the forms on purpose.
+              regex: "^@/server/(?!auth/rules$)",
+              message: "Use @/lib/api instead.",
+            },
           ],
         },
       ],
