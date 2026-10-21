@@ -4,8 +4,8 @@ Covers E6-01..02: Checkout, verified webhook, entitlements, gating, upgrade
 path, visible status. Base: [ADR-0006](../adr/0006-own-billing-entitlements.md),
 [ADR-0009](../adr/0009-sync-entitlements-from-stripe.md). Setup for humans:
 [README](../../README.md#stripe-setup). Notes for the write-up:
-[Stripe notes](../stripe-notes.md). Grilled 2026-10-21; next: step 3 can
-start in parallel with 1–2.
+[Stripe notes](../stripe-notes.md). Grilled 2026-10-21; steps 1–2 done, next:
+3 and 4.
 
 ## Decisions
 
@@ -57,10 +57,22 @@ start in parallel with 1–2.
 
 ## Steps
 
-1. [ ] Schema (`stripe_customer_id`, `entitlements`, `stripe_events`) +
+1. [x] Schema (`stripe_customer_id`, `entitlements`, `stripe_events`) +
        `getAccess` with Vitest.
-2. [ ] `BillingGateway` (Stripe + fake), `syncSubscription`, webhook, return
+2. [x] `BillingGateway` (Stripe + fake), `syncSubscription`, webhook, return
        page sync; Vitest. Test-key guard. `pnpm stripe:setup` (price + Portal).
+       Contract for step 3, in `src/server/billing/`:
+   - Backend (`routes.ts`, cookie user): `GET /billing` (access or null),
+     `POST /billing/checkout` → `{url}` or `{redirect}`,
+     `POST /billing/return {sessionId}` → `ready|pending|invalid`,
+     `POST /billing/trial/end` (409 if not trialing), `POST /billing/portal` →
+     `{url}` (409 without a customer).
+   - Fake (`fake.ts`, `BILLING_GATEWAY=fake` in e2e and Vitest): Checkout URL
+     `/billing/fake-checkout/:id`, Portal `/billing/fake-portal?customer=…`;
+     those pages don't exist yet. `fakeBilling.complete(id)` pays and returns
+     the `success_url`; `fakeBilling.update(subId, …)` changes state before a
+     signed webhook. The browser reaches them only through an e2e route
+     (`e2e.ts`). E2E webhook secret: `whsec_e2e_secret`.
 3. [ ] `/bdd-feature` → `billing.feature`; steps red (`bdd-steps`); UI green
        (`bdd-ui`): Checkout after signup, return page, upgrade path, trial
        limit + "Start paying now", `/account/billing`, Portal button.
