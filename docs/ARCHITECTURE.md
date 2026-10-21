@@ -27,8 +27,10 @@ Stripe ─────────┘ /api/webhooks/stripe     (also public: /ap
   `/login?next=…`, the page's `requireUser` does the real check. Logged in, `/login` → `/app`
   and `/signup` → `/write` ("Start typing" always ends in an editor).
 - **Pay**: Server Action → backend creates a Checkout Session → Stripe → webhook
-  (signature verified, idempotent) → entitlement row. The success redirect only
-  shows state; it never grants access.
+  (signature verified, idempotent) → `syncSubscription` → entitlement row. If
+  the webhook is late, the return page runs the same sync from the Stripe API
+  ([ADR-0009](adr/0009-sync-entitlements-from-stripe.md)); the redirect alone
+  never grants access.
 - **Edit**: editor → Server Action → backend checks access → document JSON saved.
 
 ## Code map
@@ -55,11 +57,12 @@ e2e/
 
 - Every backend route validates input with Zod and checks session and access in
   middleware; Next never decides authorization alone.
-- Entitlements are written only by verified Stripe webhooks.
+- Entitlements are written only by the server, from data read from Stripe.
 - Document content is ProseMirror JSON, never HTML.
 
 ## Tests
 
 - Vitest next to the code for domain rules (`getAccess`, webhook handling, limits).
 - playwright-bdd for acceptance: each run gets a fresh temp SQLite file. Stripe
-  Checkout is not driven in e2e; tests post webhooks signed with the test secret.
+  Checkout is not driven in e2e: a fake `BillingGateway` stands in, and tests
+  post webhooks signed with the test secret.

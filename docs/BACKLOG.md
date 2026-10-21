@@ -36,10 +36,10 @@ Coarse tasks grouped by [epic](ROADMAP.md). Flow and rules: [AGENTS.md](../AGENT
 
 ## E6 — Stripe and gating
 
-- [ ] E6-01 Checkout + verified webhook → entitlements ([ADR-0006](adr/0006-own-billing-entitlements.md)).
-      Subscription + one of trial/lifetime; the other goes to EX-05.
-- [ ] E6-02 Server-side gating, non-subscriber/subscriber UI states, upgrade
-      path, visible subscription status (incl. `past_due` / failed payment).
+- [~] E6-01 Checkout + verified webhook → [plan](plans/E6-billing.md) → entitlements ([ADR-0006](adr/0006-own-billing-entitlements.md)).
+  Subscription + one of trial/lifetime; the other goes to EX-05.
+- [~] E6-02 Server-side gating, non-subscriber/subscriber UI states, upgrade
+  path, visible subscription status (incl. `past_due` / failed payment).
 
 ## E7 — Written deliverables
 
