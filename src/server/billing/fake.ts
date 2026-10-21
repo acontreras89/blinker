@@ -98,6 +98,10 @@ export const fakeBilling = {
     );
     return { subscription: s, successUrl };
   },
+  /** What a Checkout was opened with, for the fake hosted page. */
+  input(checkoutId: string) {
+    return state.checkouts.get(checkoutId)?.input ?? null;
+  },
   expire(checkoutId: string) {
     const c = state.checkouts.get(checkoutId)?.checkout;
     if (c) c.status = "expired";

@@ -15,6 +15,8 @@ import { useEffect, useRef } from "react";
 export type TiptapProps = {
   label: string;
   autofocus: boolean;
+  /** Fixed at creation, like `content`. */
+  editable: boolean;
   content?: JSONContent;
   onCreate: (editor: TiptapEditor) => void;
   onUpdate: (editor: TiptapEditor) => void;
@@ -26,6 +28,7 @@ export type TiptapProps = {
 export default function Tiptap({
   label,
   autofocus,
+  editable,
   content,
   onCreate,
   onUpdate,
@@ -46,12 +49,15 @@ export default function Tiptap({
       Shortcuts,
     ],
     content,
+    editable,
     autofocus: autofocus && "end",
     editorProps: {
       attributes: {
         role: "textbox",
         "aria-multiline": "true",
         "aria-label": label,
+        // A read-only text box says so; `contenteditable` alone doesn't.
+        ...(!editable && { "aria-readonly": "true" }),
         spellcheck: "false",
       },
     },

@@ -53,6 +53,8 @@ type EditorHeaderProps = {
   onMenu: (open: boolean) => void;
   /** Touch: header and toolbar are always there, nothing to toggle. */
   fixed: boolean;
+  /** No subscription: nothing to save, rename or format. */
+  readOnly: boolean;
 };
 
 /** Everything but the page: back, title, save, toolbar, header mode, delete. */
@@ -70,6 +72,7 @@ export function EditorHeader({
   onBack,
   onMenu,
   fixed,
+  readOnly,
 }: EditorHeaderProps) {
   const [renaming, setRenaming] = useState(false);
 
@@ -89,6 +92,8 @@ export function EditorHeader({
           <span className="block truncate px-2 text-muted-foreground">
             New document
           </span>
+        ) : readOnly ? (
+          <span className="block truncate px-2">{doc.title}</span>
         ) : renaming ? (
           <TitleField
             id={doc.id}
@@ -110,29 +115,35 @@ export function EditorHeader({
           </button>
         )}
       </div>
-      <SaveIndicator phase={phase} problem={problem} />
-      <Button
-        variant="outline"
-        size="lg"
-        onClick={onSave}
-        className="shrink-0 px-3.5 font-semibold"
-      >
-        Save
-      </Button>
+      {!readOnly && (
+        <>
+          <SaveIndicator phase={phase} problem={problem} />
+          <Button
+            variant="outline"
+            size="lg"
+            onClick={onSave}
+            className="shrink-0 px-3.5 font-semibold"
+          >
+            Save
+          </Button>
+        </>
+      )}
       {!fixed && (
         <>
           <span
             aria-hidden="true"
             className="mx-1 h-5 w-px shrink-0 bg-border"
           />
-          <IconButton
-            label="Toolbar"
-            aria-pressed={toolbar}
-            onClick={onToolbar}
-            className="aria-pressed:bg-muted aria-pressed:text-foreground"
-          >
-            <TypeIcon />
-          </IconButton>
+          {!readOnly && (
+            <IconButton
+              label="Toolbar"
+              aria-pressed={toolbar}
+              onClick={onToolbar}
+              className="aria-pressed:bg-muted aria-pressed:text-foreground"
+            >
+              <TypeIcon />
+            </IconButton>
+          )}
           <DropdownMenu onOpenChange={onMenu}>
             <DropdownMenuTrigger render={<IconButton label="Show header" />}>
               <PanelTopIcon />

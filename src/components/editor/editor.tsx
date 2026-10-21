@@ -21,6 +21,8 @@ type EditorProps = {
   size?: "display" | "page";
   /** Focus on load, cursor at the end: the page is ready to type. */
   autofocus?: boolean;
+  /** Off: readable and selectable, not typeable. Fixed at creation. */
+  editable?: boolean;
   /** Initial content; later changes go through the editor's commands. */
   content?: JSONContent;
   onCreate?: (editor: TiptapEditor) => void;
@@ -42,6 +44,7 @@ export function Editor({
   placeholder = "Start typing",
   size = "page",
   autofocus = false,
+  editable = true,
   content,
   onCreate,
   onUpdate,
@@ -72,7 +75,8 @@ export function Editor({
     >
       <Tiptap
         label={label}
-        autofocus={autofocus}
+        autofocus={autofocus && editable}
+        editable={editable}
         content={content}
         onLinkShortcut={onLinkShortcut}
         onCreate={(editor) => {

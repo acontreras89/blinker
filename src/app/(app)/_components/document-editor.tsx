@@ -13,10 +13,13 @@ import { Button } from "@/components/ui/button";
 import { useStored } from "@/hooks/use-stored";
 import { useTouch } from "@/hooks/use-touch";
 import { remove } from "../actions";
+import { startPaying } from "../billing/actions";
+import { billingCopy } from "../billing/copy";
 import { DeleteDialog } from "./delete-dialog";
 import { EditorHeader, headerModes, type HeaderMode } from "./editor-header";
 import { FormattingToolbar } from "./formatting-toolbar";
 import { LinkField } from "./link-field";
+import { SubscribeButton } from "./subscribe-button";
 import { useSaver, type Phase, type Problem } from "./use-saver";
 
 export type StoredDocument = {
@@ -41,6 +44,8 @@ const problemCopy: Record<Problem, string> = {
   changedElsewhere: "Changed elsewhere. Reload, or save to overwrite.",
   tooLarge: "Not saved. Over 1 MB: split it into two documents.",
   missing: "Not saved. This document was deleted elsewhere.",
+  lapsed: "Not saved: your subscription has ended. Your text stays right here.",
+  trialLimit: `${billingCopy.trialLimit} ${billingCopy.trialLimitNext}`,
 };
 const problemTone: Record<Problem, "warning" | "destructive"> = {
   failed: "destructive",
@@ -49,17 +54,31 @@ const problemTone: Record<Problem, "warning" | "destructive"> = {
   changedElsewhere: "warning",
   tooLarge: "destructive",
   missing: "destructive",
+  lapsed: "destructive",
+  trialLimit: "warning",
 };
 
 const pins = ["pinned", "unpinned"] as const;
 const REVEAL_EDGE_PX = 12;
+
+type DocumentEditorProps = {
+  stored?: StoredDocument;
+  /** No subscription: the page reads, the way back to writing shows. */
+  readOnly?: boolean;
+  /** They had a subscription: the way back is "resubscribe". */
+  had: boolean;
+};
 
 /**
  * The chromeless editor: a page, a cursor and the counters. The header comes
  * on request (pointer at the top edge, Escape) and leaves on typing, as the
  * per-device header mode says; touch devices keep header and toolbar.
  */
-export function DocumentEditor({ stored }: { stored?: StoredDocument }) {
+export function DocumentEditor({
+  stored,
+  readOnly = false,
+  had,
+}: DocumentEditorProps) {
   const router = useRouter();
   const touch = useTouch();
   const editorRef = useRef<TiptapEditor | null>(null);
@@ -110,7 +129,8 @@ export function DocumentEditor({ stored }: { stored?: StoredDocument }) {
     !!revealed ||
     (mode === "until-typing" && !typed);
   const toolbarPinned = toolbarPin === "pinned";
-  const toolbarShown = touch || toolbarPinned || (toolbarOpen && headerShown);
+  const toolbarShown =
+    !readOnly && (touch || toolbarPinned || (toolbarOpen && headerShown));
   const countersPinned = countersPin === "pinned";
   const countersShown = countersPinned || headerShown;
   const busy = menus > 0 || deleting || !!link;
@@ -163,7 +183,8 @@ export function DocumentEditor({ stored }: { stored?: StoredDocument }) {
     if (!draft) return;
     e.commands.setContent(draft.content, { emitUpdate: false });
     restore(draft.stats, e.getText());
-    if (!e.isEmpty) saver.unsaved();
+    // Read-only, the draft stays in the browser until they can save it.
+    if (!e.isEmpty && !readOnly) saver.unsaved();
   };
 
   const deleteDocument = async () => {
@@ -213,6 +234,7 @@ export function DocumentEditor({ stored }: { stored?: StoredDocument }) {
             }}
             onMenu={(open) => setMenus((n) => Math.max(0, n + (open ? 1 : -1)))}
             fixed={touch}
+            readOnly={readOnly}
           />
         </header>
         {editor && (
@@ -248,6 +270,8 @@ export function DocumentEditor({ stored }: { stored?: StoredDocument }) {
         >
           <Editor
             label="Document"
+            placeholder={readOnly ? "The cursor is waiting" : undefined}
+            editable={!readOnly}
             autofocus
             content={stored?.content}
             onCreate={onCreate}
@@ -282,6 +306,29 @@ export function DocumentEditor({ stored }: { stored?: StoredDocument }) {
                     Reload
                   </Button>
                 )}
+                {saver.problem === "lapsed" && (
+                  <SubscribeButton had={had} variant="outline" size="sm" />
+                )}
+                {saver.problem === "trialLimit" && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={async () => {
+                      // The save they asked for goes through once paying.
+                      if (await startPaying()) save("manual");
+                    }}
+                  >
+                    {billingCopy.startPaying}
+                  </Button>
+                )}
+              </div>
+            )}
+            {readOnly && (
+              <div className="mb-3 flex flex-wrap items-center gap-x-4 gap-y-2 rounded-lg border border-l-3 border-l-foreground px-4 py-2.5 text-[0.95rem]">
+                <span className="min-w-[24ch] flex-1">
+                  {billingCopy.readOnly[had ? "lapsed" : "never"]}
+                </span>
+                <SubscribeButton had={had} size="sm" />
               </div>
             )}
             <div

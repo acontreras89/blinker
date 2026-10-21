@@ -3,7 +3,7 @@ import { Hono } from "hono";
 import Stripe from "stripe";
 import { z } from "zod";
 import { requireUser, type User } from "../auth/middleware";
-import { getAccess } from "./access";
+import { getAccess, trialEligible } from "./access";
 import {
   alreadyProcessed,
   confirmReturn,
@@ -18,9 +18,12 @@ const iso = (d: Date | null) => d?.toISOString() ?? null;
 // The logged-in user's plan and the ways to change it.
 export const billingRoutes = new Hono<{ Variables: { user: User } }>()
   .use(requireUser)
+  // `had`: they ever subscribed, so the way back is "resubscribe".
   .get("/", (c) => {
-    const access = getAccess(c.var.user.id);
-    if (!access) return c.json({ access: null });
+    const userId = c.var.user.id;
+    const access = getAccess(userId);
+    const had = !trialEligible(userId);
+    if (!access) return c.json({ access: null, had });
     const { status, trialEnd, periodEnd, cancelAt } = access.entitlement;
     return c.json({
       access: {
@@ -30,6 +33,7 @@ export const billingRoutes = new Hono<{ Variables: { user: User } }>()
         cancelAt: iso(cancelAt),
         documentLimit: access.documentLimit,
       },
+      had,
     });
   })
   .post("/checkout", async (c) => c.json(await startCheckout(c.var.user.id)))

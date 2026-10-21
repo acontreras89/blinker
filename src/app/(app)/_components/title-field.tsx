@@ -8,6 +8,7 @@ import { rename, type RenameOutcome } from "../actions";
 export const titleCopy = {
   tooLong: `Too long. ${TITLE_MAX} characters, tops. It's a title, not a chapter.`,
   failed: "Not renamed. The server blinked first. Try again.",
+  lapsed: "Not renamed: your subscription has ended.",
 };
 
 type TitleFieldProps = {
@@ -48,8 +49,13 @@ export function TitleField({ id, title, onDone, className }: TitleFieldProps) {
     busy.current = false;
     if (outcome?.status === "renamed") return finish(outcome.title);
     if (outcome?.status === "missing") return finish(title);
+    const status = outcome?.status;
     setError(
-      outcome?.status === "too_long" ? titleCopy.tooLong : titleCopy.failed,
+      status === "too_long"
+        ? titleCopy.tooLong
+        : status === "no_access"
+          ? titleCopy.lapsed
+          : titleCopy.failed,
     );
   };
 

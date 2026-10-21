@@ -35,6 +35,8 @@ type DocumentListProps = {
   now: number;
   /** Shown once the list is empty, deletions included. */
   empty: React.ReactNode;
+  /** Renaming is writing: off without a subscription. */
+  canRename: boolean;
 };
 
 /**
@@ -42,7 +44,12 @@ type DocumentListProps = {
  * it can move into a sidebar. Renames and deletions show at once, then the
  * server's order replaces the list.
  */
-export function DocumentList({ documents, now, empty }: DocumentListProps) {
+export function DocumentList({
+  documents,
+  now,
+  empty,
+  canRename,
+}: DocumentListProps) {
   const router = useRouter();
   const clock = useClock(60_000);
   // Local edits hold only until the server sends a fresh list.
@@ -82,7 +89,7 @@ export function DocumentList({ documents, now, empty }: DocumentListProps) {
               doc={doc}
               now={clock.now || now}
               renaming={renaming === doc.id}
-              onRename={() => setRenaming(doc.id)}
+              onRename={canRename ? () => setRenaming(doc.id) : undefined}
               onRenamed={(title) => {
                 setRenaming(null);
                 if (title === doc.title) return;
@@ -116,7 +123,7 @@ type RowProps = {
   doc: Summary;
   now: number;
   renaming: boolean;
-  onRename: () => void;
+  onRename?: () => void;
   onRenamed: (title: string) => void;
   onDelete: () => void;
 };
@@ -176,14 +183,16 @@ function Row({ doc, now, renaming, onRename, onRenamed, onDelete }: RowProps) {
           className="w-40"
           finalFocus={() => !renameNext.current}
         >
-          <DropdownMenuItem
-            onClick={() => {
-              renameNext.current = true;
-              onRename();
-            }}
-          >
-            Rename
-          </DropdownMenuItem>
+          {onRename && (
+            <DropdownMenuItem
+              onClick={() => {
+                renameNext.current = true;
+                onRename();
+              }}
+            >
+              Rename
+            </DropdownMenuItem>
+          )}
           <DropdownMenuItem variant="destructive" onClick={onDelete}>
             Delete
           </DropdownMenuItem>

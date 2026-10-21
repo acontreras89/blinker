@@ -9,6 +9,18 @@ const auth = async () => ({
   headers: { cookie: (await headers()).get("cookie") ?? "" },
 });
 
+/** A write the backend refused: no access, or the trial's document cap. */
+export type Refused = "no_access" | "trial_limit";
+
+// The gate answers before the route, so the typed client misses its 403.
+async function refusal(res: {
+  status: number;
+  json(): Promise<unknown>;
+}): Promise<Refused | null> {
+  if (res.status !== 403) return null;
+  return ((await res.json()) as { error: Refused }).error;
+}
+
 export async function listDocuments() {
   const res = await api.documents.$get(undefined, await auth());
   if (!res.ok) throw new Error(`List failed: ${res.status}`);
@@ -23,11 +35,13 @@ export async function getDocument(id: string) {
   return (await res.json()).document;
 }
 
-/** Null when the content is over the size limit. */
+/** The new document, or why it wasn't made. */
 export async function createDocument(content: Content) {
   const res = await api.documents.$post({ json: { content } }, await auth());
   // The body limit answers before the route, so the typed client misses it.
-  if ((res.status as number) === 413) return null;
+  if ((res.status as number) === 413) return "too_large" as const;
+  const refused = await refusal(res);
+  if (refused) return refused;
   if (res.status !== 201) throw new Error(`Create failed: ${res.status}`);
   return (await res.json()).document;
 }
@@ -35,7 +49,7 @@ export async function createDocument(content: Content) {
 export type SaveOutcome =
   | { status: "saved"; revision: number; updatedAt: string; overwrote: boolean }
   | { status: "conflict"; revision: number }
-  | { status: "missing" | "too_large" | "failed" };
+  | { status: "missing" | "too_large" | "failed" | Refused };
 
 /** Never throws: every outcome is a save state the editor shows. */
 export async function saveContent(
@@ -54,19 +68,24 @@ export async function saveContent(
       return { status: "conflict", revision: (await res.json()).revision };
     if (res.status === 404) return { status: "missing" };
     if (res.status === 413) return { status: "too_large" };
-    return { status: "failed" };
+    return { status: (await refusal(res)) ?? "failed" };
   } catch {
     return { status: "failed" };
   }
 }
 
-/** Null for a missing document. The title is trimmed; empty keeps the old one. */
+/**
+ * Null for a missing document, the refusal without access. The title is
+ * trimmed; empty keeps the old one.
+ */
 export async function renameDocument(id: string, title: string) {
   const res = await api.documents[":id"].$patch(
     { param: { id }, json: { title } },
     await auth(),
   );
   if (res.status === 404) return null;
+  const refused = await refusal(res);
+  if (refused) return refused;
   if (!res.ok) throw new Error(`Rename failed: ${res.status}`);
   return await res.json();
 }

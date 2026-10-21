@@ -18,7 +18,10 @@ export type Problem =
   | "overwrote"
   | "changedElsewhere"
   | "tooLarge"
-  | "missing";
+  | "missing"
+  /** The server refused: no subscription, or the trial's document cap. */
+  | "lapsed"
+  | "trialLimit";
 
 export type Created = { id: string; title: string };
 
@@ -96,6 +99,8 @@ export function useSaver({ stored, editor, onCreated }: Options) {
       if (outcome.status === "conflict") setProblem("changedElsewhere");
       else if (outcome.status === "too_large") setProblem("tooLarge");
       else if (outcome.status === "missing") setProblem("missing");
+      else if (outcome.status === "no_access") setProblem("lapsed");
+      else if (outcome.status === "trial_limit") setProblem("trialLimit");
       else if (mode === "manual") setProblem("failed");
       else if (problemRef.current !== "failed") setProblem("warned");
     },
@@ -204,7 +209,15 @@ type Attempt =
       overwrote: boolean;
       created?: Created;
     }
-  | { status: "conflict" | "too_large" | "missing" | "failed" };
+  | {
+      status:
+        | "conflict"
+        | "too_large"
+        | "missing"
+        | "failed"
+        | "no_access"
+        | "trial_limit";
+    };
 
 // A save that throws (connection lost, server down) is a failed save.
 async function attempt(

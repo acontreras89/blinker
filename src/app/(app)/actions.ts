@@ -6,6 +6,7 @@ import {
   getDocument,
   renameDocument,
   saveContent,
+  type Refused,
   type SaveOutcome,
 } from "@/lib/documents";
 import { title as titleRule, type Content } from "@/server/documents/rules";
@@ -15,12 +16,12 @@ import { title as titleRule, type Content } from "@/server/documents/rules";
 
 export type CreateOutcome =
   | { status: "saved"; id: string; title: string; revision: number }
-  | { status: "too_large" | "failed" };
+  | { status: "too_large" | "failed" | Refused };
 
 export async function create(content: Content): Promise<CreateOutcome> {
   try {
     const document = await createDocument(content);
-    if (!document) return { status: "too_large" };
+    if (typeof document === "string") return { status: document };
     const { id, title, revision } = document;
     return { status: "saved", id, title, revision };
   } catch {
@@ -38,7 +39,8 @@ export async function save(
 }
 
 export type RenameOutcome =
-  { status: "renamed"; title: string } | { status: "too_long" | "missing" };
+  | { status: "renamed"; title: string }
+  | { status: "too_long" | "missing" | Refused };
 
 export async function rename(
   id: string,
@@ -46,9 +48,9 @@ export async function rename(
 ): Promise<RenameOutcome> {
   if (!titleRule.safeParse(title).success) return { status: "too_long" };
   const renamed = await renameDocument(id, title);
-  return renamed
-    ? { status: "renamed", title: renamed.title }
-    : { status: "missing" };
+  if (!renamed) return { status: "missing" };
+  if (typeof renamed === "string") return { status: renamed };
+  return { status: "renamed", title: renamed.title };
 }
 
 export async function remove(id: string): Promise<void> {

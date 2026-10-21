@@ -12,4 +12,11 @@ export function proxy(request: NextRequest) {
   return NextResponse.redirect(login);
 }
 
-export const config = { matcher: ["/app/:path*", "/write/:path*"] };
+export const config = {
+  matcher: [
+    "/app/:path*",
+    "/write/:path*",
+    "/billing/:path*",
+    "/account/:path*",
+  ],
+};

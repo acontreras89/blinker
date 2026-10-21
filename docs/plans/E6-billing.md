@@ -4,8 +4,7 @@ Covers E6-01..02: Checkout, verified webhook, entitlements, gating, upgrade
 path, visible status. Base: [ADR-0006](../adr/0006-own-billing-entitlements.md),
 [ADR-0009](../adr/0009-sync-entitlements-from-stripe.md). Setup for humans:
 [README](../../README.md#stripe-setup). Notes for the write-up:
-[Stripe notes](../stripe-notes.md). Grilled 2026-10-21; steps 1–2 done, 3 red, next:
-3 green and 4.
+[Stripe notes](../stripe-notes.md). Grilled 2026-10-21; steps 1–4 done, next: 5.
 
 ## Decisions
 
@@ -86,10 +85,10 @@ path, visible status. Base: [ADR-0006](../adr/0006-own-billing-entitlements.md),
      the `success_url`; `fakeBilling.update(subId, …)` changes state before a
      signed webhook. The browser reaches them only through an e2e route
      (`e2e.ts`). E2E webhook secret: `whsec_e2e_secret`.
-3. [~] Feature agreed; steps red (`billing.steps.ts`, billing Givens in
-   `common.steps.ts`, helpers in `fixtures.ts`). Next: UI green (`bdd-ui`).
-   Contract (steps are the source of truth; copy in their `copy` objects,
-   `saveCopy`, `ctaCopy`, `checkoutCopy`):
+3. [x] Feature agreed; steps red (`billing.steps.ts`, billing Givens in
+       `common.steps.ts`, helpers in `fixtures.ts`). Next: UI green (`bdd-ui`).
+       Contract (steps are the source of truth; copy in their `copy` objects,
+       `saveCopy`, `ctaCopy`, `checkoutCopy`):
    - **Signup** goes to Checkout. **Fake Checkout** `/billing/fake-checkout/:id`:
      button `Subscribe` pays (`fakeBilling.complete`) and goes to the
      `success_url`; link `Back` → `cancel_url`; text `3 days free` only when
@@ -118,8 +117,32 @@ path, visible status. Base: [ADR-0006](../adr/0006-own-billing-entitlements.md),
    - Test-only routes added to `src/server/e2e.ts`: `/billing/checkout`,
      `/billing/checkout/:id/complete`, `/billing/subscription`, `/backend`.
      Webhooks are posted signed with `whsec_e2e_secret`.
-4. [ ] Plug `getAccess` into E5's document middleware (likely done by then):
-       403 on create/edit/rename without access; read and delete stay open.
+     UI green. Decisions:
+   - Billing routes live under `(app)`: `/billing/return`,
+     `/billing/fake-checkout/[id]`, `/billing/fake-portal`, `/account/billing`;
+     the proxy guards `/billing` and `/account` too. Actions in
+     `billing/actions.ts`, copy in `billing/copy.ts`.
+   - Every way to Checkout is a form + Server Action (`subscribe`), never a
+     link: Next prefetches links, and that would open Checkouts.
+   - Dashboard: notices above the list (impersonation alert via
+     `/app?checkout=invalid`, read-only + outline CTA, past due + Manage
+     billing); "Start typing" stays the primary CTA. A trial at its cap gets
+     the alert in place, no navigation. Without access, Rename is hidden.
+   - Read-only editor: `editable=false` + `aria-readonly` (Playwright and
+     screen readers ignore `contenteditable` alone), no Save/toolbar/rename,
+     a bar with the CTA above the counters. A landing draft is shown but kept
+     in the browser until they can save it.
+   - Refused saves keep the editor editable (if they resubscribe elsewhere, a
+     save here works). In the editor, "Start paying now" ends the trial and
+     finishes the refused save (the text is on screen); from the dashboard
+     it opens a blank `/write`.
+   - Billing page order: past due › canceled (`cancelAt`) › trial › renews.
+     Days are formatted on the server (local-only app, ADR-0001).
+   - Fake Stripe pages wear a "Fake Stripe · test mode" badge; the portal
+     404s unless `BILLING_GATEWAY=fake`.
+4. [x] `getAccess` gates document writes: 403 `no_access` on create/edit/
+       rename; 403 `trial_limit` on create at the trial's cap (documents that
+       exist now). Read and delete stay open.
 5. [ ] Manual run against real Stripe test mode (Chrome + `stripe listen`):
        pay, decline, 3DS, Portal cancel, `past_due` via a test clock.
 6. [ ] `pnpm check` + e2e green; README Stripe flow, CONTEXT, ARCHITECTURE

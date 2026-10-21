@@ -49,6 +49,18 @@ export const e2eRoutes = new Hono<{ Variables: { user: User } }>()
   .post("/billing/checkout", async (c) =>
     c.json(await startCheckout(c.var.user.id)),
   )
+  // The fake Checkout page: what it offers, for its owner only.
+  .get("/billing/checkout/:id", async (c) => {
+    const checkout = await fakeGateway.getCheckout(c.req.param("id"));
+    const input = checkout && fakeBilling.input(checkout.id);
+    if (!input || checkout.customerId !== customerOf(c.var.user.id))
+      return c.json({ error: "not_found" as const }, 404);
+    return c.json({
+      open: checkout.status === "open",
+      trialDays: input.trialDays,
+      cancelUrl: input.cancelUrl,
+    });
+  })
   .post("/billing/checkout/:id/complete", async (c) => {
     const checkout = await fakeGateway.getCheckout(c.req.param("id"));
     const own = checkout && customerOf(c.var.user.id);

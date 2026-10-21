@@ -16,7 +16,7 @@ export function LogOut() {
         await authClient.signOut();
         location.replace("/login");
       }}
-      className="ml-auto text-base font-medium text-muted-foreground hover:text-foreground"
+      className="text-base font-medium text-muted-foreground hover:text-foreground"
     >
       Log out
     </button>

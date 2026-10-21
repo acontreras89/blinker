@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { checkout } from "@/app/(app)/billing/actions";
 import { authClient } from "@/lib/auth-client";
 import { email, signUpInput } from "@/server/auth/rules";
 import {
@@ -60,7 +61,9 @@ export function SignupForm() {
       ...values,
       name: values.name.trim(),
     });
-    if (!error) return location.replace("/write");
+    // Registered: on to Checkout, then the editor. Should Checkout fail to
+    // open, the dashboard offers it again.
+    if (!error) return location.replace(await checkout().catch(() => "/app"));
     setPending(false);
     setAlert(error.status === 422 ? copy.emailTaken : genericError);
   }

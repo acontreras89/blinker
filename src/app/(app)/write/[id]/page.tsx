@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { getBilling } from "@/lib/billing";
 import { getDocument } from "@/lib/documents";
 import { requireUser } from "@/lib/session";
 import { DocumentEditor } from "../../_components/document-editor";
@@ -17,11 +18,16 @@ export async function generateMetadata({
 export default async function Document({ params }: PageProps<"/write/[id]">) {
   const { id } = await params;
   await requireUser(`/write/${id}`);
-  const doc = await getDocument(id);
+  const [doc, { access, had }] = await Promise.all([
+    getDocument(id),
+    getBilling(),
+  ]);
   if (!doc) notFound();
   return (
     <DocumentEditor
       key={doc.id}
+      readOnly={!access}
+      had={had}
       stored={{
         id: doc.id,
         title: doc.title,
