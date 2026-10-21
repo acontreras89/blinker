@@ -19,6 +19,8 @@ export const users = sqliteTable("users", {
     .notNull()
     .default(false),
   image: text("image"),
+  // Created on the first Checkout and reused (E6).
+  stripeCustomerId: text("stripe_customer_id").unique(),
   ...timestamps,
 });
 
@@ -87,3 +89,34 @@ export const documents = sqliteTable(
   },
   (t) => [index("documents_user_updated_idx").on(t.userId, t.updatedAt)],
 );
+
+// Billing (ADR-0006, ADR-0009). One row per Stripe subscription, written only
+// by the sync from what Stripe returns; one-time purchases would add their own.
+export const entitlements = sqliteTable(
+  "entitlements",
+  {
+    // The Stripe object granting access: a subscription id.
+    id: text("id").primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    kind: text("kind", { enum: ["subscription"] }).notNull(),
+    // Stripe's subscription status, as is.
+    status: text("status").notNull(),
+    trialEnd: integer("trial_end", { mode: "timestamp_ms" }),
+    periodEnd: integer("period_end", { mode: "timestamp_ms" }).notNull(),
+    // Set when the user cancels: access ends then, not at once.
+    cancelAt: integer("cancel_at", { mode: "timestamp_ms" }),
+    ...timestamps,
+  },
+  (t) => [index("entitlements_user_idx").on(t.userId)],
+);
+
+// Processed webhook `event.id`s: a replay is a no-op.
+export const stripeEvents = sqliteTable("stripe_events", {
+  id: text("id").primaryKey(),
+  type: text("type").notNull(),
+  receivedAt: integer("received_at", { mode: "timestamp_ms" })
+    .notNull()
+    .default(sql`(unixepoch() * 1000)`),
+});

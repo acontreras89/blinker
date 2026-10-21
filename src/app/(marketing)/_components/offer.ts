@@ -1,5 +1,11 @@
-// What we sell. Which payment kinds ship is still open (BACKLOG E6, EX-05), so
-// the landing is driven by a plan list: pick a preset in OFFER.
+import {
+  PRICE,
+  TRIAL_DAYS,
+  TRIAL_DOCUMENT_LIMIT,
+} from "@/server/billing/rules";
+
+// What we sell: monthly + trial (E6); the other presets wait for EX-05. The
+// live plan's price and trial come from billing, so landing and Stripe agree.
 export type Plan = {
   name: string;
   price: string;
@@ -13,14 +19,17 @@ export type Plan = {
 
 const monthly: Plan = {
   name: "Monthly",
-  price: "$8",
-  period: "month",
+  price: `$${PRICE.amount / 100}`,
+  period: PRICE.interval,
   pitch: "Unlimited documents. Cancel anytime.",
   cta: "Start typing",
   href: "/signup",
 };
 
-const withTrial: Plan = { ...monthly, trial: { days: 7, documents: 3 } };
+const withTrial: Plan = {
+  ...monthly,
+  trial: { days: TRIAL_DAYS, documents: TRIAL_DOCUMENT_LIMIT },
+};
 
 const pro: Plan = {
   name: "Pro",
@@ -52,7 +61,7 @@ export const PRESETS = {
 } satisfies Record<string, Plan[]>;
 
 /** The live offer. The first plan is the main one. */
-export const OFFER: Plan[] = PRESETS.monthly;
+export const OFFER: Plan[] = PRESETS.trial;
 
 const disappointed = "Cancel whenever. We'll be disappointed, not surprised.";
 
@@ -69,7 +78,7 @@ export function faq(plans: Plan[]): { q: string; a: string }[] {
     {
       q: "Is there a free plan?",
       a: trial
-        ? `No. There's a ${trial.days}-day trial with up to ${trial.documents} documents. After that it's ${main.price} a month, or back to staring at your inbox.`
+        ? `No. There's a ${trial.days}-day trial with ${trial.documents === 1 ? "one document" : `up to ${trial.documents} documents`}. After that it's ${main.price} a month, or back to staring at your inbox.`
         : `No. The box at the top of this page is the free plan. Real documents are ${main.price} a month.`,
     },
     ...(trial

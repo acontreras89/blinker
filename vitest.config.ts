@@ -8,6 +8,8 @@ export default defineConfig({
     env: {
       DATABASE_URL: ":memory:",
       BETTER_AUTH_SECRET: "test-secret-at-least-32-characters-long",
+      BILLING_GATEWAY: "fake",
+      STRIPE_WEBHOOK_SECRET: "whsec_test_secret",
     },
   },
 });

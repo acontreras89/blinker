@@ -9,6 +9,6 @@ export const api = hc<AppType>("http://backend.internal", {
     app.request(input, init),
 });
 
-// Public mounts only (`/api/auth/*`, later the Stripe webhook): Next route
+// Public mounts only (`/api/auth/*`, `/api/webhooks/stripe`): Next route
 // handlers pass the raw request through.
 export const handle = (req: Request) => app.fetch(req);

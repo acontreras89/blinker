@@ -1,5 +1,6 @@
 import { Hono } from "hono";
 import { auth } from "./auth";
+import { billingRoutes, webhookRoutes } from "./billing/routes";
 import { documentRoutes } from "./documents/routes";
 import { e2eRoutes } from "./e2e";
 
@@ -14,7 +15,9 @@ export const app = new Hono()
     return c.json({ user });
   })
   .route("/documents", documentRoutes)
+  .route("/billing", billingRoutes)
   .on(["GET", "POST"], "/api/auth/*", (c) => auth.handler(c.req.raw))
+  .route("/api/webhooks/stripe", webhookRoutes)
   .route("/api/e2e", e2eRoutes);
 
 export type AppType = typeof app;

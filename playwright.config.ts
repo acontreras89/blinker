@@ -26,6 +26,9 @@ export default defineConfig({
       BETTER_AUTH_URL: `http://localhost:${PORT}`,
       AUTH_RATE_LIMIT: "off",
       E2E_SEED: "on",
+      // Stripe stays out of e2e: a fake gateway, real webhook signatures.
+      BILLING_GATEWAY: "fake",
+      STRIPE_WEBHOOK_SECRET: "whsec_e2e_secret",
     },
   },
 });

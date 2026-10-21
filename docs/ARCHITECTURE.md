@@ -49,7 +49,7 @@ src/
     db/           Drizzle schema (plural tables) and migrations
     documents/    routes, use cases, rules shared with the UI
     e2e.ts        test-only seeding, off unless E2E_SEED=on
-    billing/      checkout, webhook, getAccess
+    billing/      getAccess, sync, webhook; BillingGateway: Stripe or a fake
 e2e/
   features/       Gherkin, written before the UI
   steps/          playwright-bdd step definitions

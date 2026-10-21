@@ -21,10 +21,11 @@ Test mode only; no real money moves. You need a free Stripe account.
    keys. Copy the secret key (`sk_test_…`) into `.env` as `STRIPE_SECRET_KEY`.
 3. `stripe listen --print-secret` → copy the `whsec_…` into `.env` as
    `STRIPE_WEBHOOK_SECRET`. It is stable per machine and account.
-4. `pnpm stripe:setup` creates the product and prices in your test account;
-   safe to re-run. _(Lands in E6.)_
+4. `pnpm stripe:setup` creates the product, the monthly price and the
+   Customer Portal settings in your test account; safe to re-run. The server
+   refuses to start without an `sk_test_` key and a `whsec_` secret.
 5. While the app runs, keep webhooks forwarded in another terminal:
-   `stripe listen --forward-to localhost:3000/api/webhooks/stripe`.
+   `stripe listen --all-snapshot --forward-to localhost:3000/api/webhooks/stripe`.
 
 Test cards (any future date, any CVC, any postcode):
 

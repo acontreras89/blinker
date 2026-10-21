@@ -24,8 +24,14 @@ in [ADR-0006](adr/0006-own-billing-entitlements.md) and
   of scope: a limitation), `customer.subscription.trial_will_end` (no emails),
   `paused` / `resumed` (pausing not enabled), `product.*` / `price.*` (static).
 - **Card only in Checkout.** Async methods (SEPA, bank debits) confirm days
-  later and add pending states; left out, a limitation.
+  later and add pending states; left out, a limitation. API `2026-09-30`
+  dropped `payment_method_types` on Checkout: it is
+  `allowed_payment_method_types` now.
 - **Stripe has its own "Entitlements" API** (Features). We don't use it; our
   entitlements are our table.
 - **Period end is on the subscription item** in current API versions, not on
   the subscription.
+- **A cancellation can arrive as `cancel_at` or `cancel_at_period_end`.** We
+  store one `cancelAt`; access ends then even if the final
+  `subscription.deleted` never arrives. A missed renewal never locks a payer
+  out: period end alone doesn't revoke access.
