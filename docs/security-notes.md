@@ -40,3 +40,6 @@ Running cheat sheet for the E7-02 write-up. One line per decision, link the code
   had a subscription.
 - **Test keys enforced in code.** The server refuses to boot unless
   `STRIPE_SECRET_KEY` starts with `sk_test_`.
+- **No double subscriptions.** Starting Checkout with access already sends
+  the user to `/account/billing`; an open, unexpired Checkout is reused
+  instead of creating a second one.

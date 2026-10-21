@@ -3,7 +3,8 @@
 Covers E6-01..02: Checkout, verified webhook, entitlements, gating, upgrade
 path, visible status. Base: [ADR-0006](../adr/0006-own-billing-entitlements.md),
 [ADR-0009](../adr/0009-sync-entitlements-from-stripe.md). Setup for humans:
-[README](../../README.md#stripe-setup). Grilling in progress.
+[README](../../README.md#stripe-setup). Notes for the write-up:
+[Stripe notes](../stripe-notes.md). Grilling in progress.
 
 ## Decisions
 
@@ -27,11 +28,16 @@ path, visible status. Base: [ADR-0006](../adr/0006-own-billing-entitlements.md),
   `trial_end: "now"`). Copy polish → E8-04.
 - **One trial per user.** Offered only if the user never had a subscription.
 - **Customer.** Created in Stripe on the first Checkout, `customer_id` stored
-  on the user and reused. Abandoning Checkout leaves a registered
-  non-subscriber; that is the normal entry to the upgrade path.
+  on the user and reused.
+- **No double Checkout.** With access → `/account/billing`; an open Checkout
+  is reused.
+- **Events.** See [Stripe notes](../stripe-notes.md); all trigger a sync.
 - **Keys.** The server refuses to boot unless `STRIPE_SECRET_KEY` is `sk_test_`.
 - **Status.** `/account/billing`: plan and state (trial ends / renews /
-  past due / access until).
+  past due / access until) and "Manage billing" → Customer Portal session
+  (cancel at period end, card, invoices). Portal config created by
+  `stripe:setup`. E2E checks only the redirect to the fake; the real Portal is
+  tested by hand.
 - **E2E.** A `BillingGateway` port: Stripe in dev/prod, a fake in e2e (local
   "checkout" page). Tests post webhooks signed with a test secret, so signature
   checks run for real. Real Stripe only for manual checks and the demo video.
@@ -40,9 +46,20 @@ path, visible status. Base: [ADR-0006](../adr/0006-own-billing-entitlements.md),
 
 ## Open
 
-- Customer Portal (EX-01) for cancel / card / invoices vs own buttons.
-- Double Checkout (two tabs, two subscriptions); events list.
+- Entitlement model: one row per subscription (history) vs one per user.
 
 ## Steps
 
-TBD after grilling.
+1. [ ] Schema (`stripe_customer_id`, `entitlements`, `stripe_events`) +
+       `getAccess` with Vitest.
+2. [ ] `BillingGateway` (Stripe + fake), `syncSubscription`, webhook, return
+       page sync; Vitest. Test-key guard. `pnpm stripe:setup` (price + Portal).
+3. [ ] `/bdd-feature` → `billing.feature`; steps red (`bdd-steps`); UI green
+       (`bdd-ui`): Checkout after signup, return page, upgrade path, trial
+       limit + "Start paying now", `/account/billing`, Portal button.
+4. [ ] Plug `getAccess` into E5's document middleware (likely done by then):
+       403 on create/edit/rename without access; read and delete stay open.
+5. [ ] Manual run against real Stripe test mode (Chrome + `stripe listen`):
+       pay, decline, 3DS, Portal cancel, `past_due` via a test clock.
+6. [ ] `pnpm check` + e2e green; README Stripe flow, CONTEXT, ARCHITECTURE
+       touched up; leftovers moved; plan deleted.

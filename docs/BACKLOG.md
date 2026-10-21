@@ -36,17 +36,15 @@ Coarse tasks grouped by [epic](ROADMAP.md). Flow and rules: [AGENTS.md](../AGENT
 
 ## E6 — Stripe and gating
 
-- [~] E6-01 Checkout + verified webhook → [plan](plans/E6-billing.md) → entitlements ([ADR-0006](adr/0006-own-billing-entitlements.md)).
-  Subscription + one of trial/lifetime; the other goes to EX-05.
-- [~] E6-02 Server-side gating, non-subscriber/subscriber UI states, upgrade
-  path, visible subscription status (incl. `past_due` / failed payment).
+- [~] E6-01 Checkout, verified webhook, entitlements → [plan](plans/E6-billing.md)
+- [~] E6-02 Gating, upgrade path, status, Customer Portal → [plan](plans/E6-billing.md)
 
 ## E7 — Written deliverables
 
 - [ ] E7-01 README: setup (<15 min), architecture, tradeoffs, Stripe test flow,
       known limitations, how AI was used.
 - [ ] E7-02 Write-up: active subscriber rule, delayed webhook, one security decision
-      ([notes](security-notes.md)).
+      ([security](security-notes.md), [Stripe](stripe-notes.md) notes).
 
 ## E8 — Polish
 
@@ -69,7 +67,6 @@ Coarse tasks grouped by [epic](ROADMAP.md). Flow and rules: [AGENTS.md](../AGENT
 
 ## EX — Extras (by priority)
 
-- [ ] EX-01 Stripe Customer Portal ("Manage billing").
 - [ ] EX-02 Deploy to GCP (see [ADR-0001](adr/0001-local-only-deployment.md)).
 - [ ] EX-03 OAuth login.
 - [ ] EX-04 Version history: manual "save version" vs autosave checkpoints,
