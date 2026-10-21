@@ -13,6 +13,14 @@ import { createBdd, test as base } from "playwright-bdd";
 
 export type Credentials = { name: string; email: string; password: string };
 
+/** A document a step made through the API. */
+export type Seeded = {
+  id: string;
+  title: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+};
+
 type Fixtures = {
   /** The scenario's user: fresh credentials, registered only if a step does. */
   user: Credentials;
@@ -20,6 +28,16 @@ type Fixtures = {
   session: { cookies: Cookie[] };
   /** The user's second device: a separate browser context. */
   secondDevice: Page;
+  /** A second tab of the scenario's browser: same context, same session. */
+  secondTab: Page;
+  /** Documents seeded by `Given`s: the user's by title, the one being edited, another user's. */
+  docs: { byTitle: Record<string, Seeded>; current?: Seeded; other?: string };
+  /** Whether Server Action POSTs (saves) are failed in the page. */
+  saving: { fails: boolean };
+  /** Browser dialogs the page raised, by type (`beforeunload`…). */
+  dialogs: string[];
+  /** Words per minute read before a change, to compare after it. */
+  speed: { beforeIdle?: number; beforeReset?: number };
 };
 
 export const test = base.extend<Fixtures>({
@@ -31,6 +49,15 @@ export const test = base.extend<Fixtures>({
     await provide(await context.newPage());
     await context.close();
   },
+  secondTab: async ({ page }, provide) => {
+    const tab = await page.context().newPage();
+    await provide(tab);
+    await tab.close();
+  },
+  docs: async ({}, provide) => provide({ byTitle: {} }),
+  saving: async ({}, provide) => provide({ fails: false }),
+  dialogs: async ({}, provide) => provide([]),
+  speed: async ({}, provide) => provide({}),
 });
 
 export const { Given, When, Then } = createBdd(test);
@@ -59,6 +86,27 @@ export async function logIn(context: BrowserContext, user: Credentials) {
   expect(res.ok(), await res.text()).toBe(true);
 }
 
+/**
+ * Seeds a document as the request's user (`POST /api/e2e/documents`, on only in
+ * e2e). A context's own `request` seeds for the browser's user.
+ */
+export async function seedDocument(
+  api: APIRequestContext,
+  seed: {
+    title?: string;
+    text?: string;
+    createdAt?: Date;
+    updatedAt?: Date;
+  } = {},
+): Promise<Seeded> {
+  const res = await api.post("/api/e2e/documents", { data: seed });
+  expect(res.status(), await res.text()).toBe(201);
+  const { id, title } = await res.json();
+  return { id, title, createdAt: seed.createdAt, updatedAt: seed.updatedAt };
+}
+
+export const documentPath = (id: string) => `/write/${id}`;
+
 // The editor on screen: the landing hero or the app editor.
 export const editor = (page: Page) =>
   page.getByRole("textbox").and(page.locator("[contenteditable]"));
@@ -75,6 +123,63 @@ export async function expectLoggedIn(context: BrowserContext, loggedIn = true) {
   await expect(loggedIn ? openApp : logIn).toBeVisible();
   await expect(loggedIn ? logIn : openApp).toHaveCount(0);
   await tab.close();
+}
+
+/** Puts the caret at the end of the editor's text, as a click there would. */
+export async function focusEditorEnd(page: Page) {
+  await editor(page).click();
+  await editor(page).press("ControlOrMeta+a");
+  await editor(page).press("ArrowRight");
+}
+
+// Save state, in the product's voice (docs/DESIGN.md#voice). Unsaved and
+// Saved are polite statuses: announced, not necessarily on screen while the
+// header is hidden. Everything else is an alert that must be visible
+// (docs/plans/E5-documents.md, "Save states" and "Two tabs").
+export const saveCopy = {
+  unsaved: "Unsaved changes",
+  saved: "Saved",
+  failed: "Not saved. The server blinked first. Save again.",
+  warned: "Not saved yet. Trying again on your next change.",
+  overwrote: "Edited elsewhere too. This version won.",
+  changedElsewhere: "Changed elsewhere. Reload, or save to overwrite.",
+};
+
+const escape = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+/** A `status` whose whole text is the copy (counters are `output`s, also statuses). */
+export const saveStatus = (page: Page, copy: string) =>
+  page
+    .getByRole("status")
+    .filter({ hasText: new RegExp(`^\\s*${escape(copy)}\\s*$`) });
+
+export async function expectSaveStatus(page: Page, copy: string) {
+  await expect(saveStatus(page, copy).first()).toBeAttached();
+}
+
+const saveAlert = (page: Page) =>
+  page.getByRole("alert").filter({
+    hasText: new RegExp(
+      [
+        saveCopy.failed,
+        saveCopy.warned,
+        saveCopy.overwrote,
+        saveCopy.changedElsewhere,
+      ]
+        .map(escape)
+        .join("|"),
+    ),
+  });
+
+/**
+ * Saves (with the keyboard shortcut unless told how) and waits until the save
+ * has an outcome: Saved, or one of the save alerts.
+ */
+export async function save(page: Page, how?: () => Promise<void>) {
+  await (how ? how() : editor(page).press("ControlOrMeta+s"));
+  await expect(
+    saveStatus(page, saveCopy.saved).or(saveAlert(page)).first(),
+  ).toBeAttached();
 }
 
 export async function expectAskedToLogIn(page: Page) {

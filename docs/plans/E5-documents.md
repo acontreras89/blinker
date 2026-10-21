@@ -82,8 +82,49 @@ diff saves, "changed elsewhere" on focus if cut: all in the backlog (EX).
    - Save outcomes (`saveContent`): `saved` (+ `overwrote`), `conflict`
      (autosave only), `missing`, `too_large`, `failed`. Title rules:
      `TITLE_MAX` and `title` in `@/server/documents/rules`.
-3. [ ] **Next.** Steps, red (bdd-steps subagent, fresh session). `they reset the stats`
-       moves from `landing.steps.ts` to common (now used by two features).
+3. [x] Steps, red: `common`, `documents`, `editor` steps. Contract for the
+       UI (the steps are the source of truth; copy in their `copy` objects
+       and `saveCopy` in `fixtures.ts`):
+   - **List.** A document is a link to `/write/[id]` named exactly its title,
+     in a list item (or row) that also holds its dates as text `Updated 2
+hours ago` / `Created 3 days ago`. Each relative date, focused, has the
+     exact date (`Oct 18, 2026`-style day, `en-US` medium) in its accessible
+     description. Row actions: a `More options` button opening menu items
+     `Rename`, `Delete` (or those as buttons in the row). Empty state text
+     `Nothing here yet.` plus a `Start typing` link.
+   - **Title.** A textbox named `Title` (in the row or the header); Enter
+     confirms, Escape cancels; too long → its accessible error message. In
+     the editor the title is a button named by the title (or the `Title`
+     field itself).
+   - **Delete.** A `dialog`/`alertdialog` with the title and the
+     "gone for good" copy; `Cancel` and `Delete` buttons.
+   - **Saves.** Unsaved and Saved are `status` elements whose whole text is
+     the copy (present in the accessibility tree, not necessarily visible).
+     Failed, warned, overwrote and changed-elsewhere are visible `alert`s.
+     ⌘/Ctrl+S saves; `beforeunload` while unsaved. Stale tab on focus: the
+     changed-elsewhere alert plus a `Reload` button.
+   - **Chrome.** The header is shown ⇔ a `Save` button is visible; Escape
+     reveals it (steps use that to reach header controls). The "…" menu is
+     `More options` → menu item `Delete`. Header mode: a `Show header`
+     button/combobox, options (`radio`/`menuitemradio`/`option`) `On
+request`, `Until typing`, `Always`. Toolbar: role `toolbar` named
+     `Formatting`, toggled by a `Toolbar` button, pinned with `Pin toolbar`.
+     Counters unpinned with `Unpin counters` (or a pressed `Pin counters`).
+     "Only the text and the counters": no visible link, no Save, no toolbar.
+     Touch = CDP touch emulation (`pointer: coarse`, `hover: none`).
+   - **Formats.** Tiptap's default shortcuts plus ⌘K for links (the shortcut
+     focuses a URL field; Enter applies). Checked by role (`strong`,
+     `emphasis`, `code`, `blockquote`, `heading`, `separator`, `link`),
+     strike by `line-through`, lists by `list-style-type` (disc/circle/square
+     vs decimal), code block as `code` inside `pre`. ` ```let x ` must give a
+     code block with text `let x` (Tiptap's default rule would take `let` as
+     the language). Each toolbar button (named by its format, plus Undo,
+     Redo, Link, Horizontal rule) has its shortcut in its accessible
+     description on hover (`⌘`/`Ctrl`, `⇧`/`Shift`, `⌥`/`Alt` + key; the
+     rule shows `---`).
+   - **Time.** Editor `Given`s install Playwright's clock (time flows);
+     idle minutes are `clock.fastForward`. `they pause` waits 1.5 s.
+     Returning to a tab = `bringToFront` + a window `focus` event.
 4. [ ] UI until green: list, empty state, `/write` create + manual save
        (button, ⌘S), states, rename, delete, hero draft.
 5. [ ] Chromeless editor (E5-03): header modes and reveal, toolbar

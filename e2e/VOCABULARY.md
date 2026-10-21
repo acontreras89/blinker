@@ -21,7 +21,7 @@ listed here. `{…}` = parameter; actors and nouns from [CONTEXT](../docs/CONTEX
   `the dashboard`, `a blank editor`
 - `they reload the page`
 - `they are told the page does not exist`
-- `they start typing from the landing`
+- `they start typing from {place}` — its **Start typing** link
 
 ## Editing
 
@@ -30,7 +30,9 @@ listed here. `{…}` = parameter; actors and nouns from [CONTEXT](../docs/CONTEX
   editor on screen, hero or app
 - `they save the document` — how is the UI's choice
 - `the dashboard lists {string}` · `the dashboard does not list {string}` —
-  comma-separated titles
+  comma-separated titles; judged in a new tab unless already there
+- `the dashboard lists {string} in that order` — all of them, top first
+- `they are told they have no documents yet`
 - `the word count is {int}` · `the words per minute are above 0` ·
   `the words per minute are 0` · `they reset the stats`
 

@@ -1,5 +1,5 @@
 import { expect } from "@playwright/test";
-import { Then, When } from "./fixtures";
+import { Then } from "./fixtures";
 
 Then("they see the product name", async ({ page }) => {
   await expect(page.getByRole("heading", { level: 1 })).toContainText(
@@ -19,8 +19,4 @@ Then("they see the pricing", async ({ page }) => {
   await expect(
     page.getByRole("region", { name: "Pricing" }).getByText(/\$\d/).first(),
   ).toBeVisible();
-});
-
-When("they reset the stats", async ({ page }) => {
-  await page.getByRole("button", { name: "Reset stats" }).click();
 });
