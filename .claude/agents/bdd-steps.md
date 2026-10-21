@@ -37,8 +37,8 @@ _what_ the user can perceive and operate, never _how_ it is built.
 4. **Record and hand off.** Plan: mark the steps step done, and note the
    contract the UI agent must meet (accessible names, error copy, how errors
    are exposed). New decisions → the plan; security ones →
-   [security notes](../../docs/security-notes.md). Run `pnpm format`, commit
-   your paths only, and report the red summary.
+   [security notes](../../docs/security-notes.md). Format and commit your
+   paths only (other agents may be mid-edit), and report the red summary.
 
 ## Rules
 

@@ -35,7 +35,8 @@ Load only what the task needs.
   with a recommended answer. The user dictates by voice.
 - Ask before meaningful changes; the user decides, the agent finds facts.
 - Run Prettier on every file you write, Markdown included, before committing
-  (`pnpm format`); it reflows tables and lists.
+  (`pnpm exec prettier --write <your paths>`); it reflows tables and lists.
+  Not `pnpm format`: parallel agents may have files mid-edit.
 
 ## Session protocol
 
@@ -68,12 +69,14 @@ UI behaviour is specified before it is built, with Playwright + Gherkin:
 1. Grilling on the behaviour → a declarative `.feature`: `/bdd-feature`.
 2. Step definitions until **red**: the `bdd-steps` subagent
    ([.claude/agents/bdd-steps.md](.claude/agents/bdd-steps.md)).
-3. A separate agent builds the UI until it is **green**, without editing the
-   `.feature`. UI decisions are made here: prototype freely, any UI that passes
-   is valid.
+3. UI until **green**: the `bdd-ui` subagent
+   ([.claude/agents/bdd-ui.md](.claude/agents/bdd-ui.md)). UI decisions are
+   made here. Tell it what to do on a contract problem (`stop` when someone is
+   hands-on, `continue` when AFK) and, if the UI is undecided, how many
+   prototypes to build for a human to pick.
 
-Red and green run in separate contexts; the UI subagent is still to be written
-(E2-02).
+Red and green run in separate contexts. The subagents know only the BDD flow;
+whoever spawns them closes the plan, moves leftovers, and logs the work.
 
 ## Commits
 

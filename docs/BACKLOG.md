@@ -16,10 +16,8 @@ Coarse tasks grouped by [epic](ROADMAP.md). Flow and rules: [AGENTS.md](../AGENT
 
 ## E2 — Skeleton, DB, auth
 
-- [~] E2-01 Auth → [plan](plans/E2-01-auth.md)
-- [~] E2-02 Extract the BDD flow into a skill + subagents. Done: `bdd-feature`
-  (step 1), [vocabulary](../e2e/VOCABULARY.md), `bdd-steps` subagent (step 2);
-  left: UI/green subagent.
+- [x] E2-01 Auth: signup, login, logout, private routes → [auth.feature](../e2e/features/auth.feature), [security notes](security-notes.md)
+- [x] E2-02 BDD flow: `bdd-feature` skill, [vocabulary](../e2e/VOCABULARY.md), `bdd-steps` and `bdd-ui` subagents
 
 ## E3 — Product and brand concept
 
