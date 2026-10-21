@@ -14,3 +14,5 @@ date,block,start,end,epic,task,claude_session,note
 2026-10-20,B7,12:52,13:36,E2,E2-01,e4bb536d-4e0d-44dc-a1ea-fb02cbc297f6,Auth step definitions (API setup; UI outcomes by role/name); red on missing UI
 2026-10-20,B7,13:36,13:47,E2,E2-02,e4bb536d-4e0d-44dc-a1ea-fb02cbc297f6,bdd-steps subagent; AGENTS.md points to it
 2026-10-20,B8,12:57,14:00,E5,E5-01,393707e5-8a97-4b47-98fa-c54aa02df29c,"Grill and plan documents + editor (E5-01..03); ADR-0008; brief as local Markdown"
+2026-10-21,B9,08:51,09:02,E2,E2-02,ac4a6260-e9d1-4863-9b41-7bc18a136874,bdd-ui subagent (step 3); parallel-agent rules in AGENTS.md
+2026-10-21,B9,09:02,09:35,E2,E2-01,ac4a6260-e9d1-4863-9b41-7bc18a136874,Auth UI green (signup/login/logout; proxy + page session checks); CTA size fix; plan closed
