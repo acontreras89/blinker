@@ -19,3 +19,4 @@ date,block,start,end,epic,task,claude_session,note
 2026-10-21,B10,08:53,10:25,E5,E5-01,8c97406c-f798-47bf-ace6-c9c1fa701d35,"Grill documents.feature + editor.feature (list; save, states, tabs, formats, header modes, counters); ADR-0008 stale autosave refused"
 2026-10-21,B11,08:59,10:35,E6,E6-01,a5d2a00f-ae90-434e-9bb7-c8e3be479a18,"Grill and plan billing (E6-01..02); ADR-0009 sync from Stripe; Stripe setup in README; Stripe notes; Portal moved into E6"
 2026-10-21,B12,10:32,10:53,E5,E5-02,cc99844e-e3c8-45c1-a66b-2388eba22db7,"Documents backend (plan step 2): schema, use cases, Hono routes, Vitest, e2e seeding route"
+2026-10-21,B13,10:38,11:20,E6,E6-01,f4b06806-961f-4a63-a0c6-d6d45964d8f2,"Billing backend (plan steps 1-2): schema, getAccess, BillingGateway Stripe + fake, sync, webhook, routes, stripe:setup, test-key guard; user on Stripe setup from 10:47"
