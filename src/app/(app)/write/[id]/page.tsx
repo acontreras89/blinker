@@ -4,6 +4,7 @@ import { getBilling } from "@/lib/billing";
 import { getDocument } from "@/lib/documents";
 import { requireUser } from "@/lib/session";
 import { DocumentEditor } from "../../_components/document-editor";
+import { FreshOnReturn } from "../../_components/fresh-on-return";
 
 export const instant = false;
 
@@ -24,16 +25,19 @@ export default async function Document({ params }: PageProps<"/write/[id]">) {
   ]);
   if (!doc) notFound();
   return (
-    <DocumentEditor
-      key={doc.id}
-      readOnly={!access}
-      had={had}
-      stored={{
-        id: doc.id,
-        title: doc.title,
-        content: doc.content,
-        revision: doc.revision,
-      }}
-    />
+    <FreshOnReturn>
+      <DocumentEditor
+        // Paying again makes it writable: a new editor, editable from the start.
+        key={`${doc.id}:${!!access}`}
+        readOnly={!access}
+        had={had}
+        stored={{
+          id: doc.id,
+          title: doc.title,
+          content: doc.content,
+          revision: doc.revision,
+        }}
+      />
+    </FreshOnReturn>
   );
 }

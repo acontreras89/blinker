@@ -4,11 +4,9 @@ import { cn } from "cn";
 import Link from "next/link";
 import { useState } from "react";
 import { Button, buttonVariants } from "@/components/ui/button";
+import type { Writing } from "@/lib/billing";
 import { billingCopy } from "../billing/copy";
 import { CheckoutButton, StartPayingButton } from "./subscribe-button";
-
-/** A blank editor, the trial's cap (said up front), or Checkout. */
-export type Writing = "write" | "capped" | "subscribe";
 
 type StartTypingProps = {
   mode: Writing;

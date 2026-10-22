@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import { Cursor } from "@/components/cursor";
-import { getBilling, type Plan } from "@/lib/billing";
+import { getBilling, writing, type Writing } from "@/lib/billing";
 import { listDocuments } from "@/lib/documents";
 import { requireUser } from "@/lib/session";
 import { AppHeader } from "../_components/app-header";
 import { Notice } from "../_components/notice";
 import { DocumentList } from "../_components/document-list";
-import { StartTyping, type Writing } from "../_components/start-typing";
+import { StartTyping } from "../_components/start-typing";
 import {
   ManageBillingButton,
   SubscribeButton,
@@ -15,13 +15,6 @@ import { billingCopy } from "../billing/copy";
 
 export const instant = false;
 export const metadata: Metadata = { title: "Your documents" };
-
-/** What "Start typing" does: write, hit the trial's cap, or go subscribe. */
-function writing(access: Plan | null, count: number): Writing {
-  if (!access) return "subscribe";
-  const { documentLimit } = access;
-  return documentLimit !== null && count >= documentLimit ? "capped" : "write";
-}
 
 export default async function Dashboard({ searchParams }: PageProps<"/app">) {
   const user = await requireUser("/app");

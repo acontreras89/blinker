@@ -177,6 +177,8 @@ export function useSaver({ stored, editor, onCreated }: Options) {
       removeEventListener("pagehide", visibility);
       removeEventListener("focus", focus);
       document.removeEventListener("visibilitychange", visibility);
+      // Gone or hidden by a client navigation: what's pending goes now.
+      if (dirty()) save("auto");
       clearTimeout(timer.current);
     };
   }, [save, checkBehind]);

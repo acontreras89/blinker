@@ -4,14 +4,28 @@ import type { JSONContent, Editor as TiptapEditor } from "@tiptap/react";
 import { cn } from "cn";
 import { PinIcon, PinOffIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { clearDraft, loadDraft } from "@/components/editor/draft";
+import {
+  useCallback,
+  useEffect,
+  useEffectEvent,
+  useRef,
+  useState,
+} from "react";
+import {
+  clearDraft,
+  clearStats,
+  loadDraft,
+  loadStats,
+  saveStats,
+} from "@/components/editor/draft";
 import { Editor } from "@/components/editor/editor";
 import { Stat } from "@/components/editor/stat";
+import { storeStats } from "@/components/editor/stats";
 import { useWritingStats } from "@/components/editor/use-writing-stats";
 import { Button } from "@/components/ui/button";
 import { useStored } from "@/hooks/use-stored";
 import { useTouch } from "@/hooks/use-touch";
+import { brand } from "@/lib/brand";
 import { remove } from "../actions";
 import { startPaying } from "../billing/actions";
 import { billingCopy } from "../billing/copy";
@@ -65,6 +79,8 @@ type DocumentEditorProps = {
   stored?: StoredDocument;
   /** No subscription: the page reads, the way back to writing shows. */
   readOnly?: boolean;
+  /** Read-only because the trial's documents are used up: pay to write. */
+  capped?: boolean;
   /** They had a subscription: the way back is "resubscribe". */
   had: boolean;
 };
@@ -77,6 +93,7 @@ type DocumentEditorProps = {
 export function DocumentEditor({
   stored,
   readOnly = false,
+  capped = false,
   had,
 }: DocumentEditorProps) {
   const router = useRouter();
@@ -94,10 +111,27 @@ export function DocumentEditor({
     onCreated: (created) => {
       setDoc(created);
       history.replaceState(null, "", `/write/${created.id}`);
+      document.title = `${created.title} · ${brand.name}`;
       clearDraft();
     },
   });
   const { save } = saver;
+
+  // The speed survives a reload, per document and device; nothing is stored
+  // before the editor has read back what was.
+  const statsLoaded = useRef(false);
+  const persistStats = useEffectEvent(() => {
+    if (doc && statsLoaded.current)
+      saveStats(doc.id, storeStats(stats, Date.now()));
+  });
+  useEffect(() => persistStats(), [stats, doc]);
+  useEffect(() => {
+    addEventListener("pagehide", persistStats);
+    return () => {
+      removeEventListener("pagehide", persistStats);
+      persistStats();
+    };
+  }, []);
 
   // Chrome
   const [mode, setMode] = useStored<HeaderMode>(
@@ -178,7 +212,12 @@ export function DocumentEditor({
   const onCreate = (e: TiptapEditor) => {
     editorRef.current = e;
     setEditor(e);
-    if (stored) return restore({ written: 0, elapsedMs: 0 }, e.getText());
+    statsLoaded.current = true;
+    if (stored)
+      return restore(
+        loadStats(stored.id) ?? { written: 0, elapsedMs: 0 },
+        e.getText(),
+      );
     const draft = loadDraft();
     if (!draft) return;
     e.commands.setContent(draft.content, { emitUpdate: false });
@@ -191,6 +230,7 @@ export function DocumentEditor({
     if (!doc) return;
     await remove(doc.id);
     saver.stop();
+    clearStats(doc.id);
     router.replace("/app");
   };
 
@@ -323,7 +363,26 @@ export function DocumentEditor({
                 )}
               </div>
             )}
-            {readOnly && (
+            {readOnly && capped && (
+              <div
+                role="alert"
+                className="mb-3 flex flex-wrap items-center gap-x-4 gap-y-2 rounded-lg border border-l-3 border-l-warning px-4 py-2.5 text-[0.95rem]"
+              >
+                <span className="min-w-[24ch] flex-1">
+                  {billingCopy.trialLimit} {billingCopy.trialLimitNext}
+                </span>
+                <Button
+                  size="sm"
+                  onClick={async () => {
+                    // Writable once paying: the page comes back editable.
+                    if (await startPaying()) router.refresh();
+                  }}
+                >
+                  {billingCopy.startPaying}
+                </Button>
+              </div>
+            )}
+            {readOnly && !capped && (
               <div className="mb-3 flex flex-wrap items-center gap-x-4 gap-y-2 rounded-lg border border-l-3 border-l-foreground px-4 py-2.5 text-[0.95rem]">
                 <span className="min-w-[24ch] flex-1">
                   {billingCopy.readOnly[had ? "lapsed" : "never"]}

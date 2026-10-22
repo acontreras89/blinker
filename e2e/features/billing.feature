@@ -130,6 +130,11 @@ Feature: Billing
       And they save the document
       Then the dashboard lists "Untitled, First"
 
+    Scenario: A blank editor at the trial's limit says so before any typing
+      Given a logged-in user on a trial with the documents "First"
+      When they open a blank editor
+      Then they are told their trial includes 1 document
+
     Scenario: A user who had a subscription gets no second trial
       Given a logged-in user whose subscription is canceled
       When they create a document

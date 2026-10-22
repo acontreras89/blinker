@@ -16,6 +16,14 @@ export type Plan = {
   documentLimit: number | null;
 };
 
+/** What "Start typing" does: write, hit the trial's cap, or go subscribe. */
+export type Writing = "write" | "capped" | "subscribe";
+export function writing(access: Plan | null, count: number): Writing {
+  if (!access) return "subscribe";
+  const { documentLimit } = access;
+  return documentLimit !== null && count >= documentLimit ? "capped" : "write";
+}
+
 /** Their access now (null: read and delete only) and whether they ever paid. */
 export async function getBilling(): Promise<{
   access: Plan | null;
