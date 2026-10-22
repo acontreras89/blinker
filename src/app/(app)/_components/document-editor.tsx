@@ -18,6 +18,7 @@ import {
   loadStats,
   saveStats,
 } from "@/lib/draft";
+import { CodeHighlight } from "@/components/editor/code-highlight";
 import { Editor } from "@/components/editor/editor";
 import { Stat } from "@/components/editor/stat";
 import { storeStats } from "@/lib/stats";
@@ -394,6 +395,7 @@ export function DocumentEditor({
             onLinkShortcut={openLink}
             // The caret never writes behind the bars.
             scrollMargin={{ top: touch ? 140 : 96, bottom: 160 }}
+            codeBlock={CodeHighlight}
             className="flex-1 overflow-visible"
           />
           <p role="status" className="sr-only">

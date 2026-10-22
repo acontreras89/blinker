@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  type AnyExtension,
   EditorContent,
   Extension,
   textblockTypeInputRule,
@@ -24,6 +25,8 @@ export type TiptapProps = {
   onLinkShortcut?: (editor: TiptapEditor) => void;
   /** Room kept around the caret while typing, for chrome over the page. */
   scrollMargin?: { top: number; bottom: number };
+  /** A code block of its own (highlighted) instead of StarterKit's. */
+  codeBlock?: AnyExtension;
 };
 
 /** Client-only (Tiptap reads randomness while rendering); see editor.tsx. */
@@ -36,6 +39,7 @@ export default function Tiptap({
   onUpdate,
   onLinkShortcut,
   scrollMargin,
+  codeBlock,
 }: TiptapProps) {
   const callbacks = useRef({ onCreate, onUpdate, onLinkShortcut });
   useEffect(() => {
@@ -48,7 +52,9 @@ export default function Tiptap({
         heading: { levels: [1, 2, 3] },
         underline: false,
         link: { openOnClick: false, defaultProtocol: "https" },
+        ...(codeBlock && { codeBlock: false }),
       }),
+      ...(codeBlock ? [codeBlock] : []),
       Shortcuts,
     ],
     content,

@@ -1,6 +1,10 @@
 "use client";
 
-import type { JSONContent, Editor as TiptapEditor } from "@tiptap/react";
+import type {
+  AnyExtension,
+  JSONContent,
+  Editor as TiptapEditor,
+} from "@tiptap/react";
 import { cn } from "cn";
 import dynamic from "next/dynamic";
 import { useState } from "react";
@@ -31,6 +35,8 @@ type EditorProps = {
   onLinkShortcut?: (editor: TiptapEditor) => void;
   /** Room kept around the caret while typing, for chrome over the page. */
   scrollMargin?: { top: number; bottom: number };
+  /** A code block of its own (highlighted) instead of StarterKit's. */
+  codeBlock?: AnyExtension;
   /** The scroll box: give it a max height and the content scrolls inside. */
   className?: string;
 };
@@ -52,6 +58,7 @@ export function Editor({
   onUpdate,
   onLinkShortcut,
   scrollMargin,
+  codeBlock,
   className,
 }: EditorProps) {
   // With content, the placeholder never shows: until Tiptap is in, the
@@ -87,6 +94,7 @@ export function Editor({
         content={content}
         onLinkShortcut={onLinkShortcut}
         scrollMargin={scrollMargin}
+        codeBlock={codeBlock}
         onCreate={(editor) => {
           onCreate?.(editor);
           sync(editor);

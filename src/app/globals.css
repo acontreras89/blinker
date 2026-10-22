@@ -183,8 +183,10 @@
     font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
     font-size: 0.88em;
   }
+  /* Inline code has no margins to stand out with: a border does it. */
   & :not(pre) > code {
-    padding: 0.1em 0.3em;
+    padding: 0.05em 0.3em;
+    border: 1px solid var(--border);
     border-radius: var(--radius-sm);
     background: var(--muted);
   }
@@ -245,5 +247,24 @@
   }
   & hr {
     margin-block: 1.8em;
+  }
+}
+
+/* Highlighted code in black and white (the accent is the cursor's): weight
+   and shade, no colours. */
+.tiptap pre {
+  & :is(.hljs-keyword, .hljs-built_in, .hljs-selector-tag, .hljs-name) {
+    font-weight: 700;
+  }
+  & :is(.hljs-title, .hljs-attr, .hljs-property, .hljs-section) {
+    font-weight: 600;
+  }
+  & :is(.hljs-string, .hljs-number, .hljs-literal, .hljs-regexp) {
+    color: var(--muted-foreground);
+  }
+  & :is(.hljs-comment, .hljs-quote, .hljs-meta) {
+    color: var(--muted-foreground);
+    font-style: italic;
+    opacity: 0.8;
   }
 }
