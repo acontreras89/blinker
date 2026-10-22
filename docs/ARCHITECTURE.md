@@ -78,3 +78,37 @@ e2e/
 - playwright-bdd for acceptance: each run gets a fresh temp SQLite file. Stripe
   Checkout is not driven in e2e: a fake `BillingGateway` stands in, and tests
   post webhooks signed with the test secret.
+
+## Constraints and the real-product version
+
+What shaped this code, and what we'd do with none of it. Deliberate, not
+missed.
+
+| Source | Constraint                                                                                                 |
+| ------ | ---------------------------------------------------------------------------------------------------------- |
+| Brief  | One web app for both surfaces; local hosting is fine; SQLite is fine                                       |
+| Brief  | Out of scope: infra, collaboration, admin, email verification                                              |
+| Ours   | ~8 h budget, 12 h cap; one reviewer must run it in <15 min ([ADR-0001](adr/0001-local-only-deployment.md)) |
+| Ours   | One process, no Docker, no external services but Stripe                                                    |
+
+Shortcuts taken for that size, named before a reviewer does:
+
+- **One repo, one package.** A product would start as a monorepo: `apps/web`,
+  `apps/api`, `packages/` for the shared rules (title, content limits) that
+  `src/server/*/rules.ts` now shares by import.
+- **Backend in-process.** Hono runs inside Next ([ADR-0005](adr/0005-next-frontend-hono-backend.md));
+  a product would deploy it on its own, behind the same typed client.
+- **Flat server modules.** Use cases query Drizzle directly: no repositories,
+  ports/adapters, dependency injection or factories. All tables live in one
+  `db/schema.ts`, next to the modules. Billing is the exception: its
+  `BillingGateway` port exists because e2e needs a fake Stripe.
+- **SQLite file.** Postgres with migrations in CI, backups and a connection
+  pool for anything multi-instance.
+- **Whole-document saves, last write wins** ([ADR-0008](adr/0008-document-persistence.md)).
+  A product would send diffs and, past one writer, use a CRDT (Yjs).
+
+What a customer would still miss (in [EX](BACKLOG.md#ex--extras-by-priority)
+unless noted): password reset and email verification, account deletion and
+export (GDPR), rate limiting beyond Better Auth's, error tracking and
+structured logs, version history, deployment with HTTPS, transactional email
+(receipts come from Stripe), real Terms/Privacy, and a support channel.
