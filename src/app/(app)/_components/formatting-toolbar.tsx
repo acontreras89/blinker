@@ -23,12 +23,14 @@ import {
   Undo2Icon,
   type LucideIcon,
 } from "lucide-react";
-import { Fragment, useId, useSyncExternalStore } from "react";
+import { Fragment, useEffect, useId, useRef, useState } from "react";
+import { Hint } from "@/components/hint";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { shortcutLabel, useMac } from "@/hooks/use-mac";
 
 type Chain = ReturnType<Editor["chain"]>;
 type Tool = {
@@ -142,19 +144,8 @@ const groups: Tool[][] = [
 
 const tools = groups.flat();
 
-// Apple keyboards get symbols; the rest spell the modifiers out.
-const apple = {
-  subscribe: () => () => {},
-  get: () => /Mac|iPhone|iPad/.test(navigator.platform),
-};
-
 function shortcut(tool: Tool, mac: boolean) {
-  if (!tool.keys) return tool.markdown ?? "";
-  const { shift, alt, key } = tool.keys;
-  if (mac) return `⌘${shift ? "⇧" : ""}${alt ? "⌥" : ""}${key}`;
-  return ["Ctrl", shift && "Shift", alt && "Alt", key]
-    .filter(Boolean)
-    .join("+");
+  return tool.keys ? shortcutLabel(tool.keys, mac) : (tool.markdown ?? "");
 }
 
 type FormattingToolbarProps = {
@@ -177,7 +168,24 @@ export function FormattingToolbar({
   className,
 }: FormattingToolbarProps) {
   const id = useId();
-  const mac = useSyncExternalStore(apple.subscribe, apple.get, () => true);
+  const mac = useMac();
+  // On narrow screens it scrolls: a fade at the cut edge says there's more.
+  const root = useRef<HTMLDivElement>(null);
+  const [more, setMore] = useState(false);
+  useEffect(() => {
+    const el = root.current;
+    if (!el) return;
+    const check = () =>
+      setMore(el.scrollLeft + el.clientWidth < el.scrollWidth - 1);
+    check();
+    el.addEventListener("scroll", check, { passive: true });
+    const observer = new ResizeObserver(check);
+    observer.observe(el);
+    return () => {
+      el.removeEventListener("scroll", check);
+      observer.disconnect();
+    };
+  }, []);
   const state = useEditorState({
     editor,
     selector: ({ editor }) => ({
@@ -189,9 +197,11 @@ export function FormattingToolbar({
 
   return (
     <Toolbar.Root
+      ref={root}
       aria-label="Formatting"
       className={cn(
         "flex items-center gap-0.5 overflow-x-auto [scrollbar-width:none]",
+        more && "mask-[linear-gradient(to_right,black_80%,transparent)]",
         className,
       )}
     >
@@ -246,15 +256,18 @@ export function FormattingToolbar({
         </Fragment>
       ))}
       {pinnable && (
-        <Toolbar.Button
-          aria-label={pinned ? "Unpin toolbar" : "Pin toolbar"}
-          title={pinned ? "Unpin toolbar" : "Pin toolbar: keep it while typing"}
-          onMouseDown={(e) => e.preventDefault()}
-          onClick={() => onPinnedChange(!pinned)}
-          className={cn(toolButton, "ml-auto")}
+        <Hint
+          label={pinned ? "Unpin toolbar" : "Pin toolbar: keep it while typing"}
         >
-          {pinned ? <PinOffIcon /> : <PinIcon />}
-        </Toolbar.Button>
+          <Toolbar.Button
+            aria-label={pinned ? "Unpin toolbar" : "Pin toolbar"}
+            onMouseDown={(e) => e.preventDefault()}
+            onClick={() => onPinnedChange(!pinned)}
+            className={cn(toolButton, "ml-auto")}
+          >
+            {pinned ? <PinOffIcon /> : <PinIcon />}
+          </Toolbar.Button>
+        </Hint>
       )}
     </Toolbar.Root>
   );

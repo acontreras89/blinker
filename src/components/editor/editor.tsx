@@ -29,6 +29,8 @@ type EditorProps = {
   onUpdate?: (editor: TiptapEditor) => void;
   /** ⌘K: open a link field. Unset, the shortcut does nothing. */
   onLinkShortcut?: (editor: TiptapEditor) => void;
+  /** Room kept around the caret while typing, for chrome over the page. */
+  scrollMargin?: { top: number; bottom: number };
   /** The scroll box: give it a max height and the content scrolls inside. */
   className?: string;
 };
@@ -49,11 +51,16 @@ export function Editor({
   onCreate,
   onUpdate,
   onLinkShortcut,
+  scrollMargin,
   className,
 }: EditorProps) {
-  const [empty, setEmpty] = useState(true);
+  // With content, the placeholder never shows: until Tiptap is in, the
+  // cursor alone says the page is coming.
+  const [loaded, setLoaded] = useState(false);
+  const [empty, setEmpty] = useState(!hasText(content));
   const [compact, setCompact] = useState(false);
   const sync = (editor: TiptapEditor) => {
+    setLoaded(true);
     setEmpty(editor.isEmpty);
     if (size !== "display") return;
     if (editor.isEmpty) return setCompact(false);
@@ -65,7 +72,7 @@ export function Editor({
   return (
     <div
       className={cn(
-        "group relative min-h-[1lh] overflow-y-auto pb-[0.15em]",
+        "group relative flex min-h-[1lh] flex-col overflow-y-auto pb-[0.15em]",
         size === "display"
           ? sizes[compact ? "compact" : "display"]
           : sizes.page,
@@ -79,6 +86,7 @@ export function Editor({
         editable={editable}
         content={content}
         onLinkShortcut={onLinkShortcut}
+        scrollMargin={scrollMargin}
         onCreate={(editor) => {
           onCreate?.(editor);
           sync(editor);
@@ -88,6 +96,14 @@ export function Editor({
           sync(editor);
         }}
       />
+      {!loaded && !empty && (
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0"
+        >
+          <Cursor />
+        </div>
+      )}
       {empty && (
         <div
           aria-hidden="true"
@@ -99,4 +115,11 @@ export function Editor({
       )}
     </div>
   );
+}
+
+/** Whether stored content has anything to show (a blank doc has none). */
+function hasText(content: JSONContent | undefined): boolean {
+  if (!content) return false;
+  if (content.text || content.type === "horizontalRule") return true;
+  return content.content?.some(hasText) ?? false;
 }

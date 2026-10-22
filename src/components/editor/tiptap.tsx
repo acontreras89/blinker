@@ -22,6 +22,8 @@ export type TiptapProps = {
   onUpdate: (editor: TiptapEditor) => void;
   /** ⌘K: the caller opens its link field. Unset, the shortcut does nothing. */
   onLinkShortcut?: (editor: TiptapEditor) => void;
+  /** Room kept around the caret while typing, for chrome over the page. */
+  scrollMargin?: { top: number; bottom: number };
 };
 
 /** Client-only (Tiptap reads randomness while rendering); see editor.tsx. */
@@ -33,6 +35,7 @@ export default function Tiptap({
   onCreate,
   onUpdate,
   onLinkShortcut,
+  scrollMargin,
 }: TiptapProps) {
   const callbacks = useRef({ onCreate, onUpdate, onLinkShortcut });
   useEffect(() => {
@@ -52,6 +55,10 @@ export default function Tiptap({
     editable,
     autofocus: autofocus && "end",
     editorProps: {
+      ...(scrollMargin && {
+        scrollMargin: { left: 0, right: 0, ...scrollMargin },
+        scrollThreshold: { left: 0, right: 0, ...scrollMargin },
+      }),
       attributes: {
         role: "textbox",
         "aria-multiline": "true",
@@ -78,7 +85,10 @@ export default function Tiptap({
     return () => dom.removeEventListener(LINK_EVENT, claim);
   }, [editor]);
 
-  return <EditorContent editor={editor} />;
+  // The text box fills its container: a click anywhere on the page types.
+  return (
+    <EditorContent editor={editor} className="flex flex-1 flex-col *:flex-1" />
+  );
 }
 
 // What StarterKit leaves out or gets wrong for Blinker:

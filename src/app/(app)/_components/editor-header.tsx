@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import { Hint } from "@/components/hint";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -25,6 +26,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { shortcutLabel, useMac } from "@/hooks/use-mac";
 import { TitleField } from "./title-field";
 import type { Phase, Problem } from "./use-saver";
 
@@ -75,17 +77,20 @@ export function EditorHeader({
   readOnly,
 }: EditorHeaderProps) {
   const [renaming, setRenaming] = useState(false);
+  const mac = useMac();
 
   return (
     <div className="flex h-14 items-center gap-2 px-[clamp(8px,2vw,20px)]">
-      <Link
-        href="/app"
-        onClick={onBack}
-        className="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-md px-2 text-[0.95rem] font-medium text-muted-foreground hover:bg-muted hover:text-foreground"
-      >
-        <ArrowLeftIcon className="size-4" />
-        <span className="max-sm:sr-only">Documents</span>
-      </Link>
+      <Hint label="Documents">
+        <Link
+          href="/app"
+          onClick={onBack}
+          className="inline-flex size-9 shrink-0 items-center justify-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground"
+        >
+          <ArrowLeftIcon className="size-[18px]" />
+          <span className="sr-only">Documents</span>
+        </Link>
+      </Hint>
       <span aria-hidden="true" className="h-5 w-px shrink-0 bg-border" />
       <div className="min-w-0 flex-1 text-[1rem] font-semibold">
         {!doc ? (
@@ -105,27 +110,31 @@ export function EditorHeader({
             className="max-w-md"
           />
         ) : (
-          <button
-            type="button"
-            onClick={() => setRenaming(true)}
-            title="Rename"
-            className="block max-w-full truncate rounded-md px-2 py-1 text-left hover:bg-muted"
-          >
-            {doc.title}
-          </button>
+          // As wide as the field it turns into: easy to hit.
+          <Hint label="Rename">
+            <button
+              type="button"
+              onClick={() => setRenaming(true)}
+              className="block w-full max-w-md truncate rounded-md border border-transparent px-2 text-left hover:bg-muted"
+            >
+              {doc.title}
+            </button>
+          </Hint>
         )}
       </div>
       {!readOnly && (
         <>
           <SaveIndicator phase={phase} problem={problem} />
-          <Button
-            variant="outline"
-            size="lg"
-            onClick={onSave}
-            className="shrink-0 px-3.5 font-semibold"
-          >
-            Save
-          </Button>
+          <Hint label="Save" keys={shortcutLabel({ key: "S" }, mac)}>
+            <Button
+              variant="outline"
+              size="lg"
+              onClick={onSave}
+              className="shrink-0 px-3.5 font-semibold"
+            >
+              Save
+            </Button>
+          </Hint>
         </>
       )}
       {!fixed && (
@@ -156,7 +165,7 @@ export function EditorHeader({
                   onValueChange={(value) => onMode(value as HeaderMode)}
                 >
                   {headerModes.map((m) => (
-                    <DropdownMenuRadioItem key={m} value={m}>
+                    <DropdownMenuRadioItem key={m} value={m} closeOnClick>
                       {modeNames[m]}
                     </DropdownMenuRadioItem>
                   ))}

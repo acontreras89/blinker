@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { brand } from "@/lib/brand";
 import { fontClass } from "./fonts";
 import "./globals.css";
@@ -23,7 +24,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className={fontClass}>
       <body className="flex min-h-full flex-col text-lg leading-[1.55]">
-        {children}
+        {/* Quick to show, instant from one tooltip to the next. */}
+        <TooltipProvider delay={250}>{children}</TooltipProvider>
       </body>
     </html>
   );

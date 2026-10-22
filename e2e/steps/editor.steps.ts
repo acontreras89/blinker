@@ -32,7 +32,7 @@ const saveButton = (page: Page) =>
 const toolbar = (page: Page) =>
   page.getByRole("toolbar", { name: "Formatting", exact: true });
 const counters = (page: Page) => [
-  page.getByLabel("words", { exact: true }),
+  page.getByLabel(/^words?$/),
   page.getByLabel("per minute", { exact: true }),
 ];
 const wpm = (page: Page) => page.getByLabel("per minute", { exact: true });

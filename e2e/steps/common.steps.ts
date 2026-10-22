@@ -327,7 +327,7 @@ Then("they are told they have no documents yet", async ({ page }) => {
 });
 
 Then("the word count is {int}", async ({ page }, n: number) => {
-  await expect(page.getByLabel("words", { exact: true })).toHaveText(String(n));
+  await expect(page.getByLabel(/^words?$/)).toHaveText(String(n));
 });
 
 Then("the words per minute are above 0", async ({ page }) => {

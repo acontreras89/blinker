@@ -196,6 +196,8 @@ export function useSaver({ stored, editor, onCreated }: Options) {
       await save("auto");
       return !dirty();
     },
+    /** They read the problem and closed it; the next save reports again. */
+    dismiss: () => setProblem(null),
     /** The document is being deleted: nothing more is saved or reported. */
     stop: () => {
       stopped.current = true;
