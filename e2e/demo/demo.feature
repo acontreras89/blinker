@@ -10,12 +10,17 @@ Feature: Demo
     Given a visitor opens the landing
     When they look around the landing
     And they type "Monday. I will write the report today."
+    And they hesitate
+    And they trade the full stop for ", right after coffee, emails and one quick look at the news."
     And they start typing from the landing
     And they register with valid details
     And they pay in Stripe Checkout with a test card
-    Then the editor contains "Monday. I will write the report today."
+    Then the editor contains "Monday. I will write the report today, right after coffee, emails and one quick look at the news."
     When they try out the formatting
     And they open the toolbar
+    And they look up a couple of shortcuts
+    And they turn on the fireworks
+    And they type "Then a conclusion that writes itself, eventually."
     And they save the document
     Then they are told the document is saved
     When they open the dashboard
@@ -32,3 +37,6 @@ Feature: Demo
     Then the dashboard lists "Report, Untitled" in that order
     When they delete "Untitled" from the dashboard
     Then the dashboard lists "Report"
+    When they check when "Report" was last updated
+    And they look at their billing
+    And they try the dark theme

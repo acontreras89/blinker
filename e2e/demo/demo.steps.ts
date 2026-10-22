@@ -12,31 +12,35 @@ const pause = (page: Page, ms: number) => page.waitForTimeout(ms);
 // A beat after every step so each change registers on video.
 AfterStep(async ({ page }) => pause(page, 800));
 
-/** Scrolls by wheel, like a person, until the target is in view. */
-async function scrollTo(page: Page, target: ReturnType<Page["locator"]>) {
-  for (let i = 0; i < 40; i++) {
-    const box = await target.boundingBox();
-    const height = page.viewportSize()!.height;
-    if (box && box.y >= 0 && box.y < height * 0.3) return;
-    await page.mouse.wheel(0, box && box.y < 0 ? -200 : 200);
-    await pause(page, 60);
-  }
-}
-
+// Through the sticky header's section links, which scroll smoothly; one FAQ
+// opened on the way. Back to the hero at the end, where the typing happens.
 When("they look around the landing", async ({ page }) => {
   await pause(page, 2000);
-  await page.mouse.move(640, 360);
-  for (const name of ["Pricing", "FAQ"]) {
-    const region = page
-      .getByRole("region", { name })
-      .or(page.locator(`#${name.toLowerCase()}`))
-      .first();
-    await scrollTo(page, region);
+  const nav = page.getByRole("navigation", { name: "Main" });
+  for (const name of ["What it does", "Pricing", "FAQ"]) {
+    await nav.getByRole("link", { name, exact: true }).click();
     await pause(page, 2500);
   }
+  await page.getByText("Where do my documents live?", { exact: true }).click();
+  await pause(page, 3000);
   await page.evaluate(() => window.scrollTo({ top: 0, behavior: "smooth" }));
   await pause(page, 1500);
 });
+
+// A beat of doubt, then the excuses: the full stop becomes a comma.
+When("they hesitate", async ({ page }) => {
+  await pause(page, 3000);
+});
+
+When(
+  "they trade the full stop for {string}",
+  async ({ page, typingDelay }, rest: string) => {
+    await focusEditorEnd(page);
+    await page.keyboard.press("Backspace");
+    await pause(page, 600);
+    await page.keyboard.type(rest, { delay: typingDelay });
+  },
+);
 
 // Stripe's hosted Checkout, test mode. Its markup is Stripe's, so locate by
 // label with the known ids as a fallback. Test card: README → Stripe test flow.
@@ -61,12 +65,14 @@ When(
     await type(/name on card|cardholder/i, "billingName", "Ada Lovelace");
     const postal = page.locator("#billingPostalCode");
     if (await postal.isVisible()) await postal.fill("10001");
-    await pause(page, 1000);
-    await page
+    // On screen before it is pressed, so the payment doesn't start off-camera.
+    const pay = page
       .getByTestId("hosted-payment-submit-button")
       .or(page.locator('button[type="submit"]'))
-      .first()
-      .click();
+      .first();
+    await pay.scrollIntoViewIfNeeded();
+    await pause(page, 1500);
+    await pay.click();
     billing.had = true;
     // Back through the return page; the webhook or the return sync unlocks.
     await page.waitForURL((url) => url.pathname.startsWith("/write"), {
@@ -94,4 +100,57 @@ When("they try out the formatting", async ({ page, typingDelay }) => {
   await type(" paragraph");
   await page.keyboard.press("Enter");
   await page.keyboard.press("Enter");
+});
+
+// Hovering shows each control's tooltip with its shortcut.
+When("they look up a couple of shortcuts", async ({ page }) => {
+  const toolbar = page.getByRole("toolbar", {
+    name: "Formatting",
+    exact: true,
+  });
+  for (const target of [
+    toolbar.getByRole("button", { name: "Bold", exact: true }),
+    page.getByRole("button", { name: "Save", exact: true }),
+  ]) {
+    await target.hover();
+    await pause(page, 2000);
+  }
+  await page.mouse.move(640, 500);
+});
+
+When("they turn on the fireworks", async ({ page }) => {
+  await page.getByRole("switch", { name: "Fireworks", exact: true }).click();
+});
+
+// The relative time's tooltip shows the exact date.
+When(
+  "they check when {string} was last updated",
+  async ({ page }, title: string) => {
+    const entry = page.getByRole("listitem").filter({
+      has: page.getByRole("link", { name: title, exact: true }),
+    });
+    await entry
+      .getByText(/^Updated/)
+      .locator("time")
+      .hover();
+    await pause(page, 2500);
+  },
+);
+
+When("they look at their billing", async ({ page }) => {
+  await page.getByRole("link", { name: "Billing", exact: true }).click();
+  const manage = { name: "Manage billing", exact: true };
+  await expect(
+    page.getByRole("button", manage).or(page.getByRole("link", manage)).first(),
+  ).toBeVisible();
+  await pause(page, 3500);
+});
+
+// Dark for a moment, then back to the system's (light in the recording).
+When("they try the dark theme", async ({ page }) => {
+  for (const theme of ["Dark", "System"]) {
+    await page.getByRole("button", { name: "Theme", exact: true }).click();
+    await page.getByRole("menuitemradio", { name: theme, exact: true }).click();
+    await pause(page, 3000);
+  }
 });

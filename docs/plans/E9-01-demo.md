@@ -27,5 +27,7 @@ records the video; no hand recording.
 1. [x] Feature agreed with the user.
 2. [x] Config, `pnpm demo` (port 3300, starts `stripe listen`), local steps;
        green, first take 1:13.
-3. [ ] Tune pace and pauses on the first take; user reviews.
-4. [ ] Compress, link from WRITEUP, close plan.
+3. [x] Tuned over five takes (header links, FAQ, hesitation, shortcuts,
+       fireworks, date tooltip, billing, dark theme): 1:54. User reviews.
+4. [ ] `pnpm demo:video` → `docs/demo.mp4`; commit it, link from WRITEUP,
+       close plan.
