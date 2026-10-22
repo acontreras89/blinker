@@ -24,7 +24,7 @@ describe("timeAgo", () => {
 describe("exactDate", () => {
   it("shows the day and the time", () => {
     expect(exactDate(new Date("2026-10-18T15:04:00"))).toBe(
-      "Oct 18, 2026, 3:04 PM",
+      "18 Oct 2026 · 3:04 PM",
     );
   });
 });

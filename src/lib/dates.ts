@@ -1,9 +1,7 @@
 // Dates on the dashboard: relative on screen, exact on request.
 const relative = new Intl.RelativeTimeFormat("en-US", { numeric: "auto" });
-const exact = new Intl.DateTimeFormat("en-US", {
-  dateStyle: "medium",
-  timeStyle: "short",
-});
+const day = new Intl.DateTimeFormat("en-GB", { dateStyle: "medium" });
+const time = new Intl.DateTimeFormat("en-US", { timeStyle: "short" });
 
 const units = [
   ["year", 365 * 86_400],
@@ -22,5 +20,6 @@ export function timeAgo(date: Date, now: number): string {
   return "just now";
 }
 
-/** "Oct 18, 2026, 3:04 PM", in the reader's time zone. */
-export const exactDate = (date: Date) => exact.format(date);
+/** "18 Oct 2026 · 3:04 PM", in the reader's time zone; no commas. */
+export const exactDate = (date: Date) =>
+  `${day.format(date)} · ${time.format(date)}`;

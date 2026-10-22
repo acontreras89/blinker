@@ -101,9 +101,9 @@ Then(
 
 // The exact date is the relative one's accessible description (a tooltip
 // tied to it, or a title), reachable by keyboard focus. Only the day is
-// pinned; the time and the rest of the format are the UI's.
+// pinned ("18 Oct 2026"); the time and the rest of the format are the UI's.
 const day = (date: Date) =>
-  new Intl.DateTimeFormat("en-US", { dateStyle: "medium" }).format(date);
+  new Intl.DateTimeFormat("en-GB", { dateStyle: "medium" }).format(date);
 
 Then("the exact date of each is available", async ({ page, docs }) => {
   const dated = Object.values(docs.byTitle).filter(

@@ -17,6 +17,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useClock } from "@/hooks/use-clock";
+import { useTouch } from "@/hooks/use-touch";
 import { exactDate, timeAgo } from "@/lib/dates";
 import { remove } from "../actions";
 import { DeleteDialog } from "./delete-dialog";
@@ -202,19 +203,23 @@ function Row({ doc, now, renaming, onRename, onRenamed, onDelete }: RowProps) {
   );
 }
 
-/** A relative date; focused or hovered, the exact one (its description). */
+/** A relative date; focused, hovered or tapped, the exact one (its description). */
 function Moment({ iso, now }: { iso: string; now: number }) {
   const id = useId();
   const date = new Date(iso);
+  // No hover on touch: a tap shows it, another (or anywhere else) hides it.
+  const touch = useTouch();
+  const [open, setOpen] = useState(false);
   return (
     <>
-      <Tooltip>
+      <Tooltip open={open} onOpenChange={setOpen}>
         <TooltipTrigger
           render={
             <time
               dateTime={iso}
               tabIndex={0}
               aria-describedby={id}
+              onClick={touch ? () => setOpen((o) => !o) : undefined}
               className="rounded-sm underline decoration-border decoration-dotted underline-offset-4 hover:text-foreground"
             />
           }
