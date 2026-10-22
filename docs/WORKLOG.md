@@ -11,9 +11,9 @@ Parallel tasks overlap, so per-task and per-epic times are upper bounds and add 
 
 | Scope | Time | Claude sessions | Messages | Input | Output | Cache write | Cache read | Est. cost |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| All | 10h02 | 19 | 1211 | 2.5k | 812.4k | 3.23M | 165.60M | $72.61 |
+| All | 10h05 | 20 | 1239 | 2.6k | 829.3k | 3.30M | 168.16M | $74.02 |
 
-Sum of task times: 18h17 (1.8× the total, from parallel work). AFK: 1h16.
+Sum of task times: 18h29 (1.8× the total, from parallel work). AFK: 1h16.
 
 ## By epic
 
@@ -26,9 +26,9 @@ Sum of task times: 18h17 (1.8× the total, from parallel work). AFK: 1h16.
 | E2 | 3h05 | 3 | 177 | 356 | 129.8k | 328.3k | 18.71M | $8.97 |
 | E5 | 3h45 | 4 | 246 | 508 | 104.9k | 869.7k | 28.24M | $12.99 |
 | E6 | 2h52 | 5 | 263 | 558 | 122.7k | 647.9k | 26.01M | $11.93 |
-| E8 | 0h52 | 1 | 207 | 420 | 121.9k | 456.8k | 51.28M | $16.35 |
+| E8 | 1h04 | 2 | 232 | 472 | 136.5k | 523.1k | 53.20M | $17.56 |
 | E7 | 0h38 | 1 | 27 | 58 | 22.0k | 76.7k | 2.30M | $1.51 |
-| E9 | 0h46 | 1 | 79 | 186 | 41.5k | 99.2k | 13.47M | $4.32 |
+| E9 | 0h46 | 1 | 82 | 192 | 43.8k | 103.5k | 14.11M | $4.53 |
 
 ## By task
 
@@ -50,7 +50,8 @@ Sum of task times: 18h17 (1.8× the total, from parallel work). AFK: 1h16.
 | E5-03 | 0h25 | 1 | 121 | 248 | 12.0k | 389.6k | 18.41M | $5.97 |
 | E8-01..09 | 0h52 | 1 | 207 | 420 | 121.9k | 456.8k | 51.28M | $16.35 |
 | E7-01..02 | 0h38 | 1 | 27 | 58 | 22.0k | 76.7k | 2.30M | $1.51 |
-| E9-01 | 0h46 | 1 | 79 | 186 | 41.5k | 99.2k | 13.47M | $4.32 |
+| E9-01 | 0h46 | 1 | 82 | 192 | 43.8k | 103.5k | 14.11M | $4.53 |
+| E8-10 | 0h12 | 1 | 25 | 52 | 14.7k | 66.3k | 1.92M | $1.21 |
 
 ## By work block
 
@@ -74,7 +75,8 @@ Sum of task times: 18h17 (1.8× the total, from parallel work). AFK: 1h16.
 | B16 (2026-10-21) | 0h00 | 1 | 139 | 286 | 7.1k | 346.8k | 15.04M | $5.01 |
 | B17 (2026-10-22) | 0h08 | 1 | 21 | 48 | 10.1k | 54.6k | 1.43M | $0.92 |
 | B18 (2026-10-22) | 0h52 | 1 | 207 | 420 | 121.9k | 456.8k | 51.28M | $16.35 |
-| B19 (2026-10-22) | 1h24 | 1 | 106 | 244 | 63.4k | 175.8k | 15.76M | $5.83 |
+| B19 (2026-10-22) | 1h24 | 1 | 109 | 250 | 65.8k | 180.1k | 16.40M | $6.04 |
+| B20 (2026-10-22) | 0h12 | 1 | 25 | 52 | 14.7k | 66.3k | 1.92M | $1.21 |
 
 ## By Claude session
 
@@ -98,7 +100,8 @@ Sum of task times: 18h17 (1.8× the total, from parallel work). AFK: 1h16.
 | 6a6ca8e7 | 0h00 | 1 | 139 | 286 | 7.1k | 346.8k | 15.04M | $5.01 |
 | 414eb887 | 0h08 | 1 | 21 | 48 | 10.1k | 54.6k | 1.43M | $0.92 |
 | 417343d4 | 0h52 | 1 | 207 | 420 | 121.9k | 456.8k | 51.28M | $16.35 |
-| b866d148 | 1h24 | 1 | 106 | 244 | 63.4k | 175.8k | 15.76M | $5.83 |
+| b866d148 | 1h24 | 1 | 109 | 250 | 65.8k | 180.1k | 16.40M | $6.04 |
+| 0fd155f4 | 0h12 | 1 | 25 | 52 | 14.7k | 66.3k | 1.92M | $1.21 |
 
 ## Unattributed
 
@@ -107,5 +110,6 @@ Messages outside every row window (widen the row or add one):
 - `98aae101`: 2 messages, $0.15
 - `7047ed28`: 8 messages, $0.36
 - `fc5ca891`: 11 messages, $0.62
+- `b866d148`: 1 messages, $0.05
 
 Unpriced models (counted at $0): <synthetic>
