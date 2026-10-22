@@ -11,10 +11,11 @@ and procrastinate instead. Power-user minded: opinionated, few features, done we
 
 - Chromeless by default: a blank page and a cursor. Keyboard shortcuts (⌘B/I/K)
   and Markdown input rules (`#`, `-`, `>`); toolbar only on request. On touch
-  devices (no shortcuts) a compact toolbar shows above the keyboard.
+  devices (no shortcuts) header, toolbar and counters stay on screen.
 - Editor header mode, per device: `On request` (default), `Until typing`,
-  `Always`; revealed by the top edge, Esc or focus. Toolbar and counters are
-  pinnable per device.
+  `Always`; revealed by the top edge, Esc or focus, kept while hovered or
+  keyboard-focused. Counters: revealed by the bottom edge. Toolbar and
+  counters are pinnable per device (not on touch).
 - Autosave plus manual save (⌘S, button), with a quiet status: Unsaved, Saving,
   Saved; a warning while autosave retries, an error when a manual save fails.
   Never hidden when work is at risk.
@@ -48,12 +49,13 @@ Neutral and quiet, so the page is the only thing that matters.
   page blinks in step.
 - Type: Hanken Grotesk, one family, document body included (1.65 line height;
   h1 2.2em, h2 1.55em, h3 1.2em). Code: the system monospace stack.
+- Code blocks are highlighted in black and white: weight and shade only.
 - Tokens use shadcn/ui names so they map 1:1 onto `src/app/globals.css`.
 
 ## Motion
 
 - Only the cursor blink and the counter pop move on their own; anything else
-  answers a user action.
+  answers a user action (bars slide in and out, 200 ms).
 - Counter pop: on in the landing; off by default in the editor, with a toggle.
 - **`prefers-reduced-motion` always wins**: no blink, no pop, toggle disabled with
   the reason shown. Not overridable.
