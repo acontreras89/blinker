@@ -13,6 +13,7 @@
     "format:check": "prettier --check .",
     "test": "vitest run",
     "test:e2e": "bddgen && playwright test",
+    "demo": "bddgen -c playwright.demo.config.ts && playwright test -c playwright.demo.config.ts",
     "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm test",
     "stripe:setup": "node --env-file=.env scripts/stripe-setup.mjs"
   },

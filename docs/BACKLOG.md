@@ -64,8 +64,7 @@ From the 2026-10-22 review (`NOTES.md`, local) plus the original E8 scope.
 
 ## E9 — Demo and submission
 
-- [ ] E9-01 Demo feature composed from existing features/steps; slow-mo run
-      script; record one video of the whole flow.
+- [~] E9-01 Demo video → [plan](plans/E9-01-demo.md)
 - [ ] E9-02 Fresh-machine check, push to GitHub, submission reply (repo, time,
       sprint questions).
 - [ ] E9-03 Check every landing claim holds: autosave ("It saves", "Saved,

@@ -257,10 +257,10 @@ When(
   "they rename the document to {string}",
   async ({ page, docs }, title: string) => {
     const field = page.getByRole("textbox", { name: "Title", exact: true });
-    // The title shows as itself; activating it gives the Title field.
-    const control = field.or(
-      page.getByRole("button", { name: docs.current!.title, exact: true }),
-    );
+    // The title shows as itself; activating it gives the Title field. A
+    // document made in the UI, not seeded, still has its default title.
+    const name = docs.current?.title ?? /^Untitled( \(\d+\))?$/;
+    const control = field.or(page.getByRole("button", { name, exact: true }));
     await (await reach(page, control.first())).click();
     await field.fill(title);
     await field.press("Enter");
@@ -396,10 +396,10 @@ defineParameterType({
 
 When(
   "they type {string} as {format} with its shortcut",
-  async ({ page }, text: string, format: Format) => {
+  async ({ page, typingDelay }, text: string, format: Format) => {
     await focusEditorEnd(page);
     await page.keyboard.press(formats[format].keys);
-    await page.keyboard.type(text);
+    await page.keyboard.type(text, { delay: typingDelay });
   },
 );
 

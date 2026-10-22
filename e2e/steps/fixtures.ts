@@ -42,6 +42,8 @@ type Fixtures = {
   billing: Billing;
   /** The status of the last call a step made to the server directly. */
   server: { status?: number };
+  /** Milliseconds per key when steps type; only the demo slows it down. */
+  typingDelay: number;
 };
 
 export type Billing = {
@@ -74,6 +76,7 @@ export const test = base.extend<Fixtures>({
   speed: async ({}, provide) => provide({}),
   billing: async ({}, provide) => provide({ had: false }),
   server: async ({}, provide) => provide({}),
+  typingDelay: [0, { option: true }],
 });
 
 export const { Given, When, Then } = createBdd(test);

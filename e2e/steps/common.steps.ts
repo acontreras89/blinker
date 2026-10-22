@@ -238,9 +238,9 @@ When("they start typing from {place}", async ({ page }, place: Place) => {
 
 // Editing
 
-When("they type {string}", async ({ page }, text: string) => {
+When("they type {string}", async ({ page, typingDelay }, text: string) => {
   await focusEditorEnd(page);
-  await page.keyboard.type(text);
+  await page.keyboard.type(text, { delay: typingDelay });
 });
 
 When("they delete everything they typed", async ({ page }) => {
@@ -262,7 +262,7 @@ Then("the editor does not contain {string}", async ({ page }, text: string) => {
 // limit says so (before the editor or on saving it: the UI's choice).
 // "Untitled, Untitled (2)" → "Untitled (1)" PROVES THE LOWEST FREE NUMBER IS
 // REUSED, NOT MAX + 1 (documents.feature).
-When("they create a document", async ({ page }) => {
+When("they create a document", async ({ page, typingDelay }) => {
   if (new URL(page.url()).pathname !== places["the dashboard"])
     await page.goto(places["the dashboard"]);
   await page
@@ -287,7 +287,7 @@ When("they create a document", async ({ page }) => {
     .toBe(true);
   if (!(await writable.isVisible())) return;
   await focusEditorEnd(page);
-  await page.keyboard.type("A new document");
+  await page.keyboard.type("A new document", { delay: typingDelay });
   await save(page);
 });
 

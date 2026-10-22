@@ -19,5 +19,6 @@ next-env.d.ts
 /test-results/
 /playwright-report/
 /.features-gen/
+/.features-gen-demo/
 /data/
 *.pem
