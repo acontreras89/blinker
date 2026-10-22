@@ -69,17 +69,12 @@ From the 2026-10-22 review (`NOTES.md`, local) plus the original E8 scope.
 - [x] E9-01 Demo run on real Stripe test mode → [demo.feature](../e2e/demo/demo.feature),
       `pnpm demo`, `pnpm demo:video`
 - [x] E9-04 Demo video re-recorded → [docs/demo.mp4](demo.mp4) (1:54)
-- [ ] E9-05 Fresh-install snags: pnpm blocks esbuild's build scripts
-      (`ERR_PNPM_IGNORED_BUILDS`; allow or deny them in `pnpm-workspace.yaml`);
-      `next build` sometimes races migrating the fresh SQLite file
-      ("table `accounts` already exists"), failing the first `pnpm test:e2e`.
-- [ ] E9-02 Fresh-machine check, push to GitHub, submission reply (repo, time,
-      sprint questions).
-- [ ] E9-03 Check every landing claim holds: autosave ("It saves", "Saved,
-      Saving, or exactly what went wrong"), ⌘B/I/K + Markdown, toolbar on
-      request, live words + WPM.
+- [x] E9-05 Fresh-install snags: esbuild builds denied, `next build` migration race retried.
+- [~] E9-02 (2026-10-22: fresh clone green; push and reply pending) Fresh-machine check, push to GitHub, submission reply (repo, time,
+  sprint questions).
+- [x] E9-03 Every landing claim holds, covered by [editor.feature](../e2e/features/editor.feature).
 
-## EX — Extras (by priority)
+## EX — Extras (as they came up during development, not by priority)
 
 - [ ] EX-02 Deploy to GCP (see [ADR-0001](adr/0001-local-only-deployment.md)).
 - [ ] EX-03 OAuth login.

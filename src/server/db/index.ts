@@ -15,4 +15,11 @@ sqlite.pragma("journal_mode = WAL");
 sqlite.pragma("foreign_keys = ON");
 
 export const db = drizzle(sqlite, { schema });
-migrate(db, { migrationsFolder: "drizzle" });
+try {
+  migrate(db, { migrationsFolder: "drizzle" });
+} catch {
+  // `next build` workers can migrate a fresh file at once: Drizzle reads the
+  // applied migrations outside its transaction, so the loser fails with
+  // "table already exists" once the winner commits. Rerunning sees them.
+  migrate(db, { migrationsFolder: "drizzle" });
+}
