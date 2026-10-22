@@ -7,9 +7,11 @@ type StatProps = {
   label: string;
   /** Counter pop on every change. Callers turn it off under reduced motion. */
   pop?: boolean;
+  /** Room kept for this many digits, so growing never moves what follows. */
+  digits?: number;
 };
 
-export function Stat({ value, label, pop = false }: StatProps) {
+export function Stat({ value, label, pop = false, digits = 3 }: StatProps) {
   const id = useId();
   const box = useRef<HTMLSpanElement>(null);
   const num = useRef<HTMLOutputElement>(null);
@@ -29,7 +31,8 @@ export function Stat({ value, label, pop = false }: StatProps) {
           ref={num}
           id={id}
           aria-live="off"
-          className="inline-block text-2xl font-extrabold text-foreground tabular-nums"
+          style={{ minWidth: `${digits}ch` }}
+          className="inline-block text-right text-2xl font-extrabold text-foreground tabular-nums"
         >
           {value}
         </output>

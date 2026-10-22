@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Suspense } from "react";
-import { ThemeMenu } from "@/components/theme-menu";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { Wordmark } from "@/components/wordmark";
 import { buttonVariants } from "@/components/ui/button";
 import { getUser } from "@/lib/session";
@@ -37,7 +37,7 @@ export default function MarketingLayout({ children }: LayoutProps<"/">) {
             >
               <AccountLink />
             </Suspense>
-            <ThemeMenu />
+            <ThemeToggle />
             <Link href="/signup" className={buttonVariants({ size: "xl" })}>
               Start typing
             </Link>

@@ -61,6 +61,8 @@ From the 2026-10-22 review (`NOTES.md`, local) plus the original E8 scope.
 - [x] E8-07 Code layout and dev request logs.
 - [x] E8-08 ARCHITECTURE: constraints and the real-product version.
 - [x] E8-09 Code block syntax highlighting (lowlight, monochrome).
+- [x] E8-10 Header toggles cycle theme and header mode (was EX-17), toolbar
+      slides, fixed-width counters.
 
 ## E9 — Demo and submission
 
@@ -94,4 +96,3 @@ From the 2026-10-22 review (`NOTES.md`, local) plus the original E8 scope.
       edits survive Checkout and are saved once access returns.
 - [ ] EX-15 Editor font choice (from E8-03).
 - [ ] EX-16 Touch: formatting toolbar docked above the keyboard (visualViewport).
-- [ ] EX-17 Header mode as a 3-state toggle (pin / text-cursor / pin-off) instead of a menu.

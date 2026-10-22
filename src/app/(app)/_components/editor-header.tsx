@@ -4,23 +4,20 @@ import { cn } from "cn";
 import {
   ArrowLeftIcon,
   EllipsisIcon,
-  PanelTopIcon,
+  PinIcon,
+  PinOffIcon,
+  TextCursorIcon,
   TypeIcon,
 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { Hint } from "@/components/hint";
-import { ThemeItems } from "@/components/theme-menu";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
@@ -38,6 +35,11 @@ const modeNames: Record<HeaderMode, string> = {
   "on-request": "On request",
   "until-typing": "Until typing",
   always: "Always",
+};
+const modeIcons = {
+  "on-request": PinOffIcon,
+  "until-typing": TextCursorIcon,
+  always: PinIcon,
 };
 
 type EditorHeaderProps = {
@@ -155,35 +157,15 @@ export function EditorHeader({
               <TypeIcon />
             </IconButton>
           )}
-          <DropdownMenu onOpenChange={onMenu}>
-            <DropdownMenuTrigger render={<IconButton label="Show header" />}>
-              <PanelTopIcon />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-48">
-              <DropdownMenuGroup>
-                <DropdownMenuLabel>Show header</DropdownMenuLabel>
-                <DropdownMenuRadioGroup
-                  value={mode}
-                  onValueChange={(value) => onMode(value as HeaderMode)}
-                >
-                  {headerModes.map((m) => (
-                    <DropdownMenuRadioItem key={m} value={m} closeOnClick>
-                      {modeNames[m]}
-                    </DropdownMenuRadioItem>
-                  ))}
-                </DropdownMenuRadioGroup>
-              </DropdownMenuGroup>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <ModeToggle mode={mode} onMode={onMode} />
         </>
       )}
+      <ThemeToggle />
       <DropdownMenu onOpenChange={onMenu}>
         <DropdownMenuTrigger render={<IconButton label="More options" />}>
           <EllipsisIcon />
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-44">
-          <ThemeItems />
-          <DropdownMenuSeparator />
           <DropdownMenuItem
             variant="destructive"
             disabled={!doc}
@@ -194,6 +176,29 @@ export function EditorHeader({
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
+  );
+}
+
+/** The header mode, cycled: its icon is the current one, a click the next. */
+function ModeToggle({
+  mode,
+  onMode,
+}: {
+  mode: HeaderMode;
+  onMode: (mode: HeaderMode) => void;
+}) {
+  const Icon = modeIcons[mode];
+  return (
+    <IconButton
+      label={`Show header: ${modeNames[mode]}`}
+      onClick={() =>
+        onMode(
+          headerModes[(headerModes.indexOf(mode) + 1) % headerModes.length],
+        )
+      }
+    >
+      <Icon />
+    </IconButton>
   );
 }
 

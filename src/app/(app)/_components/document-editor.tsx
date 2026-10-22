@@ -348,19 +348,24 @@ export function DocumentEditor({
           />
         </header>
         {editor && (
+          // Turned on or off, it slides out from under the header.
           <div
-            hidden={!toolbarOn}
             inert={!toolbarShown}
-            className="border-t border-border/60"
+            className={cn(
+              "grid transition-[grid-template-rows,visibility] duration-200 ease-out motion-reduce:transition-none",
+              toolbarOn ? "grid-rows-[1fr]" : "invisible grid-rows-[0fr]",
+            )}
           >
-            <FormattingToolbar
-              editor={editor}
-              onLink={() => openLink(editor)}
-              pinnable={!touch}
-              pinned={toolbarPinned}
-              onPinnedChange={(p) => setToolbarPin(p ? "pinned" : "unpinned")}
-              className="mx-auto h-12 max-w-[calc(68ch+4rem)] px-[clamp(8px,2vw,20px)]"
-            />
+            <div className="min-h-0 overflow-hidden border-t border-border/60">
+              <FormattingToolbar
+                editor={editor}
+                onLink={() => openLink(editor)}
+                pinnable={!touch}
+                pinned={toolbarPinned}
+                onPinnedChange={(p) => setToolbarPin(p ? "pinned" : "unpinned")}
+                className="mx-auto h-12 max-w-[calc(68ch+4rem)] px-[clamp(8px,2vw,20px)]"
+              />
+            </div>
           </div>
         )}
       </div>
@@ -488,6 +493,7 @@ export function DocumentEditor({
                     value={stats.words}
                     label={stats.words === 1 ? "word" : "words"}
                     pop={pop}
+                    digits={4}
                   />
                   <Stat value={wpm} label="per minute" pop={pop} />
                   <button

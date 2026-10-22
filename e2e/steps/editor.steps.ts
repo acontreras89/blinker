@@ -308,23 +308,20 @@ const modes = {
   always: "Always",
 } as const;
 
-// The mode is a choice named "Show header" whose options are named by mode;
-// radio group, menu or select are the UI's.
+// The mode is a button named "Show header: <mode>"; each click moves to the
+// next mode.
 When(
   /^they set the header to show (on request|until typing|always)$/,
   async ({ page }, mode: keyof typeof modes) => {
-    const name = modes[mode];
-    const option = page
-      .getByRole("radio", { name, exact: true })
-      .or(page.getByRole("menuitemradio", { name, exact: true }))
-      .or(page.getByRole("option", { name, exact: true }))
-      .first();
-    const trigger = page
-      .getByRole("button", { name: "Show header", exact: true })
-      .or(page.getByRole("combobox", { name: "Show header", exact: true }))
-      .first();
-    if (!(await option.isVisible())) await (await reach(page, trigger)).click();
-    await option.click();
+    const target = page.getByRole("button", {
+      name: `Show header: ${modes[mode]}`,
+      exact: true,
+    });
+    const toggle = page.getByRole("button", { name: /^Show header: / });
+    await reach(page, toggle);
+    for (let i = 0; i < 3 && !(await target.isVisible()); i++)
+      await toggle.click();
+    await expect(target).toBeVisible();
   },
 );
 

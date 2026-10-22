@@ -96,6 +96,7 @@ export function Hero({ finePrint }: { finePrint: string }) {
             value={stats.words}
             label={stats.words === 1 ? "word" : "words"}
             pop={pop}
+            digits={4}
           />
           <Stat value={wpm} label="per minute" pop={pop} />
           <button

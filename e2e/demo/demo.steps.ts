@@ -148,9 +148,14 @@ When("they look at their billing", async ({ page }) => {
 
 // Dark for a moment, then back to the system's (light in the recording).
 When("they try the dark theme", async ({ page }) => {
+  // The theme button cycles System → Light → Dark.
+  const toggle = page.getByRole("button", { name: /^Theme: / });
   for (const theme of ["Dark", "System"]) {
-    await page.getByRole("button", { name: "Theme", exact: true }).click();
-    await page.getByRole("menuitemradio", { name: theme, exact: true }).click();
+    const target = page.getByRole("button", {
+      name: `Theme: ${theme}`,
+      exact: true,
+    });
+    while (!(await target.isVisible())) await toggle.click();
     await pause(page, 3000);
   }
 });
