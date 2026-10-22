@@ -79,7 +79,7 @@ export function Hero({ finePrint }: { finePrint: string }) {
       </h1>
       <p
         aria-live="polite"
-        className="mb-[clamp(16px,3vh,28px)] min-h-[1.6em] max-w-[52ch] shrink-0 text-[clamp(1rem,1.5vw,1.15rem)] text-muted-foreground [&_b]:text-foreground [&_b]:tabular-nums"
+        className="mb-[clamp(16px,3vh,28px)] min-h-[1.6em] shrink-0 text-[clamp(1rem,1.5vw,1.15rem)] text-muted-foreground [&_b]:text-foreground [&_b]:tabular-nums"
       >
         {nag}
       </p>

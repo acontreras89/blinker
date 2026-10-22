@@ -5,7 +5,8 @@ import { Hero } from "./_components/hero";
 import { OFFER, faq, finePrint } from "./_components/offer";
 import { Pricing } from "./_components/pricing";
 
-const section = "wrap border-t py-[clamp(64px,11vh,128px)]";
+// `scroll-mt-20`: section links land below the sticky header (h-20).
+const section = "wrap scroll-mt-20 border-t py-[clamp(64px,11vh,128px)]";
 const h2 =
   "mb-[clamp(28px,5vh,48px)] max-w-[18ch] text-section font-extrabold tracking-[-0.04em]";
 

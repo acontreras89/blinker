@@ -24,7 +24,13 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     // The theme script sets `data-theme` before React sees <html>.
-    <html lang="en" className={fontClass} suppressHydrationWarning>
+    <html
+      lang="en"
+      className={fontClass}
+      // Smooth for in-page links only; route changes jump (Next 16 opt-in).
+      data-scroll-behavior="smooth"
+      suppressHydrationWarning
+    >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
