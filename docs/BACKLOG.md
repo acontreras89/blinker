@@ -43,10 +43,7 @@ Coarse tasks grouped by [epic](ROADMAP.md). Flow and rules: [AGENTS.md](../AGENT
 
 ## E7 — Written deliverables
 
-- [ ] E7-01 README: setup (<15 min), architecture, tradeoffs, Stripe test flow,
-      known limitations, how AI was used.
-- [ ] E7-02 Write-up: active subscriber rule, delayed webhook, one security decision
-      ([security](security-notes.md), [Stripe](stripe-notes.md) notes).
+- [~] E7-01 README, E7-02 write-up → [plan](plans/E7-written-deliverables.md)
 
 ## E8 — Polish
 
@@ -93,7 +90,8 @@ From the 2026-10-22 review (`NOTES.md`, local) plus the original E8 scope.
 - [ ] EX-03 OAuth login.
 - [ ] EX-04 Version history: manual "save version" vs autosave checkpoints,
       history panel with preview and restore. E5 ships the minimal save only.
-- [ ] EX-05 Lifetime one-time purchase (an entitlement row with no subscription).
+- [ ] EX-05 A second plan: lifetime one-time purchase (an entitlement row with
+      no subscription) or a premium tier unlocking version history (EX-04).
 - [ ] EX-06 Password reset and email verification.
 - [ ] EX-07 Account deletion and data export (GDPR).
 - [ ] EX-08 Rate limiting on auth.
