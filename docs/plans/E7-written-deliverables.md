@@ -1,7 +1,7 @@
 # E7 — Written deliverables
 
-Grilled 2026-10-22. ARCHITECTURE is E8-08's (constraints, what a real product
-would do); E7 only links to it. Cross-reference pass once both land.
+Grilled 2026-10-22. ARCHITECTURE owns constraints and the real-product version (E8-08); the
+README only links to it.
 
 ## Scope
 
@@ -26,7 +26,8 @@ would do); E7 only links to it. Cross-reference pass once both land.
 
 ## Steps
 
-1. [ ] README draft → user review.
-2. [ ] WRITEUP draft → user review.
-3. [ ] "With another day" picked from EX → user review.
-4. [ ] Cross-reference with E8-08's ARCHITECTURE.
+1. [x] README draft; tradeoffs, cuts and "with another day" reviewed.
+2. [x] WRITEUP draft.
+3. [x] Cross-reference with E8-08's ARCHITECTURE.
+4. [ ] User review: Known limitations (`<!-- To review. -->`), WRITEUP.
+5. [ ] Demo link once E9-01 records it; time refreshed in E9-02.

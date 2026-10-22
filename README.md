@@ -72,7 +72,8 @@ Every decision: [decision log](docs/ADL.md).
   kind (password reset, verification), observability, cloud deploy, payment
   methods other than card, refunds and disputes.
 
-What a real product would do differently: [ARCHITECTURE](docs/ARCHITECTURE.md).
+What a real product would do differently, and what a customer would still
+miss: [ARCHITECTURE](docs/ARCHITECTURE.md#constraints-and-the-real-product-version).
 
 ## Known limitations
 
