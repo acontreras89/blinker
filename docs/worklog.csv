@@ -32,4 +32,4 @@ date,block,start,end,epic,task,claude_session,note
 2026-10-22,B20,12:53,13:05,E8,E8-10,0fd155f4-430f-45a4-96c6-4391ce8bc1b9,"Theme and header-mode cycle toggles (EX-17 folded in), sliding toolbar, fixed-width counters; parallel to B19"
 2026-10-22,B19,13:03,13:06,E9,E9-04,b866d148-6794-4d39-a597-dc0dbcf3eac8,"Re-record the demo after the last E8 tweaks; commit docs/demo.mp4"
 2026-10-22,B21,13:03,13:06,E9,E9-05,38349496-769f-4617-82ef-7b7f884b5820,"Fresh-install snags (esbuild builds denied, migration race retried); landing claims checked (E9-03); fresh clone green"
-2026-10-22,B21,13:06,13:20,E9,E9-02,38349496-769f-4617-82ef-7b7f884b5820,"Push to GitHub, submission email draft, worklog windows widened to cover every message, sessions-over-time graph in usage.mjs"
+2026-10-22,B21,13:06,13:25,E9,E9-02,38349496-769f-4617-82ef-7b7f884b5820,"Push to GitHub, submission email draft, worklog windows widened to cover every message, sessions-over-time graph in usage.mjs, subscription share noted"
