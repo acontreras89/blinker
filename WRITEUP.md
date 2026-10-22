@@ -1,7 +1,9 @@
 # Write-up
 
-**Demo**: <!-- E9-01: video file in the repo --> landing → register → pay →
-create, edit, save, rename and delete a document.
+**Demo**: [docs/demo.mp4](docs/demo.mp4), about 2 minutes: landing →
+register → pay → create, edit, save, rename and delete a document. Recorded
+by a Playwright run against real Stripe test mode (`pnpm demo`, then
+`pnpm demo:video`).
 
 Setup, architecture and tradeoffs: [README](README.md).
 

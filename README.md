@@ -77,8 +77,6 @@ miss: [ARCHITECTURE](docs/ARCHITECTURE.md#constraints-and-the-real-product-versi
 
 ## Known limitations
 
-<!-- To review. -->
-
 - Losing access mid-session is noticed on the next save, not pushed.
 - Unsaved text lives only in the open tab: if the server is unreachable,
   closing it loses the changes (the browser warns first).

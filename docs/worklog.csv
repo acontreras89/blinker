@@ -27,3 +27,5 @@ date,block,start,end,epic,task,claude_session,note
 2026-10-21,B16,11:55,12:32,E6,E6-02,6a6ca8e7-a05b-4056-8f69-95e714934a58,"Coordinate bdd-steps + bdd-ui: billing steps red, gate and billing UI green (plan steps 3-4); cut by the session limit before closing"
 2026-10-22,B17,11:34,11:42,E6,E6-02,414eb887-f79c-4258-8622-04b3602f81cb,"Close E6 plan: check + e2e green, decisions moved to docs, manual Stripe run to E6-03"
 2026-10-22,B18,11:30,12:22,E8,E8-01..09,417343d4-ae39-41bc-917a-94cae4252199,"Review fixes (NOTES.md§Review) + E8: editor remount on return, trial cap on /write, editor chrome, theme switch, LAN dev, dashboard, highlighting, ARCHITECTURE constraints"
+2026-10-22,B19,11:38,12:16,E7,E7-01..02,b866d148-6794-4d39-a597-dc0dbcf3eac8,"Grill and draft README + WRITEUP; tradeoffs, cuts, limitations, next; link ARCHITECTURE real-product notes; worklog-windows prompt (local)"
+2026-10-22,B19,12:16,13:02,E9,E9-01,b866d148-6794-4d39-a597-dc0dbcf3eac8,"Demo feature composed from shared steps; real Stripe Checkout run with its own config and stripe listen; five takes; sticky landing header + smooth section scroll for the video"

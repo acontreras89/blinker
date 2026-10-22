@@ -43,7 +43,7 @@ Coarse tasks grouped by [epic](ROADMAP.md). Flow and rules: [AGENTS.md](../AGENT
 
 ## E7 — Written deliverables
 
-- [~] E7-01 README, E7-02 write-up → [plan](plans/E7-written-deliverables.md)
+- [x] E7-01 README, E7-02 write-up → [README](../README.md), [WRITEUP](../WRITEUP.md)
 
 ## E8 — Polish
 
@@ -66,7 +66,14 @@ From the 2026-10-22 review (`NOTES.md`, local) plus the original E8 scope.
 
 ## E9 — Demo and submission
 
-- [~] E9-01 Demo video → [plan](plans/E9-01-demo.md)
+- [x] E9-01 Demo run on real Stripe test mode → [demo.feature](../e2e/demo/demo.feature),
+      `pnpm demo`, `pnpm demo:video`
+- [ ] E9-04 Re-record the demo after the last app tweaks, commit `docs/demo.mp4`
+      (linked from WRITEUP).
+- [ ] E9-05 Fresh-install snags: pnpm blocks esbuild's build scripts
+      (`ERR_PNPM_IGNORED_BUILDS`; allow or deny them in `pnpm-workspace.yaml`);
+      `next build` sometimes races migrating the fresh SQLite file
+      ("table `accounts` already exists"), failing the first `pnpm test:e2e`.
 - [ ] E9-02 Fresh-machine check, push to GitHub, submission reply (repo, time,
       sprint questions).
 - [ ] E9-03 Check every landing claim holds: autosave ("It saves", "Saved,
