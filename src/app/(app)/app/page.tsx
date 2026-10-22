@@ -5,6 +5,7 @@ import { requireUser } from "@/lib/session";
 import { AppHeader } from "../_components/app-header";
 import { Notice } from "../_components/notice";
 import { DocumentList } from "../_components/document-list";
+import { ForgetQuery } from "../_components/forget-query";
 import { StartTyping } from "../_components/start-typing";
 import {
   ManageBillingButton,
@@ -33,6 +34,7 @@ export default async function Dashboard({ searchParams }: PageProps<"/app">) {
           {checkout === "invalid" && (
             <Notice tone="destructive" role="alert">
               {billingCopy.notTheirs}
+              <ForgetQuery />
             </Notice>
           )}
           {!access && (

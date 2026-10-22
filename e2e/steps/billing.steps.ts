@@ -127,6 +127,10 @@ Then("they are told the Checkout is not theirs", async ({ page }) => {
   await expectAlert(page, copy.notTheirs);
 });
 
+Then("they are no longer told the Checkout is not theirs", async ({ page }) => {
+  await expect(page.getByText(copy.notTheirs)).toHaveCount(0);
+});
+
 // Without a subscription
 
 Given(

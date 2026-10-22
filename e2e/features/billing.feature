@@ -40,6 +40,8 @@ Feature: Billing
       Then they are on the dashboard
       And they are told the Checkout is not theirs
       And they are invited to subscribe
+      When they reload the page
+      Then they are no longer told the Checkout is not theirs
 
       Examples:
         | checkout                       |
