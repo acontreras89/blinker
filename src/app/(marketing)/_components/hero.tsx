@@ -3,11 +3,11 @@
 import type { Editor as TiptapEditor } from "@tiptap/react";
 import Link from "next/link";
 import { useEffect, useEffectEvent, useRef, useState } from "react";
-import { loadDraft, saveDraft } from "@/components/editor/draft";
+import { loadDraft, saveDraft } from "@/lib/draft";
 import { Editor } from "@/components/editor/editor";
 import { Stat } from "@/components/editor/stat";
-import { storeStats } from "@/components/editor/stats";
-import { useWritingStats } from "@/components/editor/use-writing-stats";
+import { storeStats } from "@/lib/stats";
+import { useWritingStats } from "@/hooks/use-writing-stats";
 import { buttonVariants } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";

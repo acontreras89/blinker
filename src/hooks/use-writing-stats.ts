@@ -7,7 +7,7 @@ import {
   restoreStats,
   wordsPerMinute,
   type StoredStats,
-} from "./stats";
+} from "@/lib/stats";
 
 export function useWritingStats() {
   const [stats, setStats] = useState(EMPTY_STATS);

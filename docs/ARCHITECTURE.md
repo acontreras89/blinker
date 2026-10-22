@@ -46,11 +46,12 @@ src/
   app/            Next routes: (marketing), (auth), (app); route-only
                   components live next to their route in `_components/`
   components/     shared UI: shadcn/ui primitives, editor (Tiptap Simple Editor)
-  hooks/          per-device prefs (`use-stored`), touch detection
+  hooks/          per-device prefs (`use-stored`), touch, writing stats
   proxy.ts        optimistic redirect to log in (cookie presence only)
   lib/api.ts      in-process backend client, server-only
   lib/session.ts  current user for Server Components; auth-client.ts for forms
   lib/documents.ts the user's documents, for Server Components/Actions
+  lib/stats.ts    writing stats rules; lib/draft.ts the landing draft
   lib/billing.ts  the user's access, Checkout and Portal, same way
   server/         Hono app; never imports next/*
     auth/         Better Auth config + session middleware

@@ -17,11 +17,11 @@ import {
   loadDraft,
   loadStats,
   saveStats,
-} from "@/components/editor/draft";
+} from "@/lib/draft";
 import { Editor } from "@/components/editor/editor";
 import { Stat } from "@/components/editor/stat";
-import { storeStats } from "@/components/editor/stats";
-import { useWritingStats } from "@/components/editor/use-writing-stats";
+import { storeStats } from "@/lib/stats";
+import { useWritingStats } from "@/hooks/use-writing-stats";
 import { Button } from "@/components/ui/button";
 import { useStored } from "@/hooks/use-stored";
 import { useTouch } from "@/hooks/use-touch";
