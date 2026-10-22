@@ -218,6 +218,46 @@ function table(title, keyName, groups) {
   return out.join("\n");
 }
 
+// One lane per Claude session, like `git log --graph`: ● opens a session
+// (with its tasks), ○ closes it, │ keeps it running alongside the others.
+function sessionGraph() {
+  const spans = new Map();
+  for (const r of rows) {
+    if (!r.claude_session) continue;
+    const k = `${r.date} ${r.claude_session}`;
+    const s = spans.get(k) ?? { date: r.date, from: r.from, to: r.to };
+    s.from = r.from < s.from ? r.from : s.from;
+    s.to = r.to > s.to ? r.to : s.to;
+    s.label = `${s.label ? `${s.label}, ` : ""}${r.task}`;
+    s.id = r.claude_session.slice(0, 8);
+    spans.set(k, s);
+  }
+  const events = [...spans.values()]
+    .flatMap((s) => [
+      { s, at: s.from, open: true },
+      { s, at: s.to, open: false },
+    ])
+    .sort((a, b) => a.at - b.at || a.open - b.open);
+  const out = ["## Sessions over time", "", "```"];
+  const lanes = [];
+  let day;
+  for (const { s, at, open } of events) {
+    if (s.date !== day) out.push(...(day ? [""] : []), (day = s.date));
+    let i = open ? lanes.indexOf(null) : lanes.indexOf(s);
+    if (open) i = i < 0 ? lanes.push(s) - 1 : ((lanes[i] = s), i);
+    const graph = lanes
+      .map((l, j) => (j === i ? (open ? "●" : "○") : l ? "│" : " "))
+      .join(" ");
+    const time = at.toTimeString().slice(0, 5);
+    out.push(
+      `${time}  ${graph}${open ? `  ${s.id} ${[...new Set(s.label.split(", "))].join(", ")}` : ""}`.trimEnd(),
+    );
+    if (!open) lanes[i] = null;
+    while (lanes.length && !lanes.at(-1)) lanes.pop();
+  }
+  return [...out, "```"].join("\n");
+}
+
 const tasks = groupBy("task");
 const total = groupBy(() => "All");
 const taskSum = tasks.reduce((n, g) => n + g.min, 0);
@@ -251,6 +291,8 @@ const md = [
     "Session",
     groupBy((r) => (r.claude_session || "—").slice(0, 8)),
   ),
+  "",
+  sessionGraph(),
 ];
 
 const unattr = Object.entries(unattributed);

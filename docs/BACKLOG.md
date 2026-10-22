@@ -70,8 +70,7 @@ From the 2026-10-22 review (`NOTES.md`, local) plus the original E8 scope.
       `pnpm demo`, `pnpm demo:video`
 - [x] E9-04 Demo video re-recorded → [docs/demo.mp4](demo.mp4) (1:54)
 - [x] E9-05 Fresh-install snags: esbuild builds denied, `next build` migration race retried.
-- [~] E9-02 (2026-10-22: fresh clone green; push and reply pending) Fresh-machine check, push to GitHub, submission reply (repo, time,
-  sprint questions).
+- [x] E9-02 Fresh-machine check, push to GitHub, submission reply.
 - [x] E9-03 Every landing claim holds, covered by [editor.feature](../e2e/features/editor.feature).
 
 ## EX — Extras (as they came up during development, not by priority)
