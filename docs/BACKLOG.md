@@ -68,8 +68,7 @@ From the 2026-10-22 review (`NOTES.md`, local) plus the original E8 scope.
 
 - [x] E9-01 Demo run on real Stripe test mode → [demo.feature](../e2e/demo/demo.feature),
       `pnpm demo`, `pnpm demo:video`
-- [ ] E9-04 Re-record the demo after the last app tweaks, commit `docs/demo.mp4`
-      (linked from WRITEUP).
+- [x] E9-04 Demo video re-recorded → [docs/demo.mp4](demo.mp4) (1:54)
 - [ ] E9-05 Fresh-install snags: pnpm blocks esbuild's build scripts
       (`ERR_PNPM_IGNORED_BUILDS`; allow or deny them in `pnpm-workspace.yaml`);
       `next build` sometimes races migrating the fresh SQLite file
