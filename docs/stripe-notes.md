@@ -35,3 +35,11 @@ in [ADR-0006](adr/0006-own-billing-entitlements.md) and
   store one `cancelAt`; access ends then even if the final
   `subscription.deleted` never arrives. A missed renewal never locks a payer
   out: period end alone doesn't revoke access.
+- **One Stripe customer per user**, created on the first Checkout and
+  reused. One trial per user: offered only if they never subscribed. With
+  access, Checkout redirects to `/account/billing`; an open Checkout is reused.
+- **"Start paying now"** ends a trial with `trial_end: "now"`. From the
+  editor it also finishes the refused save; from the dashboard it opens a
+  blank `/write`.
+- **Lapse mid-session has no push**: the next save gets 403 and the editor
+  invites to resubscribe, keeping the text on screen and editable.

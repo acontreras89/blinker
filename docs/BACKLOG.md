@@ -36,8 +36,10 @@ Coarse tasks grouped by [epic](ROADMAP.md). Flow and rules: [AGENTS.md](../AGENT
 
 ## E6 — Stripe and gating
 
-- [~] E6-01 Checkout, verified webhook, entitlements → [plan](plans/E6-billing.md)
-- [~] E6-02 Gating, upgrade path, status, Customer Portal → [plan](plans/E6-billing.md)
+- [x] E6-01 Checkout, verified webhook, entitlements → [billing.feature](../e2e/features/billing.feature), [ADR-0009](adr/0009-sync-entitlements-from-stripe.md)
+- [x] E6-02 Gating, upgrade path, status, Customer Portal → [billing.feature](../e2e/features/billing.feature)
+- [ ] E6-03 Manual run against real Stripe test mode (Chrome + `stripe listen`):
+      pay, decline, 3DS, Portal cancel, `past_due` via a test clock.
 
 ## E7 — Written deliverables
 
@@ -64,7 +66,8 @@ From the 2026-10-22 review (`NOTES.md`, local) plus the original E8 scope.
   trial-limit prompt.
 - [~] E8-05 Flow bugs: back-navigation 500 (Tiptap view), stale header and
   "deleted elsewhere" after deleting, trial cap on `/write`, editor not
-  refreshed after "Start paying now", `beforeunload` when saving can't
+  refreshed after "Start paying now", `/app?checkout=invalid` joke kept on
+  reload, `beforeunload` when saving can't
   work, stats lost on reload, needless saves while Saved.
 - [~] E8-06 Dashboard: date format, tap for exact dates, floating upgrade
   prompt with a shake, dismissible toasts.

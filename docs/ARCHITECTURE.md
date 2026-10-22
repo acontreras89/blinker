@@ -23,14 +23,17 @@ Stripe ─────────┘ /api/webhooks/stripe     (also public: /ap
 - **Auth**: forms (browser) → Better Auth at `/api/auth/*` → session row +
   httpOnly cookie. Every backend call re-reads the session from the DB; Next
   pages read it through `lib/session.ts` (backend `/session`). Private routes
-  (`/app`, `/write`): `proxy.ts` bounces cookieless requests to
+  (`/app`, `/write`, `/billing`, `/account`): `proxy.ts` bounces cookieless requests to
   `/login?next=…`, the page's `requireUser` does the real check. Logged in, `/login` → `/app`
   and `/signup` → `/write` ("Start typing" always ends in an editor).
-- **Pay**: Server Action → backend creates a Checkout Session → Stripe → webhook
-  (signature verified, idempotent) → `syncSubscription` → entitlement row. If
-  the webhook is late, the return page runs the same sync from the Stripe API
-  ([ADR-0009](adr/0009-sync-entitlements-from-stripe.md)); the redirect alone
-  never grants access.
+- **Pay**: form + Server Action (`billing/actions.ts`; never a link, Next
+  would prefetch it and open Checkouts) → backend creates or reuses a Checkout
+  Session → Stripe → webhook (signature verified, idempotent) →
+  `syncSubscription` → entitlement row. `/billing/return` checks the DB and,
+  if the webhook is late, runs the same sync from the Stripe API, polling
+  ~10 s ([ADR-0009](adr/0009-sync-entitlements-from-stripe.md)); the redirect
+  alone never grants access. `/account/billing` shows the state and opens the
+  Customer Portal.
 - **Edit**: `/write` (new, created on first save, URL replaced) or
   `/write/[id]` (server-rendered) → `use-saver.ts` (⌘S/button, 1 s idle
   autosave, flush on hide) → Server Actions in `app/(app)/actions.ts` →
@@ -48,12 +51,15 @@ src/
   lib/api.ts      in-process backend client, server-only
   lib/session.ts  current user for Server Components; auth-client.ts for forms
   lib/documents.ts the user's documents, for Server Components/Actions
+  lib/billing.ts  the user's access, Checkout and Portal, same way
   server/         Hono app; never imports next/*
     auth/         Better Auth config + session middleware
     db/           Drizzle schema (plural tables) and migrations
     documents/    routes, use cases, rules shared with the UI
     e2e.ts        test-only seeding, off unless E2E_SEED=on
     billing/      getAccess, sync, webhook; BillingGateway: Stripe or a fake
+                  (`BILLING_GATEWAY=fake`, e2e only; fake Checkout/Portal
+                  pages under `app/(app)/billing/fake-*`)
 e2e/
   features/       Gherkin, written before the UI
   steps/          playwright-bdd step definitions
