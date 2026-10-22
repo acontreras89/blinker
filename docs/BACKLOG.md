@@ -48,13 +48,31 @@ Coarse tasks grouped by [epic](ROADMAP.md). Flow and rules: [AGENTS.md](../AGENT
 
 ## E8 — Polish
 
-- [ ] E8-01 Deepen DESIGN and polish the landing.
-- [ ] E8-02 Polish the editor UX: toolbar docked to the keyboard on touch,
-      overflow hint when the toolbar scrolls on phones.
-- [ ] E8-03 Editor settings: counter pop toggle (off by default, locked off under
-      reduced motion), font choice.
-- [ ] E8-04 Cheeky copy in mouse-driven moments: empty states, save feedback, sidebar,
-      trial-limit upgrade prompt.
+From the 2026-10-22 review (`NOTES.md`, local) plus the original E8 scope.
+
+- [~] E8-01 Landing: hero editor starts scrolled, untypeable and overlapped on
+  phones (LAN dev origin), synced cursors, theme switch (light/dark/system).
+- [~] E8-02 Editor chrome: counters revealed at the bottom edge with their own
+  pin (none on touch), slide in/out, header stays while hovered/focused,
+  "until typing" waits, fixed counters the text never hides under, full-height
+  text box, tooltips not titles (Save ⌘S), wider title button, tooltip delay,
+  loading state, inline code contrast, link field; touch: toolbar docked to
+  the keyboard, overflow hint.
+- [~] E8-03 Fireworks toggle in the editor (off by default, locked off under
+  reduced motion).
+- [~] E8-04 Cheeky copy: hero nag (0 / 1 word), empty states, save feedback,
+  trial-limit prompt.
+- [~] E8-05 Flow bugs: back-navigation 500 (Tiptap view), stale header and
+  "deleted elsewhere" after deleting, trial cap on `/write`, editor not
+  refreshed after "Start paying now", `beforeunload` when saving can't
+  work, stats lost on reload, needless saves while Saved.
+- [~] E8-06 Dashboard: date format, tap for exact dates, floating upgrade
+  prompt with a shake, dismissible toasts.
+- [~] E8-07 Code layout: `draft.ts`/`stats.ts` to `lib/`, the stats hook to
+  `hooks/`; Hono request logs in dev.
+- [~] E8-08 ARCHITECTURE: constraints (brief, ours, time box), what a real
+  product would do, server shortcuts named, what a customer would still miss.
+- [ ] E8-09 Code block syntax highlighting: cost it; ship if cheap, else EX.
 
 ## E9 — Demo and submission
 
@@ -86,3 +104,4 @@ Coarse tasks grouped by [epic](ROADMAP.md). Flow and rules: [AGENTS.md](../AGENT
 - [ ] EX-13 Diff saves (ProseMirror steps) instead of the whole JSON ([ADR-0008](adr/0008-document-persistence.md)).
 - [ ] EX-14 Keep unsaved text across resubscribing: a lapsed user's unsaved
       edits survive Checkout and are saved once access returns.
+- [ ] EX-15 Editor font choice (from E8-03).
