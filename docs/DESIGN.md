@@ -40,10 +40,12 @@ typing._). Primary CTA is always **Start typing**.
 
 Neutral and quiet, so the page is the only thing that matters.
 
-- Black and white, light and dark from day one. One accent, magenta, reserved for
+- Black and white, light and dark from day one: the system's, unless the
+  reader picks one (per device). One accent, magenta, reserved for
   the cursor, the primary CTA, focus and the counter pop. Status colours
   (success, warning, destructive) mark state only.
-- The brand mark is the blinking cursor after the wordmark.
+- The brand mark is the blinking cursor after the wordmark. Every cursor on a
+  page blinks in step.
 - Type: Hanken Grotesk, one family, document body included (1.65 line height;
   h1 2.2em, h2 1.55em, h3 1.2em). Code: the system monospace stack.
 - Tokens use shadcn/ui names so they map 1:1 onto `src/app/globals.css`.

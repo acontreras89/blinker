@@ -59,16 +59,21 @@ export function Hero({ finePrint }: { finePrint: string }) {
         Somebody else already wrote a paragraph.
       </>
     );
+  else if (stats.words === 0)
+    nag = "Back to blank. The page missed being empty; the cursor didn't.";
   else if (lastInputAt !== null && clock.now - lastInputAt > 5000)
     nag = (
       <>
-        <b>{stats.words}</b> words, then nothing for{" "}
-        <b>{minutes(clock.now - lastInputAt)}</b>. The cursor noticed.
+        <b>{stats.words}</b> {stats.words === 1 ? "word" : "words"}, then
+        nothing for <b>{minutes(clock.now - lastInputAt)}</b>. The cursor
+        noticed.
       </>
     );
 
   return (
-    <section className="wrap flex h-[calc(100svh-5rem)] min-h-[34rem] flex-col pt-[clamp(24px,6vh,72px)] pb-[clamp(24px,5vh,56px)]">
+    // One screen on desktop, the editor scrolling inside; on short phones it
+    // grows instead of spilling over the next section.
+    <section className="wrap flex min-h-[calc(100svh-5rem)] flex-col md:h-[calc(100svh-5rem)] md:min-h-[34rem] pt-[clamp(24px,6vh,72px)] pb-[clamp(24px,5vh,56px)]">
       <h1 className="sr-only">
         Blinker: a text editor that wants you to start typing
       </h1>
@@ -86,15 +91,21 @@ export function Hero({ finePrint }: { finePrint: string }) {
         className="min-h-[1lh] shrink"
       />
       <div className="mt-[clamp(20px,4vh,36px)] flex shrink-0 flex-wrap items-center gap-x-7 gap-y-3 border-t pt-4">
-        <Stat value={stats.words} label="words" pop={pop} />
-        <Stat value={wpm} label="per minute" pop={pop} />
-        <button
-          type="button"
-          onClick={reset}
-          className="text-[0.95rem] text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
-        >
-          Reset stats
-        </button>
+        <div className="flex flex-wrap items-baseline gap-x-7 gap-y-3">
+          <Stat
+            value={stats.words}
+            label={stats.words === 1 ? "word" : "words"}
+            pop={pop}
+          />
+          <Stat value={wpm} label="per minute" pop={pop} />
+          <button
+            type="button"
+            onClick={reset}
+            className="text-[0.95rem] text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            Reset stats
+          </button>
+        </div>
         <label className="flex cursor-pointer items-center gap-2.5 text-[0.95rem] text-muted-foreground sm:ml-auto">
           <Switch
             checked={pop}

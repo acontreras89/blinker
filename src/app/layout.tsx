@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { themeScript } from "@/lib/theme";
 import { brand } from "@/lib/brand";
 import { fontClass } from "./fonts";
 import "./globals.css";
@@ -22,7 +23,11 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={fontClass}>
+    // The theme script sets `data-theme` before React sees <html>.
+    <html lang="en" className={fontClass} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+      </head>
       <body className="flex min-h-full flex-col text-lg leading-[1.55]">
         {/* Quick to show, instant from one tooltip to the next. */}
         <TooltipProvider delay={250}>{children}</TooltipProvider>

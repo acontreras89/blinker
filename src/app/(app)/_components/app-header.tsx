@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ThemeMenu } from "@/components/theme-menu";
 import { Wordmark } from "@/components/wordmark";
 import { LogOut } from "./log-out";
 
@@ -15,6 +16,7 @@ export function AppHeader() {
           Billing
         </Link>
         <LogOut />
+        <ThemeMenu />
       </nav>
     </header>
   );

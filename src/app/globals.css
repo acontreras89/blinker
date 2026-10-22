@@ -2,8 +2,21 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
-/* Light/dark follow the system (docs/DESIGN.md). */
-@custom-variant dark (@media (prefers-color-scheme: dark));
+/* Light/dark follow the system unless the reader picks one: `data-theme` on
+   <html> (docs/DESIGN.md). */
+@custom-variant dark {
+  @media (prefers-color-scheme: dark) {
+    &:where(
+      :root:not([data-theme="light"]),
+      :root:not([data-theme="light"]) *
+    ) {
+      @slot;
+    }
+  }
+  &:where([data-theme="dark"], [data-theme="dark"] *) {
+    @slot;
+  }
+}
 
 @theme inline {
   --color-background: var(--background);
@@ -71,7 +84,7 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --background: #000000;
     --foreground: #ffffff;
     --primary: #ff4fa3;
@@ -84,6 +97,19 @@
     --border: #26282d;
     color-scheme: dark;
   }
+}
+:root[data-theme="dark"] {
+  --background: #000000;
+  --foreground: #ffffff;
+  --primary: #ff4fa3;
+  --primary-foreground: #000000;
+  --muted: #111215;
+  --muted-foreground: #a2a5ad;
+  --destructive: #ff6b5e;
+  --warning: #d29922;
+  --success: #3fb950;
+  --border: #26282d;
+  color-scheme: dark;
 }
 
 @keyframes blink {

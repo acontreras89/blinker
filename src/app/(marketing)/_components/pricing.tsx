@@ -30,8 +30,11 @@ export function Pricing({ plans }: { plans: Plan[] }) {
           </div>
           {plan.trial && (
             <p className="text-muted-foreground">
-              Start with {plan.trial.days} days free and up to{" "}
-              {plan.trial.documents} documents.
+              Start with {plan.trial.days} days free and{" "}
+              {plan.trial.documents === 1
+                ? "one document"
+                : `up to ${plan.trial.documents} documents`}
+              .
             </p>
           )}
           <p className="text-muted-foreground">{plan.pitch}</p>

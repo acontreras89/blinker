@@ -10,6 +10,7 @@ import {
 import Link from "next/link";
 import { useState } from "react";
 import { Hint } from "@/components/hint";
+import { ThemeItems } from "@/components/theme-menu";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -19,6 +20,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
@@ -180,6 +182,8 @@ export function EditorHeader({
           <EllipsisIcon />
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-44">
+          <ThemeItems />
+          <DropdownMenuSeparator />
           <DropdownMenuItem
             variant="destructive"
             disabled={!doc}

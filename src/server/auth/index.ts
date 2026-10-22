@@ -10,6 +10,10 @@ const rules = { "/sign-up/email": signUpInput, "/sign-in/email": signInInput };
 // sign-out revokes only the current one.
 export const auth = betterAuth({
   database: drizzleAdapter(db, { provider: "sqlite", usePlural: true }),
+  // Dev from a phone on the LAN: Better Auth refuses origins other than
+  // BETTER_AUTH_URL's unless trusted.
+  trustedOrigins:
+    process.env.NODE_ENV === "development" ? ["192.168.*", "10.*"] : [],
   emailAndPassword: { enabled: true, autoSignIn: true, minPasswordLength: 8 },
   // Built-in limiter, on in production. E2E turns it off: every scenario signs
   // up and logs in from the same address.

@@ -72,7 +72,7 @@ export function Editor({
   return (
     <div
       className={cn(
-        "group relative flex min-h-[1lh] flex-col overflow-y-auto pb-[0.15em]",
+        "group relative flex min-h-[1lh] flex-col overflow-y-auto pb-[0.2em]",
         size === "display"
           ? sizes[compact ? "compact" : "display"]
           : sizes.page,

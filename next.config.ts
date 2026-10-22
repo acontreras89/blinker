@@ -1,7 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  // `next dev` from a phone on the LAN: its dev assets (and so hydration) are
+  // blocked for any host but localhost without this.
+  allowedDevOrigins: ["192.168.*.*", "10.*.*.*", "*.local"],
   cacheComponents: true,
   partialPrefetching: true,
   // Room above the backend's 1 MB content limit, so an oversized save gets the
